@@ -1,4 +1,4 @@
-// Синхроннизированное движение на двух средних моторах на расстояние в 600 тиков энкодера
+// Синхроннизированное движение на двух средних моторах на расстояние в 600 тиков энкодера прямо
 function Example1() {
     advmotctrls2.SyncMotorsConfig(30, 30);
 
@@ -28,6 +28,7 @@ function Example1() {
     motors.mediumBC.stop(); // Остановить моторы
 }
 
+// Синхроннизированное движение на двух средних моторах на расстояние в 775 тиков энкодера в сторону
 function Example2() {
     advmotctrls2.SyncMotorsConfig(25, 50);
 
@@ -58,6 +59,7 @@ function Example2() {
     motors.mediumBC.stop(); // Остановить моторы
 }
 
+// Синхронизация и плавное ускорение и замедление
 function Example3() {
     advmotctrls2.AccTwoEncConfig(15, 90, 100, 300, 1000);
 
@@ -89,18 +91,54 @@ function Example3() {
     motors.mediumBC.stop(); // Остановить моторы
 }
 
+// Плавное ускорение и замедление при движении по линии
+function Example4() {
+    const B_REF_RAW_CS2 = 652;
+    const W_REF_RAW_CS2 = 423;
+    const B_REF_RAW_CS3 = 640;
+    const W_REF_RAW_CS3 = 462;
+
+    advmotctrls2.AccTwoEncConfig(15, 70, 200, 300, 4000);
+    automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
+    automation.pid1.reset(); // Сброс ПИДа
+
+    let prevTime = 0;
+    while (true) {
+        control.timer1.reset();
+        let currTime = control.millis()
+        let loopTime = currTime - prevTime;
+        prevTime = currTime;
+
+        let encB = motors.mediumB.angle();
+        let encC = motors.mediumC.angle();
+        let out = advmotctrls2.AccTwoEnc(encB, encC);
+        if (out.isDone) break;
+
+        let rrcs2 = sensors.color2.light(LightIntensityMode.ReflectedRaw);
+        let rrcs3 = sensors.color3.light(LightIntensityMode.ReflectedRaw);
+        let rcs2 = GetNormRefValCS(rrcs2, B_REF_RAW_CS2, W_REF_RAW_CS2);
+        let rcs3 = GetNormRefValCS(rrcs3, B_REF_RAW_CS3, W_REF_RAW_CS3);
+
+        let error = rcs2 - rcs3;
+        automation.pid1.setPoint(error);
+        let U = automation.pid1.compute(loopTime, 0);
+        let pwrLeft = out.pwrOut + U;
+        let pwrRight = out.pwrOut - U;
+        motors.mediumB.run(pwrLeft);
+        motors.mediumC.run(pwrRight);
+        
+        control.timer1.pauseUntil(10);
+    }
+    motors.mediumB.stop(); motors.mediumC.stop();
+}
+
 // Функция для нормализации сырых значений с датчика
 function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS: number): number {
     let refValCS = Math.map(refRawValCS, bRefRawValCS, wRefRawValCS, 0, 100);
     refValCS = Math.constrain(refValCS, 0, 100);
     return refValCS;
 }
-
-const B_REF_RAW_CS2 = 652;
-const W_REF_RAW_CS2 = 423;
-
-const B_REF_RAW_CS3 = 640;
-const W_REF_RAW_CS3 = 462;
 
 function Test() {
     motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
