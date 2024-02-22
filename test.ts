@@ -1,6 +1,6 @@
 // Синхроннизированное движение на двух средних моторах на расстояние в 600 тиков энкодера прямо
 function Example1() {
-    advmotctrls2.SyncMotorsConfig(30, 30);
+    advmotctrls2.SyncMotorsConfig(50, 50);
 
     automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -25,7 +25,9 @@ function Example1() {
         motors.mediumC.run(powers.pwrRight);
         control.timer1.pauseUntil(1);
     }
-    motors.mediumBC.stop(); // Остановить моторы
+    motors.mediumB.stop();
+    motors.mediumC.stop();
+    //motors.mediumBC.stop(); // Остановить моторы
 }
 
 // Синхроннизированное движение на двух средних моторах на расстояние в 775 тиков энкодера в сторону
@@ -56,7 +58,9 @@ function Example2() {
 
         control.timer1.pauseUntil(1);
     }
-    motors.mediumBC.stop(); // Остановить моторы
+    //motors.mediumBC.stop(); // Остановить моторы
+    motors.mediumB.stop();
+    motors.mediumC.stop();
 }
 
 // Синхронизация и плавное ускорение и замедление
@@ -88,18 +92,20 @@ function Example3() {
 
         control.timer1.pauseUntil(1);
     }
-    motors.mediumBC.stop(); // Остановить моторы
+    //motors.mediumBC.stop(); // Остановить моторы
+    motors.mediumB.stop();
+    motors.mediumC.stop();
 }
 
 // Плавное ускорение и замедление при движении по линии
 function Example4() {
-    const B_REF_RAW_CS2 = 652;
-    const W_REF_RAW_CS2 = 423;
-    const B_REF_RAW_CS3 = 640;
-    const W_REF_RAW_CS3 = 462;
+    const B_REF_RAW_CS2 = 636;
+    const W_REF_RAW_CS2 = 490;
+    const B_REF_RAW_CS3 = 665;
+    const W_REF_RAW_CS3 = 501;
 
     advmotctrls2.AccTwoEncConfig(15, 70, 200, 300, 4000);
-    automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
     automation.pid1.reset(); // Сброс ПИДа
 
@@ -149,7 +155,7 @@ function Test() {
     brick.printString("RUN", 7, 13);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    Example3();
+    Example4();
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
 }
 
