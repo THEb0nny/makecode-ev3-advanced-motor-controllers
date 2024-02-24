@@ -174,4 +174,9 @@ namespace advmotctrls {
         };
     }
 
+    export function PauseUntilTime(startTime: number, ms: number) {
+        if (startTime == 0) startTime = control.millis();
+        while (control.millis() < startTime + ms);
+    }
+
 }

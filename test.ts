@@ -23,7 +23,7 @@ function Example1() {
         let powers = advmotctrls.GetPwrSyncMotors(U);
         motors.mediumB.run(powers.pwrLeft);
         motors.mediumC.run(powers.pwrRight);
-        PauseUntilTime(currTime, 5);
+        advmotctrls.PauseUntilTime(currTime, 5);
     }
     motors.mediumB.stop();
     motors.mediumC.stop();
@@ -55,7 +55,7 @@ function Example2() {
         motors.mediumB.run(powers.pwrLeft);
         motors.mediumC.run(powers.pwrRight);
 
-        PauseUntilTime(currTime, 5);
+        advmotctrls.PauseUntilTime(currTime, 5);
     }
     //motors.mediumBC.stop(); // Остановить моторы
     motors.mediumB.stop();
@@ -87,8 +87,7 @@ function Example3() {
         let powers = advmotctrls.GetPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
         motors.mediumB.run(powers.pwrLeft);
         motors.mediumC.run(powers.pwrRight);
-
-        PauseUntilTime(currTime, 5);
+        advmotctrls.PauseUntilTime(currTime, 5);
     }
     //motors.mediumBC.stop(); // Остановить моторы
     motors.mediumB.stop();
@@ -131,7 +130,7 @@ function Example4() {
         motors.mediumB.run(pwrLeft);
         motors.mediumC.run(pwrRight);
         
-        PauseUntilTime(currTime, 5);
+        advmotctrls.PauseUntilTime(currTime, 5);
     }
     motors.mediumB.stop(); motors.mediumC.stop();
 }
@@ -141,11 +140,6 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
     let refValCS = Math.map(refRawValCS, bRefRawValCS, wRefRawValCS, 0, 100);
     refValCS = Math.constrain(refValCS, 0, 100);
     return refValCS;
-}
-
-function PauseUntilTime(startTime: number, delay: number) {
-    if (startTime == 0) startTime = control.millis();
-    while (control.millis() < startTime + delay);
 }
 
 function Test() {
