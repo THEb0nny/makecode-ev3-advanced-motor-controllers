@@ -3,7 +3,7 @@
 * Based 1.1 ver, 2023/09/27.
 */
 //% block="AdvMotCtrls" weight=89 color=#02ab38 icon="\uf3fd"
-namespace advmotctrls2 {
+namespace advmotctrls {
 
     let pwr: number;
 
