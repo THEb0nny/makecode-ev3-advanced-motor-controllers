@@ -20,6 +20,7 @@ namespace chassis {
         pidChassisSync.reset(); // Reset pid controller
 
         let prevTime = 0; // Last time time variable for loop
+        let startTime = control.millis();
         while (true) { // Synchronized motion control cycle
             let currTime = control.millis();
             let dt = currTime - prevTime;
@@ -27,7 +28,15 @@ namespace chassis {
 
             let encB = motors.mediumB.angle(); // Get left motor encoder current value
             let encC = motors.mediumC.angle(); // Get right motor encoder current value
-            if ((encB + encC) / 2 >= value) break;
+            if (unit == MoveUnit.Degrees) {
+                if ((encB + encC) / 2 >= value) break;
+            } else if (unit == MoveUnit.Rotations) {
+
+            } else if (unit == MoveUnit.MilliSeconds) {
+
+            } else if (unit == MoveUnit.Seconds) {
+
+            }
 
             let error = advmotctrls.GetErrorSyncMotors(encB, encC); // Find out the error in motor speed control
             pidChassisSync.setPoint(error); // Transfer control error to controller
