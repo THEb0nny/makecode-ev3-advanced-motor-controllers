@@ -2,7 +2,7 @@
 * Motor controllers based OFDL Advanced Motor Controller Block module (algorithm part).
 * Based 1.1 ver, 2023/09/27.
 */
-//% block="AdvMotCtrls" weight=89 color=#02ab38 icon="\uf3fd"
+//% block="AdvMotCtrls" weight=84 color=#02ab38 icon="\uf3fd"
 namespace advmotctrls {
 
     let pwr: number;
@@ -44,7 +44,7 @@ namespace advmotctrls {
         @param vRight входное значение скорости правого мотора, eg. 50
     **/
     //% blockId=SyncMotorsConfig
-    //% block="Configuraton sync сhassis control vLeft = $vLeft|vRight = $vRight"
+    //% block="configuraton sync сhassis control vLeft = $vLeft|vRight = $vRight"
     export function SyncMotorsConfig(vLeft: number, vRight: number) {
         syncVLeft = vLeft;
         syncVRight = vRight;
@@ -59,7 +59,7 @@ namespace advmotctrls {
         @param eRight входное значение энкодера правого мотора
     **/
     //% blockId=GetErrorSyncMotors
-    //% block="Get error sync chassis motors vLeft = $vLeft|vRight = $vRight"
+    //% block="get error sync chassis motors vLeft = $vLeft|vRight = $vRight"
     export function GetErrorSyncMotors(eLeft: number, eRight: number): number {
         return ((syncVRight * eLeft) - (syncVLeft * eRight));
     }
@@ -71,7 +71,7 @@ namespace advmotctrls {
         @param U входное значение управляющего воздействия от регулятора
     **/
     //% blockId=GetPwrSyncMotors
-    //% block="Configuraton sync сhassis control vLeft = $vLeft|vRight = $vRight"
+    //% block="configuraton sync сhassis control vLeft = $vLeft|vRight = $vRight"
     export function GetPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
         const pRight = syncVRight + syncVLeftSign * U;
@@ -80,16 +80,6 @@ namespace advmotctrls {
             pwrRight: pRight
         };
     }
-    
-    /*
-    function SyncPwrIn(eLeft: number, eRight: number, vLeft: number, vRight: number) {
-        const U = ((vRight * eLeft) - (vLeft * eRight)) * syncKp;
-        const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * U;
-        const pRight = vRight + (Math.abs(vLeft + 1) - Math.abs(vLeft)) * U;
-        leftMotor.run(pLeft);
-        rightMotor.run(pRight);
-    }
-    */
 
     export function GetErrorSyncMotorsInPwr(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
         return ((vRight * eLeft) - (vLeft * eRight));
@@ -113,7 +103,7 @@ namespace advmotctrls {
        @param totalDist значение всей дистанции, eg. 500
     **/
     //% blockId=AccTwoEncConfig
-    //% block="Accel/deceleration configuration chassis control at minPwr = $minPwr|maxPwr = $maxPwr|accelDist = $accelDist|decelDist = $decelDist|totalDist = $totalDist"
+    //% block="accel/deceleration configuration chassis control at minPwr = $minPwr|maxPwr = $maxPwr|accelDist = $accelDist|decelDist = $decelDist|totalDist = $totalDist"
     export function AccTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC2_minPwr = Math.abs(minPwr);
         ACC2_maxPwr = Math.abs(maxPwr);
@@ -133,7 +123,7 @@ namespace advmotctrls {
        @param totalDist значение всей дистанции, eg. 500
     **/
     //% blockId=AccTwoEnc
-    //% block="Accel/deceleration chassis control compute at encoder left = $eLeft|right = $eRight"
+    //% block="accel/deceleration chassis control compute at encoder left = $eLeft|right = $eRight"
     export function AccTwoEnc(eLeft: number, eRight: number): AccTwoEncReturn {
         let done: boolean;
         let pwrOut: number;
@@ -172,11 +162,6 @@ namespace advmotctrls {
             pwrOut: pwrOut,
             isDone: done
         };
-    }
-
-    export function PauseUntilTime(startTime: number, ms: number) {
-        if (startTime == 0) startTime = control.millis();
-        while (control.millis() < startTime + ms);
     }
 
 }

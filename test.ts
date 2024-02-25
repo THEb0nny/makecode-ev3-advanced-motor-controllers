@@ -23,7 +23,7 @@ function Example1() {
         let powers = advmotctrls.GetPwrSyncMotors(U);
         motors.mediumB.run(powers.pwrLeft);
         motors.mediumC.run(powers.pwrRight);
-        advmotctrls.PauseUntilTime(currTime, 5);
+        chassis.PauseUntilTime(currTime, 5);
     }
     motors.mediumB.stop();
     motors.mediumC.stop();
@@ -55,7 +55,7 @@ function Example2() {
         motors.mediumB.run(powers.pwrLeft);
         motors.mediumC.run(powers.pwrRight);
 
-        advmotctrls.PauseUntilTime(currTime, 5);
+        chassis.PauseUntilTime(currTime, 5);
     }
     //motors.mediumBC.stop(); // Остановить моторы
     motors.mediumB.stop();
@@ -87,7 +87,7 @@ function Example3() {
         let powers = advmotctrls.GetPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
         motors.mediumB.run(powers.pwrLeft);
         motors.mediumC.run(powers.pwrRight);
-        advmotctrls.PauseUntilTime(currTime, 5);
+        chassis.PauseUntilTime(currTime, 5);
     }
     //motors.mediumBC.stop(); // Остановить моторы
     motors.mediumB.stop();
@@ -130,7 +130,7 @@ function Example4() {
         motors.mediumB.run(pwrLeft);
         motors.mediumC.run(pwrRight);
         
-        advmotctrls.PauseUntilTime(currTime, 5);
+        chassis.PauseUntilTime(currTime, 5);
     }
     motors.mediumB.stop(); motors.mediumC.stop();
 }
@@ -152,7 +152,7 @@ function Test() {
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
     //Example1();
-    chassis.SyncChassisMovement(20, 20, 600);
+    chassis.SyncChassisMovement(20, 20, 2, MoveUnit.Seconds);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
 }
 
