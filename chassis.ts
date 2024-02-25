@@ -27,11 +27,11 @@ namespace chassis {
 
     /**
      * Sets the motors used by the chassis, default is large B+C.
-     * @param motors motors pair, eg: motors.largeBC
+     * @param motorsPair motors pair, eg: motors.largeBC
      **/
-    //% blockId=chassisSetMotors block="set motors to chassis $motors"
-    //% motors.fieldEditor="motors"
-    //% motors.fieldOptions.decompileLiterals=1
+    //% blockId=ChassisSetMotors block="set motors to chassis $motorsPair"
+    //% motorsPair.fieldEditor="motors"
+    //% motorsPair.fieldOptions.decompileLiterals=1
     //% inlineInputMode=inline
     //% weight=89
     //% group="Properties"
@@ -42,11 +42,9 @@ namespace chassis {
             motorMaxRPM = 170;
             //chassisLeftMotor = motors.largeB;
             //chassisRightMotor = motors.largeC;
-        } else {
+        } else if (motorsType == "medium") {
             motorMaxRPM = 250;
         }
-        //motorMaxRPM = (motorsType == "large" ? 170 : 250);
-        console.log(`motorsType: ${motorsType}`);
     }
 
     /**
@@ -54,7 +52,7 @@ namespace chassis {
      * @param radius the radius of a wheel, eg: 56 (mm)
      * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=chassisSetWheelRadius block="set wheel radius to $radius $unit"
+    //% blockId=ChassisSetWheelRadius block="set wheel radius to $radius $unit"
     //% weight=88 blockGap=8
     //% group="Properties"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
@@ -67,7 +65,7 @@ namespace chassis {
      * Gets the wheel radius.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=chassisGetWheelRadius block="get wheel radius $unit"
+    //% blockId=ChassisGetWheelRadius block="get wheel radius $unit"
     //% weight=87
     //% group="Properties"
     export function getWheelRadius(unit: MeasurementUnit): number {
@@ -81,7 +79,7 @@ namespace chassis {
      * @param length the base length, eg: 130 (mm)
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=chassisSetBaseLength block="set base length to $length $unit"
+    //% blockId=ChassisSetBaseLength block="set base length to $length $unit"
     //% weight=86 blockGap=8
     //% group="Properties"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
@@ -94,7 +92,7 @@ namespace chassis {
      * Gets the base length.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=chassisGetBaseLength block="get base length $unit"
+    //% blockId=ChassisGetBaseLength block="get base length $unit"
     //% weight=85
     //% group="Properties"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
@@ -105,9 +103,9 @@ namespace chassis {
 
     /**
         Set the chassis timing control values.
-        @param syncKp kp input value, eg. 1
-        @param syncKi ki input value, eg. 0
-        @param syncKd kd input value, eg. 0
+        @param kp sync kp input value, eg. 1
+        @param ki sync ki input value, eg. 0
+        @param kd sync kd input value, eg. 0
     **/
     //% blockId=SetRegulatorGains
     //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
@@ -126,7 +124,7 @@ namespace chassis {
      * @param distance driving distance, eg: 150 (cm)
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
      **/
-    //% blockId=chassisDrive block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
+    //% blockId=ChassisDrive block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
     //% inlineInputMode=inline
     //% weight=99 blockGap=8
     //% rotationSpeed.min=-3200 rotationSpeed.max=3200
@@ -160,7 +158,7 @@ namespace chassis {
     }
 
     /**
-        Synchronization of motors in the chassis with setting speeds for each motor. No acceleration or deceleration support.
+        Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
         @param vLeft left motor speed input value, eg. 50
         @param vRight right motor speed input value, eg. 50
         @param vRight right motor speed input value, eg. 50
