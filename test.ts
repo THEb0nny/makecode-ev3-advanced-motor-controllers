@@ -151,7 +151,8 @@ function Test() {
     brick.printString("RUN", 7, 14);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    Example1();
+    //Example1();
+    chassis.SyncChassisMovement(20, 20, 600);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
 }
 

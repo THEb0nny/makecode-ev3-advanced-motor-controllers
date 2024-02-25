@@ -9,7 +9,8 @@
     },
     "files": [
         "README.md",
-        "adv_mot_ctrls.ts"
+        "adv_mot_ctrls.ts",
+        "chassis.ts"
     ],
     "testFiles": [
         "test.ts"
