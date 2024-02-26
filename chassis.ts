@@ -102,8 +102,8 @@ namespace chassis {
     }
 
     /**
-        Set the chassis timing control values.
-        @param kp sync kp input value, eg. 1
+        Set the chassis synchronization control values.
+        @param kp sync kp input value, eg. 0.05
         @param ki sync ki input value, eg. 0
         @param kd sync kd input value, eg. 0
     **/
@@ -212,7 +212,7 @@ namespace chassis {
         }
         motors.mediumB.stop(); // Stop left motor
         motors.mediumC.stop(); // Stop right motor
-        //motors.mediumBC.stop(); // Остановить моторы
+        //motors.mediumBC.stop(); // Stop motors
     }
     
 }
@@ -221,7 +221,8 @@ namespace control {
 
     export function PauseUntilTime(startTime: number, ms: number) {
         if (startTime == 0) startTime = control.millis();
-        while (control.millis() < startTime + ms);
+        const waitCompletionTime = startTime + ms;
+        while (control.millis() < waitCompletionTime);
     }
 
 }
