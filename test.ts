@@ -144,10 +144,11 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
 }
 
 function Test() {
-    motors.mediumB.stop(); motors.mediumC.stop();
+    // motors.mediumB.stop(); motors.mediumC.stop();
     motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
     motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false)
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
+    motors.mediumB.stop(); motors.mediumC.stop();
     chassis.setChassisMotors(motors.mediumBC);
     brick.printString("RUN", 7, 14);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
