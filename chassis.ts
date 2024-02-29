@@ -11,9 +11,9 @@ enum MeasurementUnit {
 //% color="#00751B" weight=89 icon="\uf1b9"
 namespace chassis {
 
-    let chassisMotors: motors.SynchedMotorPair; // The motors pair
-    let chassisLeftMotor: motors.MotorBase; // The left motor in chassis
-    let chassisRightMotor: motors.MotorBase; // The right motor in chassis
+    export let motors: motors.SynchedMotorPair; // The motors pair
+    export let leftMotor: motors.Motor; // The left motor in chassis
+    export let rightMotor: motors.Motor; // The right motor in chassis
 
     let motorMaxRPM: number = 0; // Motor maximum rpm
     let wheelRadius: number = 0; // The radius of the wheel (cm)
@@ -26,7 +26,7 @@ namespace chassis {
     const pidChassisSync = new automation.PIDController(); // PID for sync loop
 
     /**
-     * Sets the motors used by the chassis, default is large B+C.
+     * Sets the motors used by the chassis.
      * @param motorsPair motors pair, eg: motors.largeBC
      **/
     //% blockId=ChassisSetMotors block="set motors to chassis $motorsPair"
@@ -36,15 +36,16 @@ namespace chassis {
     //% weight=89
     //% group="Properties"
     export function setChassisMotors(motorsPair: motors.SynchedMotorPair) {
-        chassisMotors = motorsPair;
-        const motorsType = chassisMotors.toString().split(" ")[0];
-        if (motorsType == "large") {
-            motorMaxRPM = 170;
-            //chassisLeftMotor = motors.largeB;
-            //chassisRightMotor = motors.largeC;
-        } else if (motorsType == "medium") {
-            motorMaxRPM = 250;
-        }
+        const motorsType = motorsPair.toString().split(" ")[0];
+        const motorsName = motorsPair.toString().split(" ")[1].split("+");
+        const motors = motorsPair.motorsInPair(); // Get all motors instances
+        leftMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[0])[0]; // Set left motor instance
+        rightMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[1])[0]; // Set right motor instance
+        console.log(`motors: ${motors}`);
+        console.log(`leftMotor: ${leftMotor}`);
+        console.log(`rightMotor: ${rightMotor}`);
+        if (motorsType == "large") motorMaxRPM = 170;
+        else if (motorsType == "medium") motorMaxRPM = 250;
     }
 
     /**
@@ -130,9 +131,9 @@ namespace chassis {
     //% rotationSpeed.min=-3200 rotationSpeed.max=3200
     //% group="Move"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (!chassisMotors || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) return;
+        if (!motors || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) return;
         if (!speed) {
-            chassisMotors.stop();
+            motors.stop();
             return;
         }
 
@@ -154,7 +155,7 @@ namespace chassis {
         if (distance != 0 && unit == MeasurementUnit.Millimeters) distance / 10; // mm to cm
         const seconds = distance / speed; // cm / (cm/s) = s
 
-        chassisMotors.tank(sr, sl, seconds, MoveUnit.Seconds);
+        motors.tank(sr, sl, seconds, MoveUnit.Seconds);
     }
 
     /**
@@ -171,6 +172,7 @@ namespace chassis {
     //% weight=98 blockGap=8
     //% group="Move"
     export function SyncChassisMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
+        //if (!motors) return;
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
         vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
@@ -189,8 +191,8 @@ namespace chassis {
             let dt = currTime - prevTime;
             prevTime = currTime;
 
-            let encB = motors.mediumB.angle(); // Get left motor encoder current value
-            let encC = motors.mediumC.angle(); // Get right motor encoder current value
+            let encB = leftMotor.angle(); // Get left motor encoder current value
+            let encC = rightMotor.angle(); // Get right motor encoder current value
 
             if (unit == MoveUnit.Degrees) {
                 if ((encB + encC) / 2 >= value) break;
@@ -206,13 +208,13 @@ namespace chassis {
             pidChassisSync.setPoint(error); // Transfer control error to controller
             let U = pidChassisSync.compute(dt, 0); // Find out and record the control action of the regulator
             let powers = advmotctrls.GetPwrSyncMotors(U); // Find out the power of motors for regulation
-            motors.mediumB.run(powers.pwrLeft); // Set power/speed left motor
-            motors.mediumC.run(powers.pwrRight); // Set power/speed right motor
+            leftMotor.run(powers.pwrLeft); // Set power/speed left motor
+            rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.PauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        motors.mediumB.stop(); // Stop left motor
-        motors.mediumC.stop(); // Stop right motor
-        //motors.mediumBC.stop(); // Stop motors
+        leftMotor.stop(); // Stop left motor
+        rightMotor.stop(); // Stop right motor
+        //motors.stop(); // Stop motors
     }
     
 }

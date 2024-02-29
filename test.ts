@@ -13,20 +13,20 @@ function Example1() {
         prevTime = currTime;
         console.log(`dt: ${dt}`);
 
-        let encB = motors.mediumB.angle();
-        let encC = motors.mediumC.angle();
+        let encB = chassis.leftMotor.angle();
+        let encC = chassis.rightMotor.angle();
         if ((encB + encC) / 2 >= 600) break;
 
         let error = advmotctrls.GetErrorSyncMotors(encB, encC);
         automation.pid1.setPoint(error);
         let U = automation.pid1.compute(dt, 0);
         let powers = advmotctrls.GetPwrSyncMotors(U);
-        motors.mediumB.run(powers.pwrLeft);
-        motors.mediumC.run(powers.pwrRight);
+        chassis.leftMotor.run(powers.pwrLeft);
+        chassis.rightMotor.run(powers.pwrRight);
         control.PauseUntilTime(currTime, 5);
     }
-    motors.mediumB.stop();
-    motors.mediumC.stop();
+    chassis.leftMotor.stop();
+    chassis.rightMotor.stop();
     //motors.mediumBC.stop(); // Остановить моторы
 }
 
@@ -44,22 +44,21 @@ function Example2() {
         let dt = currTime - prevTime;
         prevTime = currTime;
 
-        let encB = motors.mediumB.angle();
-        let encC = motors.mediumC.angle();
+        let encB = chassis.leftMotor.angle();
+        let encC = chassis.rightMotor.angle();
         if ((encB + encC) / 2 >= 775) break;
 
         let error = advmotctrls.GetErrorSyncMotors(encB, encC);
         automation.pid1.setPoint(error);
         let U = automation.pid1.compute(dt, 0);
         let powers = advmotctrls.GetPwrSyncMotors(U);
-        motors.mediumB.run(powers.pwrLeft);
-        motors.mediumC.run(powers.pwrRight);
-
+        chassis.leftMotor.run(powers.pwrLeft);
+        chassis.rightMotor.run(powers.pwrRight);
         control.PauseUntilTime(currTime, 5);
     }
     //motors.mediumBC.stop(); // Остановить моторы
-    motors.mediumB.stop();
-    motors.mediumC.stop();
+    chassis.leftMotor.stop();
+    chassis.rightMotor.stop();
 }
 
 // Синхронизация и плавное ускорение и замедление
@@ -76,8 +75,8 @@ function Example3() {
         let dt = currTime - prevTime;
         prevTime = currTime;
 
-        let encB = motors.mediumB.angle();
-        let encC = motors.mediumC.angle();
+        let encB = chassis.leftMotor.angle();
+        let encC = chassis.rightMotor.angle();
         let out = advmotctrls.AccTwoEnc(encB, encC);
         if (out.isDone) break;
 
@@ -85,13 +84,13 @@ function Example3() {
         automation.pid1.setPoint(error);
         let U = automation.pid1.compute(dt, 0);
         let powers = advmotctrls.GetPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
-        motors.mediumB.run(powers.pwrLeft);
-        motors.mediumC.run(powers.pwrRight);
+        chassis.leftMotor.run(powers.pwrLeft);
+        chassis.rightMotor.run(powers.pwrRight);
         control.PauseUntilTime(currTime, 5);
     }
     //motors.mediumBC.stop(); // Остановить моторы
-    motors.mediumB.stop();
-    motors.mediumC.stop();
+    chassis.leftMotor.stop();
+    chassis.rightMotor.stop();
 }
 
 // Плавное ускорение и замедление при движении по линии
@@ -112,8 +111,8 @@ function Example4() {
         let dt = currTime - prevTime;
         prevTime = currTime;
 
-        let encB = motors.mediumB.angle();
-        let encC = motors.mediumC.angle();
+        let encB = chassis.leftMotor.angle();
+        let encC = chassis.rightMotor.angle();
         let out = advmotctrls.AccTwoEnc(encB, encC);
         if (out.isDone) break;
 
@@ -127,12 +126,14 @@ function Example4() {
         let U = automation.pid1.compute(dt, 0);
         let pwrLeft = out.pwrOut + U;
         let pwrRight = out.pwrOut - U;
-        motors.mediumB.run(pwrLeft);
-        motors.mediumC.run(pwrRight);
+        chassis.leftMotor.run(pwrLeft);
+        chassis.rightMotor.run(pwrRight);
         
         control.PauseUntilTime(currTime, 5);
     }
-    motors.mediumB.stop(); motors.mediumC.stop();
+    //motors.mediumBC.stop(); // Остановить моторы
+    chassis.leftMotor.stop();
+    chassis.rightMotor.stop();
 }
 
 // Функция для нормализации сырых значений с датчика
@@ -143,11 +144,11 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
 }
 
 function Test() {
+    motors.mediumB.stop(); motors.mediumC.stop();
     motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
     motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false)
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
-    motors.mediumB.stop(); motors.mediumC.stop();
-    motors.mediumB.clearCounts(); motors.mediumC.clearCounts();
+    chassis.setChassisMotors(motors.mediumBC);
     brick.printString("RUN", 7, 14);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
