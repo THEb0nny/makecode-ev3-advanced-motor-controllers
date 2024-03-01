@@ -63,7 +63,6 @@ namespace advmotctrls {
     export function GetErrorSyncMotors(eLeft: number, eRight: number): number {
         return ((syncVRight * eLeft) - (syncVLeft * eRight));
     }
-
     
     /**
         Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора.
