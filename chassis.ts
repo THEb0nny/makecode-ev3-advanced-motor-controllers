@@ -39,8 +39,10 @@ namespace chassis {
         const motorsType = motorsPair.toString().split(" ")[0];
         const motorsName = motorsPair.toString().split(" ")[1].split("+");
         const motors = motorsPair.motorsInPair(); // Get all motors instances
-        leftMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[0])[0]; // Set left motor instance
-        rightMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[1])[0]; // Set right motor instance
+        if (motors.length > 0) {
+            leftMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[0])[0]; // Set left motor instance
+            rightMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[1])[0]; // Set right motor instance
+        }
         console.log(`motors: ${motors}`);
         console.log(`leftMotor: ${leftMotor}`);
         console.log(`rightMotor: ${rightMotor}`);

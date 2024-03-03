@@ -144,18 +144,18 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
 }
 
 function Test() {
-    // motors.mediumB.stop(); motors.mediumC.stop();
-    motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
-    motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false)
-    motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
-    motors.mediumB.stop(); motors.mediumC.stop();
+    //motors.mediumB.setInverted(true); motors.mediumC.setInverted(false); // Начинает ехать
+    //motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false)
+    //motors.mediumB.setBrake(false); motors.mediumC.setBrake(false);
+    // motors.mediumB.run(10); motors.mediumC.run(10);
+    // motors.mediumBC.run(10);
+    // motors.mediumBC.tank(10, 10);
     chassis.setChassisMotors(motors.mediumBC);
     brick.printString("RUN", 7, 14);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    //Example1();
-    chassis.SyncChassisMovement(20, 20, 2, MoveUnit.Seconds);
-    brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
+    // Example1();
+    chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
 
 Test();
