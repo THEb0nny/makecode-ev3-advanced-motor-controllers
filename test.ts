@@ -1,5 +1,5 @@
-// Синхроннизированное движение на двух средних моторах на расстояние в 600 тиков энкодера прямо
-function Example1() {
+// Rectilinear movement with synchronization
+function StraightlineMovementExample() {
     advmotctrls.SyncMotorsConfig(20, 20);
 
     automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
@@ -30,8 +30,8 @@ function Example1() {
     //motors.mediumBC.stop(); // Остановить моторы
 }
 
-// Синхроннизированное движение на двух средних моторах на расстояние в 775 тиков энкодера в сторону
-function Example2() {
+// Arc synchronized movement
+function ArcMovementExample() {
     advmotctrls.SyncMotorsConfig(25, 50);
 
     automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
@@ -61,8 +61,8 @@ function Example2() {
     chassis.rightMotor.stop();
 }
 
-// Синхронизация и плавное ускорение и замедление
-function Example3() {
+// Synchronization with smooth acceleration and deceleration during straight-line motion
+function SyncAccelerationStraightlineMovementExample() {
     advmotctrls.AccTwoEncConfig(15, 90, 100, 300, 1000);
 
     automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
@@ -94,8 +94,8 @@ function Example3() {
     chassis.rightMotor.stop();
 }
 
-// Плавное ускорение и замедление при движении по линии
-function Example4() {
+// Smooth acceleration and deceleration when moving along the line
+function AccelLineFollowExample() {
     const B_REF_RAW_CS2 = 636;
     const W_REF_RAW_CS2 = 490;
     const B_REF_RAW_CS3 = 665;
