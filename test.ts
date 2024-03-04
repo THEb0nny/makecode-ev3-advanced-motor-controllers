@@ -141,16 +141,9 @@ function Example4() {
 function TurnExample(deg: number, speed: number) {
     if (deg == 0 || speed <= 0) return;
 
-    let emlPrev = motors.mediumB.angle(), emrPrev = motors.mediumC.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
+    let emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
     let calcMotRot = Math.round(deg * chassis.getBaseLength() / chassis.getWheelRadius()); // Расчёт угла поворота моторов для поворота
     let lMotRotCalc = emlPrev + calcMotRot, rMotRotCalc = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
-
-    // console.logValue("emlPrev", emlPrev);
-    // console.logValue("emrPrev", emrPrev);
-    // console.logValue("calcMotRot", calcMotRot);
-    // console.logValue("lMotRotCalc", lMotRotCalc);
-    // console.logValue("rMotRotCalc", rMotRotCalc);
-    // console.sendToScreen();
 
     if (deg > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
     else if (deg < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
@@ -177,19 +170,11 @@ function TurnExample(deg: number, speed: number) {
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
 
-        // console.logValue("eml", eml);
-        // console.logValue("emr", emr);
-        // console.sendToScreen();
-
         control.PauseUntilTime(currTime, 5);
     }
     //motors.mediumBC.stop(); // Остановить моторы
     chassis.leftMotor.stop();
     chassis.rightMotor.stop();
-
-    // console.logValue("eml", chassis.leftMotor.angle());
-    // console.logValue("emr", chassis.rightMotor.angle());
-    // console.sendToScreen();
 }
 
 // Функция для нормализации сырых значений с датчика

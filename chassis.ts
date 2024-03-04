@@ -132,7 +132,7 @@ namespace chassis {
     //% weight=99 blockGap=8
     //% rotationSpeed.min=-3200 rotationSpeed.max=3200
     //% group="Move"
-    export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
+    export function Drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (!motors || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) return;
         if (!speed) {
             motors.stop();
@@ -178,13 +178,10 @@ namespace chassis {
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
         vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
-
         advmotctrls.SyncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
-
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
-
         let prevTime = 0; // Last time time variable for loop
         const startTime = control.millis() * (unit == MoveUnit.Seconds ? 0.001 : 1); // We fix the time before the start of the regulation cycle
         const endTime = (unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds ? startTime + value : 0); // We record the end time of the regulation cycle if the appropriate mode is selected
@@ -192,10 +189,8 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-
             let encB = leftMotor.angle(); // Get left motor encoder current value
             let encC = rightMotor.angle(); // Get right motor encoder current value
-
             if (unit == MoveUnit.Degrees) {
                 if ((encB + encC) / 2 >= value) break;
             } else if (unit == MoveUnit.Rotations) {
@@ -205,7 +200,6 @@ namespace chassis {
             } else if (unit == MoveUnit.Seconds) {
                 if (control.millis() * 0.001 >= endTime) break;
             }
-
             let error = advmotctrls.GetErrorSyncMotors(encB, encC); // Find out the error in motor speed control
             pidChassisSync.setPoint(error); // Transfer control error to controller
             let U = pidChassisSync.compute(dt, 0); // Find out and record the control action of the regulator
@@ -217,6 +211,70 @@ namespace chassis {
         leftMotor.stop(); // Stop left motor
         rightMotor.stop(); // Stop right motor
         //motors.stop(); // Stop motors
+    }
+
+    /**
+        Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed. For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
+        @param degress rotation value in degrees, eg. 90
+        @param speed turning speed value, eg. 40
+    **/
+    //% blockId=ChassisSpinTurn
+    //% block="sync chassis spin turn at degress=$degress|for speed=$speed"
+    //% inlineInputMode=inline
+    //% weight=97 blockGap=8
+    //% group="Move"
+    export function ChassisSpinTurn(degress: number, speed: number) {
+        if (degress == 0 || speed <= 0) {
+            motors.stop();
+            return;
+        }
+        let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
+        let calcMotRot = Math.round(degress * getBaseLength() / getWheelRadius()); // Расчёт угла поворота моторов для поворота
+        let lMotRotCalc = emlPrev + calcMotRot, rMotRotCalc = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
+        if (degress > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
+        else if (degress < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
+        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка значений регулятору
+        pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+        pidChassisSync.reset(); // Сброс ПИДа
+        let prevTime = 0;
+        while (true) {
+            let currTime = control.millis();
+            let dt = currTime - prevTime;
+            prevTime = currTime;
+            let eml = leftMotor.angle();
+            let emr = rightMotor.angle();
+            if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
+            let error = advmotctrls.GetErrorSyncMotors(eml, emr);
+            pidChassisSync.setPoint(error);
+            let U = pidChassisSync.compute(dt, 0);
+            let powers = advmotctrls.GetPwrSyncMotors(U);
+            leftMotor.run(powers.pwrLeft);
+            rightMotor.run(powers.pwrRight);
+            control.PauseUntilTime(currTime, 5);
+        }
+        //motors.mediumBC.stop(); // Остановить моторы
+        leftMotor.stop();
+        rightMotor.stop();
+    }
+
+    /**
+        Stop the chassis motors.
+        @param setBrake hold the motors when braking, eg. true
+    **/
+    //% blockId=ChassisSpinTurn
+    //% block="chassis stop|at hold $setBrake"
+    //% inlineInputMode=inline
+    //% expandableArgumentMode=toggle
+    //% weight=96 blockGap=8
+    //% group="Move"
+    export function ChassisStop(setBrake?: boolean) {
+        if (!setBrake) {
+            leftMotor.setBrake(setBrake);
+            rightMotor.setBrake(setBrake);
+        }
+        //motors.stop();
+        leftMotor.stop();
+        rightMotor.stop();
     }
     
 }
