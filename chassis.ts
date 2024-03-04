@@ -23,7 +23,7 @@ namespace chassis {
     let syncKi: number = 0; // Integral synchronization gain
     let syncKd: number = 0.5; // Differential synchronization gain
 
-    const pidChassisSync = new automation.PIDController(); // PID for sync loop
+    const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
     /**
      * Sets the motors used by the chassis.
@@ -71,7 +71,7 @@ namespace chassis {
     //% blockId=ChassisGetWheelRadius block="get wheel radius $unit"
     //% weight=87
     //% group="Properties"
-    export function getWheelRadius(unit: MeasurementUnit): number {
+    export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
         else if (unit == MeasurementUnit.Millimeters) return wheelRadius * 10;
         else return 0;
