@@ -28,7 +28,7 @@ namespace chassis {
     /**
      * Sets the motors used by the chassis.
      * @param motorsPair motors pair, eg: motors.largeBC
-     **/
+    **/
     //% blockId=ChassisSetMotors block="set motors to chassis $motorsPair"
     //% motorsPair.fieldEditor="motors"
     //% motorsPair.fieldOptions.decompileLiterals=1
@@ -54,7 +54,7 @@ namespace chassis {
      * Sets the wheel radius.
      * @param radius the radius of a wheel, eg: 56 (mm)
      * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
-     */
+    **/
     //% blockId=ChassisSetWheelRadius block="set wheel radius to $radius $unit"
     //% weight=88 blockGap=8
     //% group="Properties"
@@ -81,7 +81,7 @@ namespace chassis {
      * Sets the base length.
      * @param length the base length, eg: 130 (mm)
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
-     */
+    **/
     //% blockId=ChassisSetBaseLength block="set base length to $length $unit"
     //% weight=86 blockGap=8
     //% group="Properties"
@@ -126,7 +126,7 @@ namespace chassis {
      * @param rotationSpeed rotation of the robot around the center point, eg: 30
      * @param distance driving distance, eg: 150 (cm)
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
-     **/
+    **/
     //% blockId=ChassisDrive block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
     //% inlineInputMode=inline
     //% weight=99 blockGap=8
@@ -219,7 +219,7 @@ namespace chassis {
         @param speed turning speed value, eg. 40
     **/
     //% blockId=ChassisSpinTurn
-    //% block="sync chassis spin turn at degress=$degress|for speed=$speed"
+    //% block="sync chassis spin turn at degress = $degress|for speed=$speed"
     //% inlineInputMode=inline
     //% weight=97 blockGap=8
     //% group="Move"
@@ -261,8 +261,9 @@ namespace chassis {
         Stop the chassis motors.
         @param setBrake hold the motors when braking, eg. true
     **/
-    //% blockId=ChassisSpinTurn
-    //% block="chassis stop|at hold $setBrake"
+    //% blockId=ChassisStop
+    //% block="chassis stop||at hold $setBrake"
+    //% setBrake.shadow="toggleOnOff"
     //% inlineInputMode=inline
     //% expandableArgumentMode=toggle
     //% weight=96 blockGap=8
