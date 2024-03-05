@@ -11,7 +11,6 @@ function StraightlineMovementExample() {
         let currTime = control.millis();
         let dt = currTime - prevTime;
         prevTime = currTime;
-        console.log(`dt: ${dt}`);
 
         let encB = chassis.leftMotor.angle();
         let encC = chassis.rightMotor.angle();
@@ -185,11 +184,11 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
 }
 
 function Test() {
-    motors.mediumB.setInverted(true); motors.mediumC.setInverted(false); // Начинает ехать
-    motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false)
+    motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
+    motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false);
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
     chassis.setWheelRadius(62.4);
-    chassis.setBaseLength(185);
+    chassis.setBaseLength(180);
     // motors.mediumB.run(10); motors.mediumC.run(10);
     // motors.mediumBC.run(10);
     // motors.mediumBC.tank(10, 10);
@@ -197,7 +196,7 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    TurnExample(-90, 15);
+    TurnExample(-90, 40);
     // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
 
