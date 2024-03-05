@@ -106,9 +106,9 @@ namespace chassis {
 
     /**
         Set the chassis synchronization control values.
-        @param kp sync kp input value, eg. 0.05
+        @param kp sync kp input value, eg. 0.03
         @param ki sync ki input value, eg. 0
-        @param kd sync kd input value, eg. 0
+        @param kd sync kd input value, eg. 0.5
     **/
     //% blockId=SetRegulatorGains
     //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
@@ -139,7 +139,7 @@ namespace chassis {
             return;
         }
 
-        // speed is expressed in %
+        // Speed is expressed in %
         const R = wheelRadius; // cm
         const L = baseLength; // cm
         const maxw = motorMaxRPM / 60 * 2 * Math.PI; // rad/s
@@ -208,9 +208,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.PauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        leftMotor.stop(); // Stop left motor
-        rightMotor.stop(); // Stop right motor
-        //motors.stop(); // Stop motors
+        ChassisStop();
     }
 
     /**
@@ -252,9 +250,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight);
             control.PauseUntilTime(currTime, 5);
         }
-        //motors.mediumBC.stop(); // Остановить моторы
-        leftMotor.stop();
-        rightMotor.stop();
+        ChassisStop();
     }
 
     /**

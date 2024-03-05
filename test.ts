@@ -24,9 +24,7 @@ function StraightlineMovementExample() {
         chassis.rightMotor.run(powers.pwrRight);
         control.PauseUntilTime(currTime, 5);
     }
-    chassis.leftMotor.stop();
-    chassis.rightMotor.stop();
-    //motors.mediumBC.stop(); // Остановить моторы
+    chassis.ChassisStop();
 }
 
 // Arc synchronized movement
@@ -55,9 +53,7 @@ function ArcMovementExample() {
         chassis.rightMotor.run(powers.pwrRight);
         control.PauseUntilTime(currTime, 5);
     }
-    //motors.mediumBC.stop(); // Остановить моторы
-    chassis.leftMotor.stop();
-    chassis.rightMotor.stop();
+    chassis.ChassisStop();
 }
 
 // Synchronization with smooth acceleration and deceleration during straight-line motion
@@ -88,9 +84,7 @@ function SyncAccelerationStraightlineMovementExample() {
 
         control.PauseUntilTime(currTime, 5);
     }
-    //motors.mediumBC.stop(); // Остановить моторы
-    chassis.leftMotor.stop();
-    chassis.rightMotor.stop();
+    chassis.ChassisStop();
 }
 
 // Smooth acceleration and deceleration when moving along the line
@@ -131,9 +125,7 @@ function AccelLineFollowExample() {
         
         control.PauseUntilTime(currTime, 5);
     }
-    //motors.mediumBC.stop(); // Остановить моторы
-    chassis.leftMotor.stop();
-    chassis.rightMotor.stop();
+    chassis.ChassisStop();
 }
 
 // Синхроннизированный поворот на двух средних моторах на нужный угол
@@ -171,9 +163,7 @@ function TurnExample(deg: number, speed: number) {
 
         control.PauseUntilTime(currTime, 5);
     }
-    //motors.mediumBC.stop(); // Остановить моторы
-    chassis.leftMotor.stop();
-    chassis.rightMotor.stop();
+    chassis.ChassisStop();
 }
 
 // Функция для нормализации сырых значений с датчика
