@@ -11,7 +11,7 @@ enum MeasurementUnit {
 //% color="#00751B" weight=89 icon="\uf1b9"
 namespace chassis {
 
-    export let motors: motors.SynchedMotorPair; // The motors pair
+    export let motorsPair: motors.SynchedMotorPair; // The motors pair
     export let leftMotor: motors.Motor; // The left motor in chassis
     export let rightMotor: motors.Motor; // The right motor in chassis
 
@@ -37,17 +37,32 @@ namespace chassis {
     //% group="Properties"
     export function setChassisMotors(motorsPair: motors.SynchedMotorPair) {
         const motorsType = motorsPair.toString().split(" ")[0];
-        const motorsName = motorsPair.toString().split(" ")[1].split("+");
-        const motors = motorsPair.motorsInPair(); // Get all motors instances
-        if (motors.length > 0) {
-            leftMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[0])[0]; // Set left motor instance
-            rightMotor = motors.filter((motor) => motor.toString().split(" ")[1] == motorsName[1])[0]; // Set right motor instance
+        const motorsName = motorsPair.toString();
+        const motorsNameArr = motorsName.split(" ")[1].split("+");
+        const myMotors = motorsPair.motorsInPair(); // Get all motors instances
+        if (myMotors.length >= 2) { // Ищем из существующих моторов
+            leftMotor = myMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[0])[0]; // Set left motor instance
+            rightMotor = myMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[1])[0]; // Set right motor instance
         }
-        console.log(`motors: ${motors}`);
+        if (!leftMotor && !rightMotor) { // Если моторы не были найдены, тогда уже создать свои
+            const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsName));
+            const isLarge = motorsType == "large" ? true : false;
+            leftMotor = new motors.Motor(motorsOut[0], isLarge);
+            rightMotor = new motors.Motor(motorsOut[1], isLarge);
+        }
+        console.log(`myMotors: ${myMotors}`);
         console.log(`leftMotor: ${leftMotor}`);
         console.log(`rightMotor: ${rightMotor}`);
         if (motorsType == "large") motorMaxRPM = 170;
         else if (motorsType == "medium") motorMaxRPM = 250;
+    }
+
+    function strNameToOutput(outStr: string): Output {
+        if (outStr == "B+C") return Output.BC;
+        else if (outStr == "A+B") return Output.AB;
+        else if (outStr == "C+D") return Output.CD;
+        else if (outStr == "A+D") return Output.AD;
+        return Output.ALL;
     }
 
     /**
@@ -133,9 +148,9 @@ namespace chassis {
     //% rotationSpeed.min=-3200 rotationSpeed.max=3200
     //% group="Move"
     export function Drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (!motors || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) return;
+        if (!motorsPair || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) return;
         if (!speed) {
-            motors.stop();
+            motorsPair.stop();
             return;
         }
 
@@ -157,7 +172,7 @@ namespace chassis {
         if (distance != 0 && unit == MeasurementUnit.Millimeters) distance / 10; // mm to cm
         const seconds = distance / speed; // cm / (cm/s) = s
 
-        motors.tank(sr, sl, seconds, MoveUnit.Seconds);
+        motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
     }
 
     /**
@@ -223,7 +238,7 @@ namespace chassis {
     //% group="Move"
     export function ChassisSpinTurn(degress: number, speed: number) {
         if (degress == 0 || speed <= 0) {
-            motors.stop();
+            motorsPair.stop();
             return;
         }
         let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
