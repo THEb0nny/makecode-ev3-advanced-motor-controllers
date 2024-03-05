@@ -2,9 +2,9 @@
 function StraightlineMovementExample(speed: number) {
     advmotctrls.SyncMotorsConfig(speed, speed);
 
-    automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
-    automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
-    automation.pid1.reset(); // Сброс ПИДа
+    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+    chassis.pidChassisSync.reset(); // Сброс ПИДа
 
     let prevTime = 0;
     while (true) {
@@ -17,8 +17,8 @@ function StraightlineMovementExample(speed: number) {
         if ((encB + encC) / 2 >= 600) break;
 
         let error = advmotctrls.GetErrorSyncMotors(encB, encC);
-        automation.pid1.setPoint(error);
-        let U = automation.pid1.compute(dt, 0);
+        chassis.pidChassisSync.setPoint(error);
+        let U = chassis.pidChassisSync.compute(dt, 0);
         let powers = advmotctrls.GetPwrSyncMotors(U);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
@@ -31,9 +31,9 @@ function StraightlineMovementExample(speed: number) {
 function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
     advmotctrls.SyncMotorsConfig(lMotPwr, rMotPwr);
 
-    automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
-    automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
-    automation.pid1.reset(); // Сброс ПИДа
+    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+    chassis.pidChassisSync.reset(); // Сброс ПИДа
 
     let prevTime = 0;
     while (true) {
@@ -46,8 +46,8 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
         if ((encB + encC) / 2 >= 775) break;
 
         let error = advmotctrls.GetErrorSyncMotors(encB, encC);
-        automation.pid1.setPoint(error);
-        let U = automation.pid1.compute(dt, 0);
+        chassis.pidChassisSync.setPoint(error);
+        let U = chassis.pidChassisSync.compute(dt, 0);
         let powers = advmotctrls.GetPwrSyncMotors(U);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
@@ -57,12 +57,12 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
 }
 
 // Synchronization with smooth acceleration and deceleration during straight-line motion
-function SyncAccelerationStraightlineMovementExample() {
+function SyncAccelStraightlineMovementExample() {
     advmotctrls.AccTwoEncConfig(15, 90, 100, 300, 1000);
 
-    automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
-    automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
-    automation.pid1.reset(); // Сброс ПИДа
+    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+    chassis.pidChassisSync.reset(); // Сброс ПИДа
     
     let prevTime = 0;
     while (true) {
@@ -76,8 +76,8 @@ function SyncAccelerationStraightlineMovementExample() {
         if (out.isDone) break;
 
         let error = advmotctrls.GetErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
-        automation.pid1.setPoint(error);
-        let U = automation.pid1.compute(dt, 0);
+        chassis.pidChassisSync.setPoint(error);
+        let U = chassis.pidChassisSync.compute(dt, 0);
         let powers = advmotctrls.GetPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
@@ -139,9 +139,9 @@ function TurnExample(deg: number, speed: number) {
     if (deg > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
     else if (deg < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
 
-    automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
-    automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
-    automation.pid1.reset(); // Сброс ПИДа
+    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+    chassis.pidChassisSync.reset(); // Сброс ПИДа
 
     let prevTime = 0;
     while (true) {
@@ -155,8 +155,8 @@ function TurnExample(deg: number, speed: number) {
         if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
 
         let error = advmotctrls.GetErrorSyncMotors(eml, emr);
-        automation.pid1.setPoint(error);
-        let U = automation.pid1.compute(dt, 0);
+        chassis.pidChassisSync.setPoint(error);
+        let U = chassis.pidChassisSync.compute(dt, 0);
         let powers = advmotctrls.GetPwrSyncMotors(U);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);

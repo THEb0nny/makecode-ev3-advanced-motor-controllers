@@ -23,7 +23,7 @@ namespace chassis {
     let syncKi: number = 0; // Integral synchronization gain
     let syncKd: number = 0.5; // Differential synchronization gain
 
-    const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
+    export const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
     /**
      * Sets the motors used by the chassis.
