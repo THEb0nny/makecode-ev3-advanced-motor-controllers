@@ -183,7 +183,6 @@ function Test() {
     // motors.mediumBC.run(10);
     // motors.mediumBC.tank(10, 10);
     chassis.setChassisMotors(motors.mediumBC);
-    chassis.setChassisMotors(motors.mediumBC);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();

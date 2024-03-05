@@ -284,9 +284,9 @@ namespace chassis {
             leftMotor.setBrake(setBrake);
             rightMotor.setBrake(setBrake);
         }
-        //motors.stop();
-        leftMotor.stop();
-        rightMotor.stop();
+        motorsPair.stop();
+        //leftMotor.stop();
+        //rightMotor.stop();
     }
     
 }
