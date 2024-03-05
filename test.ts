@@ -1,6 +1,6 @@
 // Rectilinear movement with synchronization
-function StraightlineMovementExample() {
-    advmotctrls.SyncMotorsConfig(20, 20);
+function StraightlineMovementExample(speed: number) {
+    advmotctrls.SyncMotorsConfig(speed, speed);
 
     automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -28,8 +28,8 @@ function StraightlineMovementExample() {
 }
 
 // Arc synchronized movement
-function ArcMovementExample() {
-    advmotctrls.SyncMotorsConfig(25, 50);
+function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
+    advmotctrls.SyncMotorsConfig(lMotPwr, rMotPwr);
 
     automation.pid1.setGains(0.03, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -189,6 +189,7 @@ function Test() {
     brick.clearScreen();
     brick.showPorts();
     TurnExample(-90, 40);
+    ArcMovementExample(25, 50);
     // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
 
