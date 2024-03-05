@@ -35,7 +35,8 @@ namespace chassis {
     //% inlineInputMode=inline
     //% weight=89
     //% group="Properties"
-    export function setChassisMotors(motorsPair: motors.SynchedMotorPair) {
+    export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair) {
+        motorsPair = newMotorsPair;
         const motorsName = motorsPair.toString();
         const motorsType = motorsName.split(" ")[0];
         const motorsNameArr = motorsName.split(" ")[1].split("+");
@@ -232,7 +233,7 @@ namespace chassis {
         @param speed turning speed value, eg. 40
     **/
     //% blockId=ChassisSpinTurn
-    //% block="sync chassis spin turn at degress = $degress|for speed=$speed"
+    //% block="sync chassis spin turn at degress = $degress|°|for speed=$speed"
     //% inlineInputMode=inline
     //% weight=97 blockGap=8
     //% group="Move"
@@ -280,13 +281,14 @@ namespace chassis {
     //% weight=96 blockGap=8
     //% group="Move"
     export function ChassisStop(setBrake?: boolean) {
-        if (!setBrake) {
+        if (setBrake) {
+            motorsPair.setBrake(setBrake);
             leftMotor.setBrake(setBrake);
             rightMotor.setBrake(setBrake);
         }
         motorsPair.stop();
-        //leftMotor.stop();
-        //rightMotor.stop();
+        leftMotor.stop();
+        rightMotor.stop();
     }
     
 }

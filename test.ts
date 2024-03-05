@@ -129,12 +129,12 @@ function AccelLineFollowExample() {
 }
 
 // Синхроннизированный поворот на двух средних моторах на нужный угол
-function TurnExample(deg: number, speed: number) {
+function SpinTurnExample(deg: number, speed: number) {
     if (deg == 0 || speed <= 0) return;
 
     let emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
-    let calcMotRot = Math.round(deg * chassis.getBaseLength() / chassis.getWheelRadius()); // Расчёт угла поворота моторов для поворота
-    let lMotRotCalc = emlPrev + calcMotRot, rMotRotCalc = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
+    let calcMotRot = Math.round((deg * chassis.getBaseLength()) / chassis.getWheelRadius()); // Расчёт угла поворота моторов для поворота
+    let totalLeftMotRot = emlPrev + calcMotRot, totalRightMotRot = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
 
     if (deg > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
     else if (deg < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
@@ -166,6 +166,67 @@ function TurnExample(deg: number, speed: number) {
     chassis.ChassisStop();
 }
 
+// Перечисление о типах относительных поворотов
+enum WheelPivot {
+    //% block="левого колеса"
+    LeftWheel,
+    //% block="правого колеса"
+    RightWheel
+}
+
+// Синхроннизированный поворот на двух средних моторах на нужный угол относительно одного из колёс
+function PivotTurnExample(deg: number, speed: number, wheelPivot: WheelPivot) {
+    if (deg == 0 || speed == 0 || deg > 0 && speed < 0 || deg < 0 && speed > 0) return;
+
+    let emPrev = 0; // Считываем с моторов значения с энкодеров перед стартом алгаритма
+    if (wheelPivot == WheelPivot.LeftWheel) emPrev = chassis.rightMotor.angle();
+    else if (wheelPivot == WheelPivot.RightWheel) emPrev = chassis.leftMotor.angle();
+    let calcMotRot = Math.round(((deg * chassis.getBaseLength()) / chassis.getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
+    let totalMotRot = emPrev + calcMotRot; // Считаем итоговое значение поворота
+    // console.logValue("calcMotRot", calcMotRot);
+    // console.logValue("totalMotRot", totalMotRot);
+
+    chassis.ChassisStop(true);
+    if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.SyncMotorsConfig(0, speed);
+    else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.SyncMotorsConfig(speed, 0);
+
+    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+    chassis.pidChassisSync.reset(); // Сброс ПИДа
+
+    let prevTime = 0;
+    while (true) {
+        let currTime = control.millis();
+        let dt = currTime - prevTime;
+        prevTime = currTime;
+
+        let eml = chassis.leftMotor.angle();
+        let emr = chassis.rightMotor.angle();
+
+        // console.logValue("eml", eml);
+        // console.logValue("emr", emr);
+        console.sendToScreen();
+
+        if (wheelPivot == WheelPivot.LeftWheel) {
+            if (Math.abs(emr) >= Math.abs(totalMotRot)) break;
+        } else if (wheelPivot == WheelPivot.RightWheel) {
+            if (Math.abs(eml) >= Math.abs(totalMotRot)) break;
+        }
+
+        let error = 0;
+        if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.GetErrorSyncMotors(eml, emr);
+        else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.GetErrorSyncMotors(eml, emr);
+        chassis.pidChassisSync.setPoint(error);
+        let U = chassis.pidChassisSync.compute(dt, 0);
+        let powers = advmotctrls.GetPwrSyncMotors(U);
+        if (wheelPivot == WheelPivot.LeftWheel) chassis.rightMotor.run(powers.pwrRight);
+        else if (wheelPivot == WheelPivot.RightWheel) chassis.leftMotor.run(powers.pwrLeft);
+        
+        control.PauseUntilTime(currTime, 5);
+    }
+    chassis.ChassisStop(false);
+}
+
 // Функция для нормализации сырых значений с датчика
 function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS: number): number {
     let refValCS = Math.map(refRawValCS, bRefRawValCS, wRefRawValCS, 0, 100);
@@ -178,7 +239,7 @@ function Test() {
     motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false);
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
     chassis.setWheelRadius(62.4);
-    chassis.setBaseLength(180);
+    chassis.setBaseLength(185);
     // motors.mediumB.run(10); motors.mediumC.run(10);
     // motors.mediumBC.run(10);
     // motors.mediumBC.tank(10, 10);
@@ -187,8 +248,9 @@ function Test() {
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
     brick.showPorts();
-    TurnExample(-90, 40);
-    ArcMovementExample(25, 50);
+    PivotTurnExample(90, 30, WheelPivot.LeftWheel);
+    // SpinTurnExample(90, 20);
+    // ArcMovementExample(25, 50);
     // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
 
