@@ -36,23 +36,23 @@ namespace chassis {
     //% weight=89
     //% group="Properties"
     export function setChassisMotors(motorsPair: motors.SynchedMotorPair) {
-        const motorsType = motorsPair.toString().split(" ")[0];
         const motorsName = motorsPair.toString();
+        const motorsType = motorsName.split(" ")[0];
         const motorsNameArr = motorsName.split(" ")[1].split("+");
-        const myMotors = motorsPair.motorsInPair(); // Get all motors instances
-        if (myMotors.length >= 2) { // Ищем из существующих моторов
-            leftMotor = myMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[0])[0]; // Set left motor instance
-            rightMotor = myMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[1])[0]; // Set right motor instance
+        const allUseSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
+        // console.log(`allUseMotors: ${allUseSingleMotors.length}`);
+        if (allUseSingleMotors.length >= 2) { // Ищем из существующих моторов
+            leftMotor = allUseSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[0])[0]; // Set left motor instance
+            rightMotor = allUseSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[1])[0]; // Set right motor instance
         }
-        if (!leftMotor && !rightMotor) { // Если моторы не были найдены, тогда уже создать свои
+        if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
             const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsName));
-            const isLarge = motorsType == "large" ? true : false;
-            leftMotor = new motors.Motor(motorsOut[0], isLarge);
-            rightMotor = new motors.Motor(motorsOut[1], isLarge);
+            const isLargeMotor = (motorsType == "large" ? true : false);
+            if (!leftMotor) leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
+            if (!rightMotor) rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
         }
-        console.log(`myMotors: ${myMotors}`);
-        console.log(`leftMotor: ${leftMotor}`);
-        console.log(`rightMotor: ${rightMotor}`);
+        // console.log(`leftMotor: ${leftMotor}`);
+        // console.log(`rightMotor: ${rightMotor}`);
         if (motorsType == "large") motorMaxRPM = 170;
         else if (motorsType == "medium") motorMaxRPM = 250;
     }
