@@ -24,7 +24,7 @@ function StraightlineMovementExample(speed: number) {
         chassis.rightMotor.run(powers.pwrRight);
         control.PauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop();
+    chassis.ChassisStop(true);
 }
 
 // Arc synchronized movement
@@ -53,7 +53,7 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
         chassis.rightMotor.run(powers.pwrRight);
         control.PauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop();
+    chassis.ChassisStop(true);
 }
 
 // Synchronization with smooth acceleration and deceleration during straight-line motion
@@ -84,7 +84,7 @@ function SyncAccelStraightlineMovementExample() {
 
         control.PauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop();
+    chassis.ChassisStop(true);
 }
 
 // Smooth acceleration and deceleration when moving along the line
@@ -125,7 +125,7 @@ function AccelLineFollowExample() {
         
         control.PauseUntilTime(currTime, 10);
     }
-    chassis.ChassisStop();
+    chassis.ChassisStop(true);
 }
 
 // Синхроннизированный поворот на двух средних моторах на нужный угол
@@ -163,7 +163,7 @@ function SpinTurnExample(deg: number, speed: number) {
 
         control.PauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop();
+    chassis.ChassisStop(true);
 }
 
 // Перечисление о типах относительных поворотов

@@ -235,7 +235,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.PauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        ChassisStop();
+        ChassisStop(true);
     }
 
     /**
@@ -277,7 +277,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight);
             control.PauseUntilTime(currTime, 5);
         }
-        ChassisStop();
+        ChassisStop(true);
     }
 
     /**
@@ -297,11 +297,11 @@ namespace chassis {
             leftMotor.setBrake(setBrake);
             rightMotor.setBrake(setBrake);
         }
-        leftMotor.setBrakeSettleTime(0);
         motorsPair.stop();
-        //leftMotor.stop();
-        //rightMotor.stop();
-        //leftMotor.setBrakeSettleTime(10);
+        // leftMotor.setBrakeSettleTime(0);
+        // leftMotor.stop();
+        // rightMotor.stop();
+        // leftMotor.setBrakeSettleTime(10);
     }
     
 }
