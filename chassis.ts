@@ -29,7 +29,8 @@ namespace chassis {
      * Sets the motors used by the chassis.
      * @param motorsPair motors pair, eg: motors.largeBC
     **/
-    //% blockId=ChassisSetMotors block="set motors to chassis $motorsPair"
+    //% blockId=ChassisSetMotors
+    //% block="set motors to chassis $motorsPair"
     //% block.loc.ru="установить моторы шасси $motorsPair"
     //% motorsPair.fieldEditor="motors"
     //% motorsPair.fieldOptions.decompileLiterals=1
@@ -72,7 +73,8 @@ namespace chassis {
      * @param radius the radius of a wheel, eg: 56 (mm)
      * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
     **/
-    //% blockId=ChassisSetWheelRadius block="set wheel radius = $radius|$unit"
+    //% blockId=ChassisSetWheelRadius
+    //% block="set wheel radius = $radius|$unit"
     //% block.loc.ru="установить радиус колёс шасси $radius|$unit"
     //% weight=88 blockGap=8
     //% group="Properties"
@@ -86,7 +88,8 @@ namespace chassis {
      * Gets the wheel radius.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=ChassisGetWheelRadius block="get wheel radius $unit"
+    //% blockId=ChassisGetWheelRadius
+    //% block="get wheel radius $unit"
     //% block.loc.ru="получить радиус колёс шасси в $unit"
     //% weight=87
     //% group="Properties"
@@ -101,7 +104,8 @@ namespace chassis {
      * @param length the base length, eg: 130 (mm)
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
     **/
-    //% blockId=ChassisSetBaseLength block="set base length = $length|$unit"
+    //% blockId=ChassisSetBaseLength
+    //% block="set base length = $length|$unit"
     //% block.loc.ru="установить размер коллеи шасси = $length|$unit"
     //% weight=86 blockGap=8
     //% group="Properties"
@@ -115,7 +119,8 @@ namespace chassis {
      * Gets the base length.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=ChassisGetBaseLength block="get base length $unit"
+    //% blockId=ChassisGetBaseLength
+    //% block="get base length $unit"
     //% block.loc.ru="получить размер коллеи шасси в $unit"
     //% weight=85
     //% group="Properties"
@@ -148,7 +153,8 @@ namespace chassis {
      * @param distance driving distance, eg: 150 (cm)
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
     **/
-    //% blockId=ChassisDrive block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
+    //% blockId=ChassisDrive
+    //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
     //% inlineInputMode=inline
     //% weight=99 blockGap=8
     //% rotationSpeed.min=-3200 rotationSpeed.max=3200
