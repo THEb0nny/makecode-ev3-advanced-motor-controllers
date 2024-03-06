@@ -93,6 +93,54 @@ namespace advmotctrls {
         };
     }
 
+    /*
+    export function AccOneEncConfig(minPwr_in: number, maxPwr_in: number, accelDist_in: number, decelDist_in: number, totalDist_in: number) {
+        ACC1_minPwr = Math.abs(minPwr_in);
+        ACC1_maxPwr = Math.abs(maxPwr_in);
+        ACC1_accelDist = accelDist_in;
+        ACC1_decelDist = decelDist_in;
+        ACC1_totalDist = totalDist_in;
+
+        if (minPwr_in < 0) ACC1_isNEG = 1;
+        else ACC1_isNEG = 0;
+    }
+
+    export function AccOneEnc(e1: number, pwrOut: number): boolean {
+        let done: boolean;
+        let currEnc = Math.abs(e1);
+        if (currEnc >= ACC1_totalDist) {
+            done = true;
+        } else if (currEnc > ACC1_totalDist / 2) {
+            if (ACC1_decelDist == 0) {
+                pwr = ACC1_maxPwr;
+            } else {
+                pwr = (ACC1_maxPwr - ACC1_minPwr) / Math.pow(ACC1_decelDist, 2) * Math.pow(currEnc - ACC1_totalDist, 2) + ACC1_minPwr;
+            }
+            done = false;
+        } else {
+            if (ACC1_accelDist == 0) {
+                pwr = ACC1_maxPwr;
+            } else {
+                pwr = (ACC1_maxPwr - ACC1_minPwr) / Math.pow(ACC1_accelDist, 2) * Math.pow(currEnc - 0, 2) + ACC1_minPwr;
+            }
+            done = false;
+        }
+
+        if (pwr < ACC1_minPwr) {
+            pwr = ACC1_minPwr;
+        } else if (pwr > ACC1_maxPwr) {
+            pwr = ACC1_maxPwr;
+        }
+
+        if (ACC1_isNEG == 1) {
+            pwrOut = 0 - pwr;
+        } else {
+            pwrOut = pwr;
+        }
+        return done;
+    }
+    */
+
     /**
        Конфигурация ускорения и замедления шассии двух моторов.
        @param minPwr входное значение скорости на старте, eg. 15

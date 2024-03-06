@@ -134,7 +134,7 @@ function SpinTurnExample(deg: number, speed: number) {
 
     let emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
     let calcMotRot = Math.round((deg * chassis.getBaseLength()) / chassis.getWheelRadius()); // Расчёт угла поворота моторов для поворота
-    let totalLeftMotRot = emlPrev + calcMotRot, totalRightMotRot = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
+    //let totalLeftMotRot = emlPrev + calcMotRot, totalRightMotRot = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
 
     if (deg > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
     else if (deg < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
@@ -152,7 +152,7 @@ function SpinTurnExample(deg: number, speed: number) {
         let eml = chassis.leftMotor.angle();
         let emr = chassis.rightMotor.angle();
 
-        if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
+        if ((Math.abs(eml - emlPrev) + Math.abs(emr - emrPrev)) / 2 >= Math.abs(calcMotRot)) break;
 
         let error = advmotctrls.GetErrorSyncMotors(eml, emr);
         chassis.pidChassisSync.setPoint(error);
@@ -248,8 +248,8 @@ function Test() {
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
     brick.showPorts();
-    PivotTurnExample(90, 30, WheelPivot.LeftWheel);
-    // SpinTurnExample(90, 20);
+    // PivotTurnExample(90, 30, WheelPivot.LeftWheel);
+    SpinTurnExample(90, 20);
     // ArcMovementExample(25, 50);
     // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
