@@ -233,7 +233,7 @@ namespace chassis {
         @param speed turning speed value, eg. 40
     **/
     //% blockId=ChassisSpinTurn
-    //% block="sync chassis spin turn at degress = $degress|°|for speed=$speed"
+    //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed"
     //% inlineInputMode=inline
     //% weight=97 blockGap=8
     //% group="Move"
