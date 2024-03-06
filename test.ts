@@ -123,7 +123,7 @@ function AccelLineFollowExample() {
         chassis.leftMotor.run(pwrLeft);
         chassis.rightMotor.run(pwrRight);
         
-        control.PauseUntilTime(currTime, 5);
+        control.PauseUntilTime(currTime, 10);
     }
     chassis.ChassisStop();
 }
