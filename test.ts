@@ -240,18 +240,19 @@ function Test() {
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
     chassis.setWheelRadius(62.4);
     chassis.setBaseLength(185);
-    // motors.mediumB.run(10); motors.mediumC.run(10);
+    // motors.mediumB.run(10);
+    // motors.mediumC.run(10);
     // motors.mediumBC.run(10);
     // motors.mediumBC.tank(10, 10);
     chassis.setChassisMotors(motors.mediumBC);
-    brick.printString("RUN example", 7, 10);
+    //brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
     brick.showPorts();
     // PivotTurnExample(90, 30, WheelPivot.LeftWheel);
-    SpinTurnExample(90, 20);
+    //SpinTurnExample(90, 20);
     // ArcMovementExample(25, 50);
-    // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
+    chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
 
 Test();

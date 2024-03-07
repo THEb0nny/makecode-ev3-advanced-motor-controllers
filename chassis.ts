@@ -204,6 +204,7 @@ namespace chassis {
         //if (!motors) return;
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
         vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
+        let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
         advmotctrls.SyncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
@@ -219,7 +220,7 @@ namespace chassis {
             let encB = leftMotor.angle(); // Get left motor encoder current value
             let encC = rightMotor.angle(); // Get right motor encoder current value
             if (unit == MoveUnit.Degrees) {
-                if ((encB + encC) / 2 >= value) break;
+                if (((encB - emlPrev) + (encC - emrPrev)) / 2 >= value) break;
             } else if (unit == MoveUnit.Rotations) {
                 if (((encB + encC) / 2) / 360 >= value) break;
             } else if (unit == MoveUnit.MilliSeconds) {
