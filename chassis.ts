@@ -201,7 +201,7 @@ namespace chassis {
     //% weight=98 blockGap=8
     //% group="Move"
     export function SyncChassisMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
-        //if (!motors) return;
+        if (!motorsPair) return;
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
         vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
         let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
@@ -219,10 +219,8 @@ namespace chassis {
             prevTime = currTime;
             let encB = leftMotor.angle(); // Get left motor encoder current value
             let encC = rightMotor.angle(); // Get right motor encoder current value
-            if (unit == MoveUnit.Degrees) {
+            if (unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) {
                 if (((encB - emlPrev) + (encC - emrPrev)) / 2 >= value) break;
-            } else if (unit == MoveUnit.Rotations) {
-                if (((encB + encC) / 2) / 360 >= value) break;
             } else if (unit == MoveUnit.MilliSeconds) {
                 if (control.millis() >= endTime) break;
             } else if (unit == MoveUnit.Seconds) {
@@ -250,6 +248,7 @@ namespace chassis {
     //% weight=97 blockGap=8
     //% group="Move"
     export function ChassisSpinTurn(degress: number, speed: number) {
+        if (!motorsPair) return;
         if (degress == 0 || speed <= 0) {
             motorsPair.stop();
             return;
