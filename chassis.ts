@@ -162,7 +162,7 @@ namespace chassis {
     export function Drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (!motorsPair || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) return;
         if (!speed) {
-            motorsPair.stop();
+            ChassisStop(true);
             return;
         }
 
@@ -250,12 +250,12 @@ namespace chassis {
     export function ChassisSpinTurn(degress: number, speed: number) {
         if (!motorsPair) return;
         if (degress == 0 || speed <= 0) {
-            motorsPair.stop();
+            ChassisStop(true);
             return;
         }
         let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
         let calcMotRot = Math.round(degress * getBaseLength() / getWheelRadius()); // Расчёт угла поворота моторов для поворота
-        let lMotRotCalc = emlPrev + calcMotRot, rMotRotCalc = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
+        //let lMotRotCalc = emlPrev + calcMotRot, rMotRotCalc = (emrPrev + calcMotRot) * -1; // Расчитываем итоговое значение углов на каждый мотор
         if (degress > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
         else if (degress < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка значений регулятору
@@ -268,7 +268,7 @@ namespace chassis {
             prevTime = currTime;
             let eml = leftMotor.angle();
             let emr = rightMotor.angle();
-            if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
+            if ((Math.abs(eml - emlPrev) + Math.abs(emr - emrPrev)) / 2 >= Math.abs(calcMotRot)) break;
             let error = advmotctrls.GetErrorSyncMotors(eml, emr);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
