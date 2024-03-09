@@ -138,7 +138,7 @@ namespace chassis {
     **/
     //% blockId=SetRegulatorGains
     //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
-    //% block.loc.ru="установить коэффиценты синхронизации kp = $Kp|ki = $Ki|kd = $Kd"
+    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp|ki = $Ki|kd = $Kd"
     //% group="Properties"
     //% inlineInputMode=inline
     export function SetRegulatorGains(Kp: number, Ki: number, Kd: number) {
@@ -198,7 +198,7 @@ namespace chassis {
     **/
     //% blockId=SyncChassisMovement
     //% block="sync chassis movement at $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|for value = $value|$unit"
-    //% block.loc.ru="синхронизированное управление шаси на скоростях $vLeft|\\%|$vRight|\\%|на $value|$unit"
+    //% block.loc.ru="синхронизированное управление шасси с $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|на $value|$unit"
     //% inlineInputMode=inline
     //% weight=98 blockGap=8
     //% group="Move"
@@ -245,8 +245,8 @@ namespace chassis {
         @param speed turning speed value, eg. 40
     **/
     //% blockId=ChassisSpinTurn
-    //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed"
-    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|на скорости = $speed"
+    //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed|\\%"
+    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|со скоростью = $speed|\\%"
     //% inlineInputMode=inline
     //% weight=97 blockGap=8
     //% group="Move"
@@ -288,7 +288,7 @@ namespace chassis {
     **/
     //% blockId=ChassisStop
     //% block="chassis stop||at hold $setBrake"
-    //% block.loc.ru="остановить моторы шасси||с удержанием $setBrake"
+    //% block.loc.ru="остановить шасси||с удержанием $setBrake"
     //% setBrake.shadow="toggleOnOff"
     //% inlineInputMode=inline
     //% expandableArgumentMode=toggle
