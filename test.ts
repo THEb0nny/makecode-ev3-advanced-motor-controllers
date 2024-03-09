@@ -87,13 +87,48 @@ function SyncAccelStraightlineMovementExample() {
     chassis.ChassisStop(true);
 }
 
+const B_REF_RAW_CS2 = 636;
+const W_REF_RAW_CS2 = 490;
+const B_REF_RAW_CS3 = 665;
+const W_REF_RAW_CS3 = 501;
+
+function LineFollowExample(speed: number) {
+    advmotctrls.SyncMotorsConfig(speed, speed);
+    automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
+    automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
+    automation.pid1.reset(); // Сброс ПИДа
+
+    let prevTime = 0;
+    while (true) {
+        let currTime = control.millis();
+        let dt = currTime - prevTime;
+        prevTime = currTime;
+
+        let rrcs2 = sensors.color2.light(LightIntensityMode.ReflectedRaw);
+        let rrcs3 = sensors.color3.light(LightIntensityMode.ReflectedRaw);
+        let rcs2 = GetNormRefValCS(rrcs2, B_REF_RAW_CS2, W_REF_RAW_CS2);
+        let rcs3 = GetNormRefValCS(rrcs3, B_REF_RAW_CS3, W_REF_RAW_CS3);
+
+        let eml = chassis.leftMotor.angle();
+        let emr = chassis.rightMotor.angle();
+
+        //let sync_error = advmotctrls.GetErrorSyncMotors(eml, emr);
+        let error = rcs2 - rcs3;
+        automation.pid1.setPoint(error);
+        let U = automation.pid1.compute(dt, 0);
+        let powers = advmotctrls.GetPwrSyncMotors(U);
+        // let pwrLeft = out.pwrOut + U;
+        // let pwrRight = out.pwrOut - U;
+        chassis.leftMotor.run(powers.pwrLeft);
+        chassis.rightMotor.run(powers.pwrRight);
+
+        control.PauseUntilTime(currTime, 10);
+    }
+    chassis.ChassisStop(true);
+}
+
 // Smooth acceleration and deceleration when moving along the line
 function AccelLineFollowExample() {
-    const B_REF_RAW_CS2 = 636;
-    const W_REF_RAW_CS2 = 490;
-    const B_REF_RAW_CS3 = 665;
-    const W_REF_RAW_CS3 = 501;
-
     advmotctrls.AccTwoEncConfig(15, 70, 200, 300, 4000);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа

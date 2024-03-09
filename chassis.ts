@@ -255,7 +255,6 @@ namespace chassis {
         }
         let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
         let calcMotRot = Math.round(degress * getBaseLength() / getWheelRadius()); // Расчёт угла поворота моторов для поворота
-        //let lMotRotCalc = emlPrev + calcMotRot, rMotRotCalc = (emrPrev + calcMotRot) * -1; // Расчитываем итоговое значение углов на каждый мотор
         if (degress > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
         else if (degress < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка значений регулятору
