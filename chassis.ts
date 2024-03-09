@@ -291,6 +291,7 @@ namespace chassis {
     //% weight=96 blockGap=8
     //% group="Move"
     export function ChassisStop(setBrake?: boolean) {
+        if (!motorsPair) return;
         if (setBrake) {
             motorsPair.setBrake(setBrake);
             leftMotor.setBrake(setBrake);
