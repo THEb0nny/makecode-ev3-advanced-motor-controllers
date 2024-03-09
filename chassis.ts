@@ -138,6 +138,7 @@ namespace chassis {
     **/
     //% blockId=SetRegulatorGains
     //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
+    //% block.loc.ru="установить коэффиценты синхронизации kp = $Kp|ki = $Ki|kd = $Kd"
     //% group="Properties"
     //% inlineInputMode=inline
     export function SetRegulatorGains(Kp: number, Ki: number, Kd: number) {
@@ -160,8 +161,8 @@ namespace chassis {
     //% rotationSpeed.min=-3200 rotationSpeed.max=3200
     //% group="Move"
     export function Drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (!motorsPair || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) return;
-        if (!speed) {
+        if (!motorsPair) return;
+        if (!speed || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) {
             ChassisStop(true);
             return;
         }
@@ -196,7 +197,8 @@ namespace chassis {
         @param unit unit of the value, eg. MoveUnit.Degrees
     **/
     //% blockId=SyncChassisMovement
-    //% block="sync chassis movement at $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|for value = $value $unit"
+    //% block="sync chassis movement at $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|for value = $value|$unit"
+    //% block.loc.ru="синхронизированное управление шаси на скоростях $vLeft|\\%|$vRight|\\%|на $value|$unit"
     //% inlineInputMode=inline
     //% weight=98 blockGap=8
     //% group="Move"
@@ -244,6 +246,7 @@ namespace chassis {
     **/
     //% blockId=ChassisSpinTurn
     //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed"
+    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|на скорости = $speed"
     //% inlineInputMode=inline
     //% weight=97 blockGap=8
     //% group="Move"
@@ -285,6 +288,7 @@ namespace chassis {
     **/
     //% blockId=ChassisStop
     //% block="chassis stop||at hold $setBrake"
+    //% block.loc.ru="остановить моторы шасси||с удержанием $setBrake"
     //% setBrake.shadow="toggleOnOff"
     //% inlineInputMode=inline
     //% expandableArgumentMode=toggle
