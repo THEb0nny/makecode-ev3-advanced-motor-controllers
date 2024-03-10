@@ -184,10 +184,10 @@ function SpinTurnExample(deg: number, speed: number) {
         let dt = currTime - prevTime;
         prevTime = currTime;
 
-        let eml = chassis.leftMotor.angle();
-        let emr = chassis.rightMotor.angle();
+        let eml = chassis.leftMotor.angle() - emlPrev;
+        let emr = chassis.rightMotor.angle() - emrPrev;
 
-        if ((Math.abs(eml - emlPrev) + Math.abs(emr - emrPrev)) / 2 >= Math.abs(calcMotRot)) break;
+        if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
 
         let error = advmotctrls.GetErrorSyncMotors(eml, emr);
         chassis.pidChassisSync.setPoint(error);
@@ -213,13 +213,9 @@ enum WheelPivot {
 function PivotTurnExample(deg: number, speed: number, wheelPivot: WheelPivot) {
     if (deg == 0 || speed == 0 || deg > 0 && speed < 0 || deg < 0 && speed > 0) return;
 
-    let emPrev = 0; // Считываем с моторов значения с энкодеров перед стартом алгаритма
-    if (wheelPivot == WheelPivot.LeftWheel) emPrev = chassis.rightMotor.angle();
-    else if (wheelPivot == WheelPivot.RightWheel) emPrev = chassis.leftMotor.angle();
+    let emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
     let calcMotRot = Math.round(((deg * chassis.getBaseLength()) / chassis.getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
-    let totalMotRot = emPrev + calcMotRot; // Считаем итоговое значение поворота
-    // console.logValue("calcMotRot", calcMotRot);
-    // console.logValue("totalMotRot", totalMotRot);
+    //let totalMotRot = emPrev + calcMotRot; // Считаем итоговое значение поворота
 
     chassis.ChassisStop(true);
     if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.SyncMotorsConfig(0, speed);
@@ -235,17 +231,17 @@ function PivotTurnExample(deg: number, speed: number, wheelPivot: WheelPivot) {
         let dt = currTime - prevTime;
         prevTime = currTime;
 
-        let eml = chassis.leftMotor.angle();
-        let emr = chassis.rightMotor.angle();
+        let eml = chassis.leftMotor.angle() - emlPrev;
+        let emr = chassis.rightMotor.angle() - emrPrev;
 
         // console.logValue("eml", eml);
         // console.logValue("emr", emr);
         console.sendToScreen();
 
         if (wheelPivot == WheelPivot.LeftWheel) {
-            if (Math.abs(emr) >= Math.abs(totalMotRot)) break;
+            if (Math.abs(emr) >= Math.abs(calcMotRot)) break;
         } else if (wheelPivot == WheelPivot.RightWheel) {
-            if (Math.abs(eml) >= Math.abs(totalMotRot)) break;
+            if (Math.abs(eml) >= Math.abs(calcMotRot)) break;
         }
 
         let error = 0;
@@ -274,20 +270,20 @@ function Test() {
     motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false);
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
     chassis.setWheelRadius(62.4);
-    chassis.setBaseLength(185);
+    chassis.setBaseLength(190);
     // motors.mediumB.run(10);
     // motors.mediumC.run(10);
     // motors.mediumBC.run(10);
     // motors.mediumBC.tank(10, 10);
     chassis.setChassisMotors(motors.mediumBC);
-    //brick.printString("RUN example", 7, 10);
+    brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
     brick.showPorts();
-    // PivotTurnExample(90, 30, WheelPivot.LeftWheel);
-    //SpinTurnExample(90, 20);
+    PivotTurnExample(90, 30, WheelPivot.RightWheel);
+    // SpinTurnExample(90, 20);
     // ArcMovementExample(25, 50);
-    chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
+    // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
 
 Test();
