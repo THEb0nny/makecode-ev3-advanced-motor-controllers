@@ -268,12 +268,12 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = leftMotor.angle();
-            let emr = rightMotor.angle();
-            if ((Math.abs(eml - emlPrev) + Math.abs(emr - emrPrev)) / 2 >= Math.abs(calcMotRot)) break;
+            let eml = chassis.leftMotor.angle() - emlPrev;
+            let emr = chassis.rightMotor.angle() - emrPrev;
+            if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
             let error = advmotctrls.GetErrorSyncMotors(eml, emr);
-            pidChassisSync.setPoint(error);
-            let U = pidChassisSync.compute(dt, 0);
+            chassis.pidChassisSync.setPoint(error);
+            let U = chassis.pidChassisSync.compute(dt, 0);
             let powers = advmotctrls.GetPwrSyncMotors(U);
             leftMotor.run(powers.pwrLeft);
             rightMotor.run(powers.pwrRight);

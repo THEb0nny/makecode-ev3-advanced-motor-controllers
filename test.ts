@@ -165,11 +165,13 @@ function AccelLineFollowExample() {
 
 // Синхроннизированный поворот на двух средних моторах на нужный угол
 function SpinTurnExample(deg: number, speed: number) {
-    if (deg == 0 || speed <= 0) return;
+    if (deg == 0 || speed <= 0) {
+        chassis.ChassisStop(true);
+        return;
+    }
 
     let emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
     let calcMotRot = Math.round((deg * chassis.getBaseLength()) / chassis.getWheelRadius()); // Расчёт угла поворота моторов для поворота
-    //let totalLeftMotRot = emlPrev + calcMotRot, totalRightMotRot = emrPrev + calcMotRot * -1; // Расчитываем итоговое значение углов на каждый мотор
 
     if (deg > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
     else if (deg < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
