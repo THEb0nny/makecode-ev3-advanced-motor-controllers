@@ -68,6 +68,17 @@ namespace chassis {
         return Output.ALL;
     }
 
+    /*
+    // Only a double output at a time
+    function splitDoubleOutput(out: Output): Output[] {
+        if (out == Output.BC) return [Output.B, Output.C];
+        else if (out == Output.AB) return [Output.A, Output.B];
+        else if (out == Output.CD) return [Output.C, Output.D];
+        else if (out == Output.AD) return [Output.A, Output.D];
+        return [];
+    }
+    */
+
     /**
      * Sets the wheel radius.
      * @param radius the radius of a wheel, eg: 56 (mm)
@@ -312,6 +323,14 @@ namespace chassis {
 
 namespace control {
 
+    /**
+     * Function to wait for a loop to complete for a specified time.
+     * @param startTime start time, eg: 0
+     * @param delay waiting time, eg: 10
+     */
+    //% blockId=PauseUntilTime block="ждать $delay мс|при начале в $startTime"
+    //% block.loc.ru="wait $delay ms|at start at $startTime"
+    //% weight=6
     export function PauseUntilTime(startTime: number, ms: number) {
         if (startTime == 0) startTime = control.millis();
         const waitCompletionTime = startTime + ms;
