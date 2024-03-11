@@ -217,7 +217,8 @@ namespace chassis {
         if (!motorsPair) return;
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
         vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
-        let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
+        const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
+        const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
         advmotctrls.SyncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
@@ -230,16 +231,16 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let encB = leftMotor.angle(); // Get left motor encoder current value
-            let encC = rightMotor.angle(); // Get right motor encoder current value
+            let eml = leftMotor.angle() - emlPrev; // Get left motor encoder current value
+            let emr = rightMotor.angle() - emrPrev; // Get right motor encoder current value
             if (unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) {
-                if (((encB - emlPrev) + (encC - emrPrev)) / 2 >= value) break;
+                if (Math.abs(eml) >= Math.abs(value) && Math.abs(emr) >= Math.abs(value)) break;
             } else if (unit == MoveUnit.MilliSeconds) {
                 if (control.millis() >= endTime) break;
             } else if (unit == MoveUnit.Seconds) {
                 if (control.millis() * 0.001 >= endTime) break;
             }
-            let error = advmotctrls.GetErrorSyncMotors(encB, encC); // Find out the error in motor speed control
+            let error = advmotctrls.GetErrorSyncMotors(eml, emr); // Find out the error in motor speed control
             pidChassisSync.setPoint(error); // Transfer control error to controller
             let U = pidChassisSync.compute(dt, 0); // Find out and record the control action of the regulator
             let powers = advmotctrls.GetPwrSyncMotors(U); // Find out the power of motors for regulation
@@ -267,13 +268,15 @@ namespace chassis {
             ChassisStop(true);
             return;
         }
-        let emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
-        let calcMotRot = Math.round(degress * getBaseLength() / getWheelRadius()); // Расчёт угла поворота моторов для поворота
+        speed = Math.clamp(-100, 100, speed >> 0); // We limit the speed of the motor from -100 to 100 and cut off the fractional part
+        const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
+        const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
+        const calcMotRot = Math.round(degress * getBaseLength() / getWheelRadius()); // Расчёт угла поворота моторов для поворота
         if (degress > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
         else if (degress < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
-        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка значений регулятору
-        pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
-        pidChassisSync.reset(); // Сброс ПИДа
+        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
+        pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
+        pidChassisSync.reset(); // Reset pid controller
         let prevTime = 0;
         while (true) {
             let currTime = control.millis();

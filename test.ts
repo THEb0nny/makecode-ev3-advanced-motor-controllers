@@ -1,32 +1,3 @@
-// Rectilinear movement with synchronization
-function StraightlineMovementExample(speed: number) {
-    advmotctrls.SyncMotorsConfig(speed, speed);
-
-    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
-    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
-    chassis.pidChassisSync.reset(); // Сброс ПИДа
-
-    let prevTime = 0;
-    while (true) {
-        let currTime = control.millis();
-        let dt = currTime - prevTime;
-        prevTime = currTime;
-
-        let encB = chassis.leftMotor.angle();
-        let encC = chassis.rightMotor.angle();
-        if ((encB + encC) / 2 >= 600) break;
-
-        let error = advmotctrls.GetErrorSyncMotors(encB, encC);
-        chassis.pidChassisSync.setPoint(error);
-        let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.GetPwrSyncMotors(U);
-        chassis.leftMotor.run(powers.pwrLeft);
-        chassis.rightMotor.run(powers.pwrRight);
-        control.PauseUntilTime(currTime, 5);
-    }
-    chassis.ChassisStop(true);
-}
-
 // Arc synchronized movement
 function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
     advmotctrls.SyncMotorsConfig(lMotPwr, rMotPwr);
@@ -282,7 +253,8 @@ function Test() {
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
     brick.showPorts();
-    PivotTurnExample(90, 30, WheelPivot.RightWheel);
+    chassis.SyncChassisMovement(-20, -20, -200, MoveUnit.Degrees);
+    // PivotTurnExample(90, 30, WheelPivot.RightWheel);
     // SpinTurnExample(90, 20);
     // ArcMovementExample(25, 50);
     // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
