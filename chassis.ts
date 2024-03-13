@@ -167,7 +167,7 @@ namespace chassis {
     **/
     //% blockId=ChassisDrive
     //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
-    //% block.loc.ru="движение на скорости $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance|$unit"
+    //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance|$unit"
     //% inlineInputMode=inline
     //% weight=99 blockGap=8
     //% rotationSpeed.min=-3200 rotationSpeed.max=3200
