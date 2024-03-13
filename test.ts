@@ -239,21 +239,21 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
 }
 
 function Test() {
-    motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
+    motors.mediumB.setInverted(false); motors.mediumC.setInverted(false);
     motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false);
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
     chassis.setWheelRadius(62.4);
     chassis.setBaseLength(190);
     // motors.mediumB.run(10);
     // motors.mediumC.run(10);
-    // motors.mediumBC.run(10);
+    motors.mediumBC.run(10);
     // motors.mediumBC.tank(10, 10);
     chassis.setChassisMotors(motors.mediumBC);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
     brick.showPorts();
-    chassis.SyncChassisMovement(-20, -20, -200, MoveUnit.Degrees);
+    // chassis.SyncChassisMovement(-20, -20, -500, MoveUnit.Degrees);
     // PivotTurnExample(90, 30, WheelPivot.RightWheel);
     // SpinTurnExample(90, 20);
     // ArcMovementExample(25, 50);

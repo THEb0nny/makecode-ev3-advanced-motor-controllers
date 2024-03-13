@@ -44,7 +44,7 @@ namespace advmotctrls {
         @param vRight входное значение скорости правого мотора, eg. 50
     **/
     //% blockId=SyncMotorsConfig
-    //% block="configuraton sync сhassis control vLeft = $vLeft|vRight = $vRight"
+    //% block="config sync сhassis control vLeft = $vLeft|vRight = $vRight"
     export function SyncMotorsConfig(vLeft: number, vRight: number) {
         syncVLeft = vLeft;
         syncVRight = vRight;
@@ -59,7 +59,7 @@ namespace advmotctrls {
         @param eRight входное значение энкодера правого мотора
     **/
     //% blockId=GetErrorSyncMotors
-    //% block="get error sync chassis motors vLeft = $vLeft|vRight = $vRight"
+    //% block="get error sync chassis motors eLeft = $eLeft|eRight = $eRight"
     export function GetErrorSyncMotors(eLeft: number, eRight: number): number {
         return ((syncVRight * eLeft) - (syncVLeft * eRight));
     }
@@ -70,7 +70,7 @@ namespace advmotctrls {
         @param U входное значение управляющего воздействия от регулятора
     **/
     //% blockId=GetPwrSyncMotors
-    //% block="configuraton sync сhassis control vLeft = $vLeft|vRight = $vRight"
+    //% block="config sync сhassis control U = $U"
     export function GetPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
         const pRight = syncVRight + syncVLeftSign * U;
@@ -150,7 +150,7 @@ namespace advmotctrls {
        @param totalDist значение всей дистанции, eg. 500
     **/
     //% blockId=AccTwoEncConfig
-    //% block="accel/deceleration configuration chassis control at minPwr = $minPwr|maxPwr = $maxPwr|accelDist = $accelDist|decelDist = $decelDist|totalDist = $totalDist"
+    //% block="accel/deceleration config chassis control at minPwr = $minPwr|maxPwr = $maxPwr|accelDist = $accelDist|decelDist = $decelDist|totalDist = $totalDist"
     export function AccTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC2_minPwr = Math.abs(minPwr);
         ACC2_maxPwr = Math.abs(maxPwr);
