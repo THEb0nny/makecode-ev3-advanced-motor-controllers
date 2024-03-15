@@ -42,11 +42,11 @@ namespace chassis {
         const motorsName = motorsPair.toString();
         const motorsType = motorsName.split(" ")[0];
         const motorsNameArr = motorsName.split(" ")[1].split("+");
-        const allUseSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
-        // console.log(`allUseMotors: ${allUseSingleMotors.length}`);
-        if (allUseSingleMotors.length >= 2) { // Ищем из существующих моторов
-            leftMotor = allUseSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[0])[0]; // Set left motor instance
-            rightMotor = allUseSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[1])[0]; // Set right motor instance
+        const allUsedSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
+        // console.log(`allUseMotors: ${allUsedSingleMotors.length}`);
+        if (allUsedSingleMotors.length >= 2) { // Ищем из существующих моторов
+            leftMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[0])[0]; // Set left motor instance
+            rightMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsNameArr[1])[0]; // Set right motor instance
         }
         if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
             const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsName));
