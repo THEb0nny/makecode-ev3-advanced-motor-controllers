@@ -26,14 +26,16 @@ namespace chassis {
     export const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
     /**
-     * Sets the motors used by the chassis.
-     * @param motorsPair motors pair, eg: motors.largeBC
-    **/
+     * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
+     * @param newMotorsPair motors pair, eg: motors.largeBC
+     */
     //% blockId=ChassisSetMotors
-    //% block="set motors to chassis $motorsPair||at reverse property $setLeftMotReverse|$setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $motorsPair||с свойством реверса $setLeftMotReverse|$setRightMotReverse"
-    //% motorsPair.fieldEditor="motors"
-    //% motorsPair.fieldOptions.decompileLiterals=1
+    //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse|$setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse|$setRightMotReverse"
+    //% newMotorsPair.fieldEditor="motors"
+    //% newMotorsPair.fieldOptions.decompileLiterals=1
+    //% setLeftMotReverse.shadow="toggleOnOff"
+    //% setRightMotReverse.shadow="toggleOnOff"
     //% inlineInputMode=inline
     //% expandableArgumentMode="toggle"
     //% weight=89
@@ -86,7 +88,7 @@ namespace chassis {
      * Sets the wheel radius.
      * @param radius the radius of a wheel, eg: 56 (mm)
      * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
-    **/
+     */
     //% blockId=ChassisSetWheelRadius
     //% block="set wheel radius = $radius|$unit"
     //% block.loc.ru="установить радиус колёс шасси $radius|$unit"
@@ -117,7 +119,7 @@ namespace chassis {
      * Sets the base length.
      * @param length the base length, eg: 130 (mm)
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
-    **/
+     */
     //% blockId=ChassisSetBaseLength
     //% block="set base length = $length|$unit"
     //% block.loc.ru="установить размер коллеи шасси = $length|$unit"
@@ -149,7 +151,7 @@ namespace chassis {
         @param kp sync kp input value, eg. 0.03
         @param ki sync ki input value, eg. 0
         @param kd sync kd input value, eg. 0.5
-    **/
+     */
     //% blockId=SetRegulatorGains
     //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
     //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp|ki = $Ki|kd = $Kd"
@@ -167,7 +169,7 @@ namespace chassis {
      * @param rotationSpeed rotation of the robot around the center point, eg: 30
      * @param distance driving distance, eg: 150 (cm)
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
-    **/
+     */
     //% blockId=ChassisDrive
     //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
     //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance|$unit"
@@ -210,7 +212,7 @@ namespace chassis {
         @param vRight right motor speed input value, eg. 50
         @param value move duration or rotation
         @param unit unit of the value, eg. MoveUnit.Degrees
-    **/
+     */
     //% blockId=SyncChassisMovement
     //% block="sync chassis movement at $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|for value = $value|$unit"
     //% block.loc.ru="синхронизированное управление шасси с $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|на $value|$unit"
@@ -263,7 +265,7 @@ namespace chassis {
         Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed. For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
         @param degress rotation value in degrees, eg. 90
         @param speed turning speed value, eg. 40
-    **/
+     */
     //% blockId=ChassisSpinTurn
     //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed|\\%"
     //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|со скоростью = $speed|\\%"
@@ -307,7 +309,7 @@ namespace chassis {
     /**
         Stop the chassis motors.
         @param setBrake hold the motors when braking, eg. true
-    **/
+     */
     //% blockId=ChassisStop
     //% block="chassis stop||at hold $setBrake"
     //% block.loc.ru="остановить шасси||с удержанием $setBrake"
