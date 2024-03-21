@@ -28,6 +28,8 @@ namespace chassis {
     /**
      * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
      * @param newMotorsPair motors pair, eg: motors.largeBC
+     * @param setLeftMotReverse left motor reverse property, eg: false
+     * @param setRightMotReverse right motor reverse property, eg: true
      */
     //% blockId=ChassisSetMotors
     //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse|$setRightMotReverse"
