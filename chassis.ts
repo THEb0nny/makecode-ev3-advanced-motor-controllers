@@ -30,14 +30,15 @@ namespace chassis {
      * @param motorsPair motors pair, eg: motors.largeBC
     **/
     //% blockId=ChassisSetMotors
-    //% block="set motors to chassis $motorsPair"
-    //% block.loc.ru="установить моторы шасси $motorsPair"
+    //% block="set motors to chassis $motorsPair||at reverse property $setLeftMotReverse|$setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $motorsPair||с свойством реверса $setLeftMotReverse|$setRightMotReverse"
     //% motorsPair.fieldEditor="motors"
     //% motorsPair.fieldOptions.decompileLiterals=1
     //% inlineInputMode=inline
+    //% expandableArgumentMode="toggle"
     //% weight=89
     //% group="Properties"
-    export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair) {
+    export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
         motorsPair = newMotorsPair;
         const motorsName = motorsPair.toString();
         const motorsType = motorsName.split(" ")[0];
@@ -54,6 +55,8 @@ namespace chassis {
             if (!leftMotor) leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
             if (!rightMotor) rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
         }
+        if (setLeftMotReverse != undefined) leftMotor.setInverted(setLeftMotReverse);
+        if (setRightMotReverse != undefined) rightMotor.setInverted(setRightMotReverse);
         // console.log(`leftMotor: ${leftMotor}`);
         // console.log(`rightMotor: ${rightMotor}`);
         if (motorsType == "large") motorMaxRPM = 170;
