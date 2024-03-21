@@ -59,6 +59,7 @@ namespace chassis {
             if (!leftMotor) leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
             if (!rightMotor) rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
         }
+        console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
         if (setLeftMotReverse != undefined) leftMotor.setInverted(setLeftMotReverse);
         if (setRightMotReverse != undefined) rightMotor.setInverted(setRightMotReverse);
         // console.log(`leftMotor: ${leftMotor}`);
