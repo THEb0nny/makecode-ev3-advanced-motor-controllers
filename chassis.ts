@@ -60,8 +60,14 @@ namespace chassis {
             if (!rightMotor) rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
         }
         console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
-        if (setLeftMotReverse != undefined) leftMotor.setInverted(setLeftMotReverse);
-        if (setRightMotReverse != undefined) rightMotor.setInverted(setRightMotReverse);
+        if (setLeftMotReverse != undefined) {
+            leftMotor.setInverted(setLeftMotReverse);
+            console.log(`reverse ${setLeftMotReverse}`);
+        }
+        if (setRightMotReverse != undefined) {
+            rightMotor.setInverted(setRightMotReverse);
+            console.log(`reverse ${setRightMotReverse}`);
+        }
         // console.log(`leftMotor: ${leftMotor}`);
         // console.log(`rightMotor: ${rightMotor}`);
         if (motorsType == "large") motorMaxRPM = 170;
