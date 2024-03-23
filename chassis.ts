@@ -359,9 +359,10 @@ namespace control {
      * @param startTime start time, eg: 0
      * @param delay waiting time, eg: 10
      */
-    //% blockId=PauseUntilTime block="ждать $delay мс|при начале в $startTime"
-    //% block.loc.ru="wait $delay ms|at start at $startTime"
-    //% weight=6
+    //% blockId="PauseUntilTime"
+    //% block="wait $delay ms|at start at $startTime"
+    //% block.loc.ru="ждать $delay мс|при начале в $startTime|мс"
+    //% weight="6"
     export function PauseUntilTime(startTime: number, ms: number) {
         if (startTime == 0) startTime = control.millis();
         const waitCompletionTime = startTime + ms;
