@@ -175,7 +175,7 @@ function SpinTurnExample(deg: number, speed: number) {
 }
 
 // Перечисление о типах относительных поворотов
-enum WheelPivot {
+const enum WheelPivot {
     //% block="левого колеса"
     LeftWheel,
     //% block="правого колеса"
@@ -244,10 +244,6 @@ function Test() {
     motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
     chassis.setWheelRadius(62.4);
     chassis.setBaseLength(190);
-    // motors.mediumB.run(10);
-    // motors.mediumC.run(10);
-    motors.mediumBC.run(10);
-    // motors.mediumBC.tank(10, 10);
     chassis.setChassisMotors(motors.mediumBC);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
