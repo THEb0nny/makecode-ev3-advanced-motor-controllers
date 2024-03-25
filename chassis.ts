@@ -66,11 +66,11 @@ namespace chassis {
             const isLargeMotor = (motorsType == "large" ? true : false);
             if (!leftMotor) {
                 leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
-                console.log(`new leftMotor2: ${leftMotor}`);
+                //console.log(`new leftMotor2: ${leftMotor}`);
             }
             if (!rightMotor) {
                 rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
-                console.log(`new rightMotor2: ${rightMotor}`);
+                //console.log(`new rightMotor2: ${rightMotor}`);
             }
         }
         //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
