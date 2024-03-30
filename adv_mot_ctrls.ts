@@ -43,7 +43,7 @@ namespace advmotctrls {
         @param vLeft входное значение скорости левого мотора, eg. 50
         @param vRight входное значение скорости правого мотора, eg. 50
     **/
-    //% blockId=SyncMotorsConfig
+    //% blockId="SyncMotorsConfig"
     //% block="config sync сhassis control vLeft = $vLeft|vRight = $vRight"
     export function SyncMotorsConfig(vLeft: number, vRight: number) {
         syncVLeft = vLeft;
@@ -58,7 +58,7 @@ namespace advmotctrls {
         @param eLeft входное значение энкодера левого мотора
         @param eRight входное значение энкодера правого мотора
     **/
-    //% blockId=GetErrorSyncMotors
+    //% blockId="GetErrorSyncMotors"
     //% block="get error sync chassis motors eLeft = $eLeft|eRight = $eRight"
     export function GetErrorSyncMotors(eLeft: number, eRight: number): number {
         return ((syncVRight * eLeft) - (syncVLeft * eRight));
@@ -69,7 +69,7 @@ namespace advmotctrls {
         Возвращает интерфейс скорости (мощности) левого и правого моторов.
         @param U входное значение управляющего воздействия от регулятора
     **/
-    //% blockId=GetPwrSyncMotors
+    //% blockId="GetPwrSyncMotors"
     //% block="config sync сhassis control U = $U"
     export function GetPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
@@ -149,7 +149,7 @@ namespace advmotctrls {
        @param decelDist значение дистанции замедления, eg. 150
        @param totalDist значение всей дистанции, eg. 500
     **/
-    //% blockId=AccTwoEncConfig
+    //% blockId="AccTwoEncConfig"
     //% block="accel/deceleration config chassis control at minPwr = $minPwr|maxPwr = $maxPwr|accelDist = $accelDist|decelDist = $decelDist|totalDist = $totalDist"
     export function AccTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC2_minPwr = Math.abs(minPwr);
@@ -169,7 +169,7 @@ namespace advmotctrls {
        @param decelDist значение дистанции замедления, eg. 150
        @param totalDist значение всей дистанции, eg. 500
     **/
-    //% blockId=AccTwoEnc
+    //% blockId="AccTwoEnc"
     //% block="accel/deceleration chassis control compute at encoder left = $eLeft|right = $eRight"
     export function AccTwoEnc(eLeft: number, eRight: number): AccTwoEncReturn {
         let done: boolean;
