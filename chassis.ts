@@ -1,7 +1,9 @@
 enum MeasurementUnit {
     //% block="cm"
+    //% block.loc.ru="см"
     Centimeters,
     //% block="mm"
+    //% block.loc.ru="мм"
     Millimeters
 }
 
@@ -38,7 +40,7 @@ namespace chassis {
     //% newMotorsPair.fieldOptions.decompileLiterals="1"
     //% setLeftMotReverse.shadow="toggleOnOff"
     //% setRightMotReverse.shadow="toggleOnOff"
-    //% inlineInputMode=inline
+    //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% weight="89"
     //% group="Properties"
