@@ -31,16 +31,16 @@ namespace chassis {
      * @param setLeftMotReverse left motor reverse property, eg: false
      * @param setRightMotReverse right motor reverse property, eg: true
      */
-    //% blockId=ChassisSetMotors
+    //% blockId="ChassisSetChassisMotors"
     //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse|$setRightMotReverse"
     //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse|$setRightMotReverse"
     //% newMotorsPair.fieldEditor="motors"
-    //% newMotorsPair.fieldOptions.decompileLiterals=1
+    //% newMotorsPair.fieldOptions.decompileLiterals="1"
     //% setLeftMotReverse.shadow="toggleOnOff"
     //% setRightMotReverse.shadow="toggleOnOff"
     //% inlineInputMode=inline
     //% expandableArgumentMode="toggle"
-    //% weight=89
+    //% weight="89"
     //% group="Properties"
     export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
         motorsPair = newMotorsPair;
@@ -110,10 +110,10 @@ namespace chassis {
      * @param radius the radius of a wheel, eg: 56 (mm)
      * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=ChassisSetWheelRadius
+    //% blockId="ChassisSetWheelRadius"
     //% block="set wheel radius = $radius|$unit"
     //% block.loc.ru="установить радиус колёс шасси $radius|$unit"
-    //% weight=88 blockGap=8
+    //% weight="88" blockGap="8"
     //% group="Properties"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) wheelRadius = radius;
@@ -125,10 +125,10 @@ namespace chassis {
      * Gets the wheel radius.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=ChassisGetWheelRadius
+    //% blockId="ChassisGetWheelRadius"
     //% block="get wheel radius $unit"
     //% block.loc.ru="получить радиус колёс шасси в $unit"
-    //% weight=87
+    //% weight="87"
     //% group="Properties"
     export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
@@ -141,10 +141,10 @@ namespace chassis {
      * @param length the base length, eg: 130 (mm)
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=ChassisSetBaseLength
+    //% blockId="ChassisSetBaseLength"
     //% block="set base length = $length|$unit"
     //% block.loc.ru="установить размер коллеи шасси = $length|$unit"
-    //% weight=86 blockGap=8
+    //% weight="86" blockGap="8"
     //% group="Properties"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) baseLength = length;
@@ -156,10 +156,10 @@ namespace chassis {
      * Gets the base length.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=ChassisGetBaseLength
+    //% blockId="ChassisGetBaseLength"
     //% block="get base length $unit"
     //% block.loc.ru="получить размер коллеи шасси в $unit"
-    //% weight=85
+    //% weight="85"
     //% group="Properties"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) return baseLength;
@@ -173,12 +173,12 @@ namespace chassis {
      * @param ki sync ki input value, eg. 0
      * @param kd sync kd input value, eg. 0.5
     */
-    //% blockId=SetRegulatorGains
+    //% blockId="SetRegulatorGains"
     //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
     //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp|ki = $Ki|kd = $Kd"
+    //% inlineInputMode="inline"
     //% group="Properties"
-    //% inlineInputMode=inline
-    export function SetRegulatorGains(Kp: number, Ki: number, Kd: number) {
+    export function setRegulatorGains(Kp: number, Ki: number, Kd: number) {
         syncKp = Kp;
         syncKi = Ki;
         syncKd = Kd;
@@ -191,17 +191,17 @@ namespace chassis {
      * @param distance driving distance, eg: 150 (cm)
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
      */
-    //% blockId=ChassisDrive
+    //% blockId="ChassisDrive"
     //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
     //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance|$unit"
-    //% inlineInputMode=inline
-    //% weight=99 blockGap=8
-    //% rotationSpeed.min=-3200 rotationSpeed.max=3200
+    //% inlineInputMode="inline"
+    //% weight="99" blockGap="8"
+    //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
     //% group="Move"
-    export function Drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
+    export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (!motorsPair) return;
         if (!speed || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) {
-            ChassisStop(true);
+            chassisStop(true);
             return;
         }
 
@@ -233,16 +233,16 @@ namespace chassis {
         @param value move duration or rotation
         @param unit unit of the value, eg. MoveUnit.Degrees
      */
-    //% blockId=SyncChassisMovement
+    //% blockId="SyncChassisMovement"
     //% block="sync chassis movement at $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|for value = $value|$unit"
     //% block.loc.ru="синхронизированное управление шасси с $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|на $value|$unit"
-    //% inlineInputMode=inline
-    //% weight=98 blockGap=8
+    //% inlineInputMode="inline"
+    //% weight="98" blockGap="8"
     //% group="Move"
-    export function SyncChassisMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
+    export function syncChassisMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
         if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
-            ChassisStop(true);
+            chassisStop(true);
             return;
         }
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
@@ -276,25 +276,25 @@ namespace chassis {
             let powers = advmotctrls.GetPwrSyncMotors(U); // Find out the power of motors for regulation
             leftMotor.run(powers.pwrLeft); // Set power/speed left motor
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
-            control.PauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
+            control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        ChassisStop(true);
+        chassisStop(true);
     }
     /**
         Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed. For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
         @param degress rotation value in degrees, eg. 90
         @param speed turning speed value, eg. 40
      */
-    //% blockId=ChassisSpinTurn
+    //% blockId="ChassisSpinTurn"
     //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed|\\%"
     //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|со скоростью = $speed|\\%"
-    //% inlineInputMode=inline
-    //% weight=97 blockGap=8
+    //% inlineInputMode="inline"
+    //% weight="97" blockGap="8"
     //% group="Move"
-    export function ChassisSpinTurn(degress: number, speed: number) {
+    export function chassisSpinTurn(degress: number, speed: number) {
         if (!motorsPair) return;
         if (degress == 0 || speed <= 0) {
-            ChassisStop(true);
+            chassisStop(true);
             return;
         }
         speed = Math.clamp(-100, 100, speed >> 0); // We limit the speed of the motor from -100 to 100 and cut off the fractional part
@@ -320,23 +320,23 @@ namespace chassis {
             let powers = advmotctrls.GetPwrSyncMotors(U);
             leftMotor.run(powers.pwrLeft);
             rightMotor.run(powers.pwrRight);
-            control.PauseUntilTime(currTime, 5);
+            control.pauseUntilTime(currTime, 5);
         }
-        ChassisStop(true);
+        chassisStop(true);
     }
     /**
         Stop the chassis motors.
         @param setBrake hold the motors when braking, eg. true
      */
-    //% blockId=ChassisStop
+    //% blockId="ChassisStop"
     //% block="chassis stop||at hold $setBrake"
     //% block.loc.ru="остановить шасси||с удержанием $setBrake"
+    //% inlineInputMode="inline"
+    //% expandableArgumentMode="toggle"
     //% setBrake.shadow="toggleOnOff"
-    //% inlineInputMode=inline
-    //% expandableArgumentMode=toggle
-    //% weight=96 blockGap=8
+    //% weight="96" blockGap="8"
     //% group="Move"
-    export function ChassisStop(setBrake?: boolean) {
+    export function chassisStop(setBrake?: boolean) {
         if (!motorsPair) return;
         if (setBrake) {
             motorsPair.setBrake(setBrake);
@@ -363,7 +363,7 @@ namespace control {
     //% block="wait $delay ms|at start at $startTime"
     //% block.loc.ru="ждать $delay мс|при начале в $startTime|мс"
     //% weight="6"
-    export function PauseUntilTime(startTime: number, ms: number) {
+    export function pauseUntilTime(startTime: number, ms: number) {
         if (startTime == 0) startTime = control.millis();
         const waitCompletionTime = startTime + ms;
         while (control.millis() < waitCompletionTime);

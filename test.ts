@@ -22,9 +22,9 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
         let powers = advmotctrls.GetPwrSyncMotors(U);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
-        control.PauseUntilTime(currTime, 5);
+        control.pauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop(true);
+    chassis.chassisStop(true);
 }
 
 // Synchronization with smooth acceleration and deceleration during straight-line motion
@@ -53,9 +53,9 @@ function SyncAccelStraightlineMovementExample() {
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
 
-        control.PauseUntilTime(currTime, 5);
+        control.pauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop(true);
+    chassis.chassisStop(true);
 }
 
 const B_REF_RAW_CS2 = 636;
@@ -93,9 +93,9 @@ function LineFollowExample(speed: number) {
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
 
-        control.PauseUntilTime(currTime, 10);
+        control.pauseUntilTime(currTime, 10);
     }
-    chassis.ChassisStop(true);
+    chassis.chassisStop(true);
 }
 
 // Smooth acceleration and deceleration when moving along the line
@@ -129,15 +129,15 @@ function AccelLineFollowExample() {
         chassis.leftMotor.run(pwrLeft);
         chassis.rightMotor.run(pwrRight);
         
-        control.PauseUntilTime(currTime, 10);
+        control.pauseUntilTime(currTime, 10);
     }
-    chassis.ChassisStop(true);
+    chassis.chassisStop(true);
 }
 
 // Синхроннизированный поворот на двух средних моторах на нужный угол
 function SpinTurnExample(deg: number, speed: number) {
     if (deg == 0 || speed <= 0) {
-        chassis.ChassisStop(true);
+        chassis.chassisStop(true);
         return;
     }
 
@@ -169,9 +169,9 @@ function SpinTurnExample(deg: number, speed: number) {
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
 
-        control.PauseUntilTime(currTime, 5);
+        control.pauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop(true);
+    chassis.chassisStop(true);
 }
 
 // Перечисление о типах относительных поворотов
@@ -190,7 +190,7 @@ function PivotTurnExample(deg: number, speed: number, wheelPivot: WheelPivot) {
     let calcMotRot = Math.round(((deg * chassis.getBaseLength()) / chassis.getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
     //let totalMotRot = emPrev + calcMotRot; // Считаем итоговое значение поворота
 
-    chassis.ChassisStop(true);
+    chassis.chassisStop(true);
     if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.SyncMotorsConfig(0, speed);
     else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.SyncMotorsConfig(speed, 0);
 
@@ -226,9 +226,9 @@ function PivotTurnExample(deg: number, speed: number, wheelPivot: WheelPivot) {
         if (wheelPivot == WheelPivot.LeftWheel) chassis.rightMotor.run(powers.pwrRight);
         else if (wheelPivot == WheelPivot.RightWheel) chassis.leftMotor.run(powers.pwrLeft);
         
-        control.PauseUntilTime(currTime, 5);
+        control.pauseUntilTime(currTime, 5);
     }
-    chassis.ChassisStop(false);
+    chassis.chassisStop(false);
 }
 
 // Функция для нормализации сырых значений с датчика
