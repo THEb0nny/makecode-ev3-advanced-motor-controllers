@@ -227,13 +227,14 @@ namespace chassis {
 
         motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
     }
+
     /**
-        Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
-        @param vLeft left motor speed input value, eg. 50
-        @param vRight right motor speed input value, eg. 50
-        @param vRight right motor speed input value, eg. 50
-        @param value move duration or rotation
-        @param unit unit of the value, eg. MoveUnit.Degrees
+     * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
+     * @param vLeft left motor speed input value, eg. 50
+     * @param vRight right motor speed input value, eg. 50
+     * @param vRight right motor speed input value, eg. 50
+     * @param value move duration or rotation
+     * @param unit unit of the value, eg. MoveUnit.Degrees
      */
     //% blockId="SyncChassisMovement"
     //% block="sync chassis movement at $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|for value = $value|$unit"
@@ -282,10 +283,11 @@ namespace chassis {
         }
         chassisStop(true);
     }
+
     /**
-        Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed. For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
-        @param degress rotation value in degrees, eg. 90
-        @param speed turning speed value, eg. 40
+     * Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed. For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
+     * @param degress rotation value in degrees, eg. 90
+     * @param speed turning speed value, eg. 40
      */
     //% blockId="ChassisSpinTurn"
     //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed|\\%"
@@ -326,9 +328,10 @@ namespace chassis {
         }
         chassisStop(true);
     }
+
     /**
-        Stop the chassis motors.
-        @param setBrake hold the motors when braking, eg. true
+     * Stop the chassis motors.
+     * @param setBrake hold the motors when braking, eg. true
      */
     //% blockId="ChassisStop"
     //% block="chassis stop||at hold $setBrake"
@@ -368,7 +371,7 @@ namespace control {
     export function pauseUntilTime(startTime: number, ms: number) {
         if (startTime == 0) startTime = control.millis();
         const waitCompletionTime = startTime + ms;
-        while (control.millis() < waitCompletionTime);
+        while (control.millis() < waitCompletionTime) loops.pause(0.01);
     }
 
 }
