@@ -45,7 +45,7 @@ namespace advmotctrls {
     **/
     //% blockId="SyncMotorsConfig"
     //% block="config sync сhassis control vLeft = $vLeft|vRight = $vRight"
-    export function SyncMotorsConfig(vLeft: number, vRight: number) {
+    export function syncMotorsConfig(vLeft: number, vRight: number) {
         syncVLeft = vLeft;
         syncVRight = vRight;
         syncVLeftSign = Math.abs(vLeft + 1) - Math.abs(vLeft);
@@ -60,7 +60,7 @@ namespace advmotctrls {
     **/
     //% blockId="GetErrorSyncMotors"
     //% block="get error sync chassis motors eLeft = $eLeft|eRight = $eRight"
-    export function GetErrorSyncMotors(eLeft: number, eRight: number): number {
+    export function getErrorSyncMotors(eLeft: number, eRight: number): number {
         return ((syncVRight * eLeft) - (syncVLeft * eRight));
     }
     
@@ -71,7 +71,7 @@ namespace advmotctrls {
     **/
     //% blockId="GetPwrSyncMotors"
     //% block="config sync сhassis control U = $U"
-    export function GetPwrSyncMotors(U: number): MotorsPower {
+    export function getPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
         const pRight = syncVRight + syncVLeftSign * U;
         return {
@@ -80,11 +80,11 @@ namespace advmotctrls {
         };
     }
 
-    export function GetErrorSyncMotorsInPwr(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
+    export function getErrorSyncMotorsInPwr(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
         return ((vRight * eLeft) - (vLeft * eRight));
     }
 
-    export function GetPwrSyncMotorsInPwr(U: number, vLeft: number, vRight: number) {
+    export function getPwrSyncMotorsInPwr(U: number, vLeft: number, vRight: number) {
         const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * U;
         const pRight = vRight + (Math.abs(vLeft + 1) - Math.abs(vLeft)) * U;
         return {
@@ -94,7 +94,7 @@ namespace advmotctrls {
     }
 
     /*
-    export function AccOneEncConfig(minPwr_in: number, maxPwr_in: number, accelDist_in: number, decelDist_in: number, totalDist_in: number) {
+    export function accOneEncConfig(minPwr_in: number, maxPwr_in: number, accelDist_in: number, decelDist_in: number, totalDist_in: number) {
         ACC1_minPwr = Math.abs(minPwr_in);
         ACC1_maxPwr = Math.abs(maxPwr_in);
         ACC1_accelDist = accelDist_in;
@@ -105,7 +105,7 @@ namespace advmotctrls {
         else ACC1_isNEG = 0;
     }
 
-    export function AccOneEnc(e1: number, pwrOut: number): boolean {
+    export function accOneEnc(e1: number, pwrOut: number): boolean {
         let done: boolean;
         let currEnc = Math.abs(e1);
         if (currEnc >= ACC1_totalDist) {
@@ -151,7 +151,7 @@ namespace advmotctrls {
     **/
     //% blockId="AccTwoEncConfig"
     //% block="accel/deceleration config chassis control at minPwr = $minPwr|maxPwr = $maxPwr|accelDist = $accelDist|decelDist = $decelDist|totalDist = $totalDist"
-    export function AccTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+    export function accTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC2_minPwr = Math.abs(minPwr);
         ACC2_maxPwr = Math.abs(maxPwr);
         ACC2_accelDist = accelDist;
@@ -171,7 +171,7 @@ namespace advmotctrls {
     **/
     //% blockId="AccTwoEnc"
     //% block="accel/deceleration chassis control compute at encoder left = $eLeft|right = $eRight"
-    export function AccTwoEnc(eLeft: number, eRight: number): AccTwoEncReturn {
+    export function accTwoEnc(eLeft: number, eRight: number): AccTwoEncReturn {
         let done: boolean;
         let pwrOut: number;
         let currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;

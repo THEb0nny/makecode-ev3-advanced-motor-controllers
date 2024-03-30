@@ -1,6 +1,6 @@
 // Arc synchronized movement
 function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
-    advmotctrls.SyncMotorsConfig(lMotPwr, rMotPwr);
+    advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr);
 
     chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -16,10 +16,10 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
         let encC = chassis.rightMotor.angle();
         if ((encB + encC) / 2 >= 775) break;
 
-        let error = advmotctrls.GetErrorSyncMotors(encB, encC);
+        let error = advmotctrls.getErrorSyncMotors(encB, encC);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.GetPwrSyncMotors(U);
+        let powers = advmotctrls.getPwrSyncMotors(U);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
         control.pauseUntilTime(currTime, 5);
@@ -29,7 +29,7 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
 
 // Synchronization with smooth acceleration and deceleration during straight-line motion
 function SyncAccelStraightlineMovementExample() {
-    advmotctrls.AccTwoEncConfig(15, 90, 100, 300, 1000);
+    advmotctrls.accTwoEncConfig(15, 90, 100, 300, 1000);
 
     chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -43,13 +43,13 @@ function SyncAccelStraightlineMovementExample() {
 
         let eml = chassis.leftMotor.angle();
         let emr = chassis.rightMotor.angle();
-        let out = advmotctrls.AccTwoEnc(eml, emr);
+        let out = advmotctrls.accTwoEnc(eml, emr);
         if (out.isDone) break;
 
-        let error = advmotctrls.GetErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
+        let error = advmotctrls.getErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.GetPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
+        let powers = advmotctrls.getPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
 
@@ -64,7 +64,7 @@ const B_REF_RAW_CS3 = 665;
 const W_REF_RAW_CS3 = 501;
 
 function LineFollowExample(speed: number) {
-    advmotctrls.SyncMotorsConfig(speed, speed);
+    advmotctrls.syncMotorsConfig(speed, speed);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
     automation.pid1.reset(); // Сброс ПИДа
@@ -87,7 +87,7 @@ function LineFollowExample(speed: number) {
         let error = rcs2 - rcs3;
         automation.pid1.setPoint(error);
         let U = automation.pid1.compute(dt, 0);
-        let powers = advmotctrls.GetPwrSyncMotors(U);
+        let powers = advmotctrls.getPwrSyncMotors(U);
         // let pwrLeft = out.pwrOut + U;
         // let pwrRight = out.pwrOut - U;
         chassis.leftMotor.run(powers.pwrLeft);
@@ -100,7 +100,7 @@ function LineFollowExample(speed: number) {
 
 // Smooth acceleration and deceleration when moving along the line
 function AccelLineFollowExample() {
-    advmotctrls.AccTwoEncConfig(15, 70, 200, 300, 4000);
+    advmotctrls.accTwoEncConfig(15, 70, 200, 300, 4000);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
     automation.pid1.reset(); // Сброс ПИДа
@@ -113,7 +113,7 @@ function AccelLineFollowExample() {
 
         let eml = chassis.leftMotor.angle();
         let emr = chassis.rightMotor.angle();
-        let out = advmotctrls.AccTwoEnc(eml, emr);
+        let out = advmotctrls.accTwoEnc(eml, emr);
         if (out.isDone) break;
 
         let rrcs2 = sensors.color2.light(LightIntensityMode.ReflectedRaw);
@@ -144,8 +144,8 @@ function SpinTurnExample(deg: number, speed: number) {
     let emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем с моторов значения с энкодеров перед стартом алгаритма
     let calcMotRot = Math.round((deg * chassis.getBaseLength()) / chassis.getWheelRadius()); // Расчёт угла поворота моторов для поворота
 
-    if (deg > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
-    else if (deg < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
+    if (deg > 0) advmotctrls.syncMotorsConfig(speed, -speed);
+    else if (deg < 0) advmotctrls.syncMotorsConfig(-speed, speed);
 
     chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -162,10 +162,10 @@ function SpinTurnExample(deg: number, speed: number) {
 
         if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
 
-        let error = advmotctrls.GetErrorSyncMotors(eml, emr);
+        let error = advmotctrls.getErrorSyncMotors(eml, emr);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.GetPwrSyncMotors(U);
+        let powers = advmotctrls.getPwrSyncMotors(U);
         chassis.leftMotor.run(powers.pwrLeft);
         chassis.rightMotor.run(powers.pwrRight);
 
@@ -191,8 +191,8 @@ function PivotTurnExample(deg: number, speed: number, wheelPivot: WheelPivot) {
     //let totalMotRot = emPrev + calcMotRot; // Считаем итоговое значение поворота
 
     chassis.chassisStop(true);
-    if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.SyncMotorsConfig(0, speed);
-    else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.SyncMotorsConfig(speed, 0);
+    if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.syncMotorsConfig(0, speed);
+    else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.syncMotorsConfig(speed, 0);
 
     chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -218,11 +218,11 @@ function PivotTurnExample(deg: number, speed: number, wheelPivot: WheelPivot) {
         }
 
         let error = 0;
-        if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.GetErrorSyncMotors(eml, emr);
-        else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.GetErrorSyncMotors(eml, emr);
+        if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
+        else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.GetPwrSyncMotors(U);
+        let powers = advmotctrls.getPwrSyncMotors(U);
         if (wheelPivot == WheelPivot.LeftWheel) chassis.rightMotor.run(powers.pwrRight);
         else if (wheelPivot == WheelPivot.RightWheel) chassis.leftMotor.run(powers.pwrLeft);
         

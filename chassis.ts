@@ -252,7 +252,7 @@ namespace chassis {
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
         const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
-        advmotctrls.SyncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
+        advmotctrls.syncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
@@ -272,10 +272,10 @@ namespace chassis {
             } else if (unit == MoveUnit.Seconds) {
                 if (control.millis() * 0.001 >= endTime) break;
             }
-            let error = advmotctrls.GetErrorSyncMotors(eml, emr); // Find out the error in motor speed control
+            let error = advmotctrls.getErrorSyncMotors(eml, emr); // Find out the error in motor speed control
             pidChassisSync.setPoint(error); // Transfer control error to controller
             let U = pidChassisSync.compute(dt, 0); // Find out and record the control action of the regulator
-            let powers = advmotctrls.GetPwrSyncMotors(U); // Find out the power of motors for regulation
+            let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
             leftMotor.run(powers.pwrLeft); // Set power/speed left motor
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
@@ -303,8 +303,8 @@ namespace chassis {
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
         const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
         const calcMotRot = Math.round(degress * getBaseLength() / getWheelRadius()); // Расчёт угла поворота моторов для поворота
-        if (degress > 0) advmotctrls.SyncMotorsConfig(speed, -speed);
-        else if (degress < 0) advmotctrls.SyncMotorsConfig(-speed, speed);
+        if (degress > 0) advmotctrls.syncMotorsConfig(speed, -speed);
+        else if (degress < 0) advmotctrls.syncMotorsConfig(-speed, speed);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
@@ -316,10 +316,10 @@ namespace chassis {
             let eml = chassis.leftMotor.angle() - emlPrev;
             let emr = chassis.rightMotor.angle() - emrPrev;
             if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
-            let error = advmotctrls.GetErrorSyncMotors(eml, emr);
+            let error = advmotctrls.getErrorSyncMotors(eml, emr);
             chassis.pidChassisSync.setPoint(error);
             let U = chassis.pidChassisSync.compute(dt, 0);
-            let powers = advmotctrls.GetPwrSyncMotors(U);
+            let powers = advmotctrls.getPwrSyncMotors(U);
             leftMotor.run(powers.pwrLeft);
             rightMotor.run(powers.pwrRight);
             control.pauseUntilTime(currTime, 5);
