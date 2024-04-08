@@ -10,7 +10,9 @@ enum MeasurementUnit {
 /**
  * A differential drive robot
  */
-//% color="#00751B" weight=89 icon="\uf1b9"
+//% block="Chassis"
+//% block.loc.ru="Шасси"
+//% color="#00751B" weight="89" icon="\uf1b9"
 namespace chassis {
 
     export let motorsPair: motors.SynchedMotorPair; // The motors pair
