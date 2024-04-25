@@ -159,7 +159,7 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    // chassis.syncChassisMovement(-20, -20, -500, MoveUnit.Degrees);
+    chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // SpinTurnExample(90, 20);
     // chassis.spinTurn(90, 20);
