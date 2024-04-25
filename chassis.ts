@@ -33,7 +33,7 @@ namespace chassis {
      * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
      * @param newMotorsPair motors pair, eg: motors.largeBC
      * @param setLeftMotReverse left motor reverse property, eg: false
-     * @param setRightMotReverse right motor reverse property, eg: true
+     * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetChassisMotors"
     //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse|$setRightMotReverse"
@@ -46,48 +46,81 @@ namespace chassis {
     //% expandableArgumentMode="toggle"
     //% weight="89"
     //% group="Properties"
+    //% blockHidden="true"
     export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
-        motorsPair = newMotorsPair;
-        const motorsName = motorsPair.toString();
-        const motorsType = motorsName.split(" ")[0];
-        const motorsPort = motorsName.split(" ")[1];
-        const motorsPortArr = motorsName.split(" ")[1].split("+");
-        const allUsedSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
-        // allUsedSingleMotors.forEach((motor) => {
-        //     console.log(`motor: ${motor}`);
-        // });
-        if (allUsedSingleMotors.length >= 1) { // Ищем из существующих моторов
-            leftMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[0])[0]; // Set left motor instance
-            rightMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[1])[0]; // Set right motor instance
-            // console.log(`leftMotor1: ${leftMotor}, rightMotor1: ${rightMotor}`);
-        }
-        if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
-            const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsPort));
-            // console.log(`motorsName: ${motorsName}, motorsName: ${motorsPort[0]}, motorsOut: ${motorsOut[0]}, ${motorsOut[1]}`);
-            // motorsOut.forEach((port) => {
-            //     console.log(`motorsOut: ${port}`);
-            // });
-            const isLargeMotor = (motorsType == "large" ? true : false);
-            if (!leftMotor) {
-                leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
-                //console.log(`new leftMotor2: ${leftMotor}`);
-            }
-            if (!rightMotor) {
-                rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
-                //console.log(`new rightMotor2: ${rightMotor}`);
-            }
-        }
-        //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
+        return;
+        // motorsPair = newMotorsPair;
+        // const motorsName = motorsPair.toString();
+        // const motorsType = motorsName.split(" ")[0];
+        // const motorsPort = motorsName.split(" ")[1];
+        // const motorsPortArr = motorsName.split(" ")[1].split("+");
+        // const allUsedSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
+        // // allUsedSingleMotors.forEach((motor) => {
+        // //     console.log(`motor: ${motor}`);
+        // // });
+        // if (allUsedSingleMotors.length >= 1) { // Ищем из существующих моторов
+        //     leftMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[0])[0]; // Set left motor instance
+        //     rightMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[1])[0]; // Set right motor instance
+        //     // console.log(`leftMotor1: ${leftMotor}, rightMotor1: ${rightMotor}`);
+        // }
+        // if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
+        //     const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsPort));
+        //     // console.log(`motorsName: ${motorsName}, motorsName: ${motorsPort[0]}, motorsOut: ${motorsOut[0]}, ${motorsOut[1]}`);
+        //     // motorsOut.forEach((port) => {
+        //     //     console.log(`motorsOut: ${port}`);
+        //     // });
+        //     const isLargeMotor = (motorsType == "large" ? true : false);
+        //     if (!leftMotor) {
+        //         leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
+        //         //console.log(`new leftMotor2: ${leftMotor}`);
+        //     }
+        //     if (!rightMotor) {
+        //         rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
+        //         //console.log(`new rightMotor2: ${rightMotor}`);
+        //     }
+        // }
+        // //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
+        // if (setLeftMotReverse != undefined) {
+        //     leftMotor.setInverted(setLeftMotReverse);
+        //     //console.log(`reverse leftMotor: ${setLeftMotReverse}`);
+        // }
+        // if (setRightMotReverse != undefined) {
+        //     rightMotor.setInverted(setRightMotReverse);
+        //     //console.log(`reverse rightMotor: ${setRightMotReverse}`);
+        // }
+        // if (motorsType == "large") motorMaxRPM = 170;
+        // else if (motorsType == "medium") motorMaxRPM = 250;
+    }
+
+    /**
+     * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
+     * @param newLeftMotors left motors in chassis, eg: motors.largeB
+     * @param newRightMotors right motors in chassis, eg: motors.largeC
+     * @param setLeftMotReverse left motor reverse property, eg: false
+     * @param setRightMotReverse right motor reverse property, eg: false
+     */
+    //% blockId="ChassisSetSeparatelyChassisMotors"
+    //% block="set motors to chassis $newLeftMotors| $newRightMotors||at reverse property $setLeftMotReverse|$setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newLeftMotors| $newRightMotors||с свойством реверса $setLeftMotReverse|$setRightMotReverse"
+    //% newLeftMotors.fieldEditor="motors"
+    //% newLeftMotors.fieldOptions.decompileLiterals="1"
+    //% newRightMotors.fieldEditor="motors"
+    //% newRightMotors.fieldOptions.decompileLiterals="1"
+    //% setLeftMotReverse.shadow="toggleOnOff"
+    //% setRightMotReverse.shadow="toggleOnOff"
+    //% inlineInputMode="inline"
+    //% expandableArgumentMode="toggle"
+    //% weight="89"
+    //% group="Properties"
+    export function setSeparatelyChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
+        leftMotor = newLeftMotors; // Set left motor instance
+        rightMotor = newRightMotors; // Set right motor instance
         if (setLeftMotReverse != undefined) {
             leftMotor.setInverted(setLeftMotReverse);
-            //console.log(`reverse leftMotor: ${setLeftMotReverse}`);
         }
         if (setRightMotReverse != undefined) {
             rightMotor.setInverted(setRightMotReverse);
-            //console.log(`reverse rightMotor: ${setRightMotReverse}`);
         }
-        if (motorsType == "large") motorMaxRPM = 170;
-        else if (motorsType == "medium") motorMaxRPM = 250;
     }
 
     function strNameToOutput(outStr: string): Output {
@@ -346,15 +379,17 @@ namespace chassis {
     export function chassisStop(setBrake?: boolean) {
         if (!motorsPair) return;
         if (setBrake) {
-            motorsPair.setBrake(setBrake);
+            // motorsPair.setBrake(setBrake);
             leftMotor.setBrake(setBrake);
             rightMotor.setBrake(setBrake);
         }
-        motorsPair.stop();
-        // leftMotor.setBrakeSettleTime(0);
-        // leftMotor.stop();
-        // rightMotor.stop();
-        // leftMotor.setBrakeSettleTime(10);
+        // motorsPair.stop();
+        leftMotor.setBrakeSettleTime(0);
+        rightMotor.setBrakeSettleTime(0);
+        leftMotor.stop();
+        rightMotor.stop();
+        leftMotor.setBrakeSettleTime(10);
+        rightMotor.setBrakeSettleTime(10);
     }
 
 }
