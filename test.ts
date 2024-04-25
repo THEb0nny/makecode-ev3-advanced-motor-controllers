@@ -27,37 +27,6 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
     chassis.stop(true);
 }
 
-// // Synchronization with smooth acceleration and deceleration during straight-line motion
-// function SyncAccelStraightlineMovementExample(minSpeed: number, maxSpeed: number, accelDist: number, decelDist: number, totalDist: number) {
-//     advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, accelDist, decelDist, totalDist);
-
-//     chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
-//     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
-//     chassis.pidChassisSync.reset(); // Сброс ПИДа
-    
-//     let prevTime = 0;
-//     while (true) {
-//         let currTime = control.millis();
-//         let dt = currTime - prevTime;
-//         prevTime = currTime;
-
-//         let eml = chassis.leftMotor.angle();
-//         let emr = chassis.rightMotor.angle();
-//         let out = advmotctrls.accTwoEnc(eml, emr);
-//         if (out.isDone) break;
-
-//         let error = advmotctrls.getErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
-//         chassis.pidChassisSync.setPoint(error);
-//         let U = chassis.pidChassisSync.compute(dt, 0);
-//         let powers = advmotctrls.getPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
-//         chassis.leftMotor.run(powers.pwrLeft);
-//         chassis.rightMotor.run(powers.pwrRight);
-
-//         control.pauseUntilTime(currTime, 5);
-//     }
-//     chassis.stop(true);
-// }
-
 function LineFollowExample(speed: number) {
     const B_REF_RAW_CS2 = 636;
     const W_REF_RAW_CS2 = 490;
