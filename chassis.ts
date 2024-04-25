@@ -297,14 +297,15 @@ namespace chassis {
      * @param unit unit of the value, eg. MoveUnit.Degrees
      */
     //% blockId="ChassisSyncMovement"
-    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%|vfor value = $value|$unit"
-    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit"
+    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| break $setBrake"
+    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение с удержанием $setBrake"
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
+    //% setBreak.shadow="toggleOnOff"
     //% weight="88" blockGap="8"
     //% group="Move"
-    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
+    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, setBreak: boolean = true) {
         // if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
             stop(true);
@@ -343,7 +344,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        stop(true); // Break
+        stop(setBreak); // Break
     }
 
     /**
