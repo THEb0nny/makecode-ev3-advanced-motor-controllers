@@ -372,7 +372,7 @@ namespace chassis {
     //% maxSpeed.shadow="motorSpeedPicker"
     //% weight="87" blockGap="8"
     //% group="Move"
-    export function syncRampMovement(minSpeed: number, maxSpeed: number, accelDist: number, decelDist: number, totalDist: number) {
+    export function syncRampMovement(minSpeed: number, maxSpeed: number, totalDist: number, accelDist: number, decelDist: number) {
         console.log(`accelDist: ${accelDist}`);
         console.log(`decelDist: ${accelDist}`);
         console.log(`totalDist: ${totalDist}`);
