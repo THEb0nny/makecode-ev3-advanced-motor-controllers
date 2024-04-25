@@ -9,11 +9,11 @@ const enum MeasurementUnit {
 
 // Перечисление о типах относительных поворотов
 const enum WheelPivot {
-    //% block="left wheel"
-    //% block.loc.ru="левого колеса"
+    //% block="left"
+    //% block.loc.ru="левого"
     LeftWheel,
-    //% block="right wheel"
-    //% block.loc.ru="правого колеса"
+    //% block="right"
+    //% block.loc.ru="правого"
     RightWheel
 }
 
