@@ -28,8 +28,8 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
 }
 
 // Synchronization with smooth acceleration and deceleration during straight-line motion
-function SyncAccelStraightlineMovementExample() {
-    advmotctrls.accTwoEncConfig(15, 90, 100, 300, 1000);
+function SyncAccelStraightlineMovementExample(minSpeed: number, maxSpeed: number, accelDist: number, decelDist: number, totalDist: number) {
+    advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, accelDist, decelDist, totalDist);
 
     chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -159,7 +159,8 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
+    // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
+    // SyncAccelStraightlineMovementExample(5, 30, 50, 50, 400);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // SpinTurnExample(90, 20);
     // chassis.spinTurn(90, 20);
