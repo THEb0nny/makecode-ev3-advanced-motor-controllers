@@ -373,6 +373,10 @@ namespace chassis {
     //% weight="87" blockGap="8"
     //% group="Move"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, accelDist: number, decelDist: number, totalDist: number) {
+        console.log(`accelDist: ${accelDist}`);
+        console.log(`decelDist: ${accelDist}`);
+        console.log(`totalDist: ${totalDist}`);
+        console.sendToScreen();
         advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
@@ -384,6 +388,8 @@ namespace chassis {
             prevTime = currTime;
             let eml = chassis.leftMotor.angle();
             let emr = chassis.rightMotor.angle();
+            console.log(`em: ${eml} ${eml}`);
+            console.sendToScreen();
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
