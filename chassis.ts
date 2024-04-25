@@ -49,47 +49,49 @@ namespace chassis {
     //% blockHidden="true"
     export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
         return;
-        // motorsPair = newMotorsPair;
-        // const motorsName = motorsPair.toString();
-        // const motorsType = motorsName.split(" ")[0];
-        // const motorsPort = motorsName.split(" ")[1];
-        // const motorsPortArr = motorsName.split(" ")[1].split("+");
-        // const allUsedSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
-        // // allUsedSingleMotors.forEach((motor) => {
-        // //     console.log(`motor: ${motor}`);
-        // // });
-        // if (allUsedSingleMotors.length >= 1) { // Ищем из существующих моторов
-        //     leftMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[0])[0]; // Set left motor instance
-        //     rightMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[1])[0]; // Set right motor instance
-        //     // console.log(`leftMotor1: ${leftMotor}, rightMotor1: ${rightMotor}`);
-        // }
-        // if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
-        //     const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsPort));
-        //     // console.log(`motorsName: ${motorsName}, motorsName: ${motorsPort[0]}, motorsOut: ${motorsOut[0]}, ${motorsOut[1]}`);
-        //     // motorsOut.forEach((port) => {
-        //     //     console.log(`motorsOut: ${port}`);
-        //     // });
-        //     const isLargeMotor = (motorsType == "large" ? true : false);
-        //     if (!leftMotor) {
-        //         leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
-        //         //console.log(`new leftMotor2: ${leftMotor}`);
-        //     }
-        //     if (!rightMotor) {
-        //         rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
-        //         //console.log(`new rightMotor2: ${rightMotor}`);
-        //     }
-        // }
-        // //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
-        // if (setLeftMotReverse != undefined) {
-        //     leftMotor.setInverted(setLeftMotReverse);
-        //     //console.log(`reverse leftMotor: ${setLeftMotReverse}`);
-        // }
-        // if (setRightMotReverse != undefined) {
-        //     rightMotor.setInverted(setRightMotReverse);
-        //     //console.log(`reverse rightMotor: ${setRightMotReverse}`);
-        // }
-        // if (motorsType == "large") motorMaxRPM = 170;
-        // else if (motorsType == "medium") motorMaxRPM = 250;
+        /*
+        motorsPair = newMotorsPair;
+        const motorsName = motorsPair.toString();
+        const motorsType = motorsName.split(" ")[0];
+        const motorsPort = motorsName.split(" ")[1];
+        const motorsPortArr = motorsName.split(" ")[1].split("+");
+        const allUsedSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
+        // allUsedSingleMotors.forEach((motor) => {
+        //     console.log(`motor: ${motor}`);
+        // });
+        if (allUsedSingleMotors.length >= 1) { // Ищем из существующих моторов
+            leftMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[0])[0]; // Set left motor instance
+            rightMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[1])[0]; // Set right motor instance
+            // console.log(`leftMotor1: ${leftMotor}, rightMotor1: ${rightMotor}`);
+        }
+        if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
+            const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsPort));
+            // console.log(`motorsName: ${motorsName}, motorsName: ${motorsPort[0]}, motorsOut: ${motorsOut[0]}, ${motorsOut[1]}`);
+            // motorsOut.forEach((port) => {
+            //     console.log(`motorsOut: ${port}`);
+            // });
+            const isLargeMotor = (motorsType == "large" ? true : false);
+            if (!leftMotor) {
+                leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
+                //console.log(`new leftMotor2: ${leftMotor}`);
+            }
+            if (!rightMotor) {
+                rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
+                //console.log(`new rightMotor2: ${rightMotor}`);
+            }
+        }
+        //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
+        if (setLeftMotReverse != undefined) {
+            leftMotor.setInverted(setLeftMotReverse);
+            //console.log(`reverse leftMotor: ${setLeftMotReverse}`);
+        }
+        if (setRightMotReverse != undefined) {
+            rightMotor.setInverted(setRightMotReverse);
+            //console.log(`reverse rightMotor: ${setRightMotReverse}`);
+        }
+        if (motorsType == "large") motorMaxRPM = 170;
+        else if (motorsType == "medium") motorMaxRPM = 250;
+        */
     }
 
     /**
@@ -293,7 +295,7 @@ namespace chassis {
      * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
      * @param vLeft left motor speed input value, eg. 50
      * @param vRight right motor speed input value, eg. 50
-     * @param value move duration or rotation
+     * @param value move duration or rotation, eg. 500
      * @param unit unit of the value, eg. MoveUnit.Degrees
      */
     //% blockId="ChassisSyncMovement"
@@ -331,11 +333,8 @@ namespace chassis {
             let emr = rightMotor.angle() - emrPrev; // Get right motor encoder current value
             if (unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) {
                 if (Math.abs(eml) >= Math.abs(value) && Math.abs(emr) >= Math.abs(value)) break;
-            } else if (unit == MoveUnit.MilliSeconds) {
-                if (control.millis() >= endTime) break;
-            } else if (unit == MoveUnit.Seconds) {
-                if (control.millis() * 0.001 >= endTime) break;
-            }
+            } else if (unit == MoveUnit.MilliSeconds && control.millis() >= endTime) break;
+            else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break;
             let error = advmotctrls.getErrorSyncMotors(eml, emr); // Find out the error in motor speed control
             pidChassisSync.setPoint(error); // Transfer control error to controller
             let U = pidChassisSync.compute(dt, 0); // Find out and record the control action of the regulator
@@ -356,8 +355,8 @@ namespace chassis {
      * @param totalDist total length encoder value at, eg. 500
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at min speed $minSpeed|\\%| max = $maxSpeed|\\%| for acceleration distance = $accelDist| deceleration = $decelDist| total = $totalDist"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние ускорения = $accelDist| замедление = $decelDist| общая дистанция = $totalDist"
+    //% block="sync chassis ramp movement at min speed $minSpeed|\\%| max = $maxSpeed|\\%| for distance = $totalDist| acceleration = $accelDist| deceleration = $decelDist"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на мин скорости $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние = $totalDist| ускорения = $accelDist| замедления = $decelDist"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
@@ -469,11 +468,8 @@ namespace chassis {
             prevTime = currTime;
             let eml = chassis.leftMotor.angle() - emlPrev;
             let emr = chassis.rightMotor.angle() - emrPrev;
-            if (wheelPivot == WheelPivot.LeftWheel) {
-                if (Math.abs(emr) >= Math.abs(calcMotRot)) break;
-            } else if (wheelPivot == WheelPivot.RightWheel) {
-                if (Math.abs(eml) >= Math.abs(calcMotRot)) break;
-            }
+            if (wheelPivot == WheelPivot.LeftWheel && Math.abs(emr) >= Math.abs(calcMotRot)) break;
+            else if (wheelPivot == WheelPivot.RightWheel && Math.abs(eml) >= Math.abs(calcMotRot)) break;
             let error = 0;
             if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
             else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
