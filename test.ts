@@ -139,16 +139,6 @@ function AccelLineFollowExample() {
     chassis.stop(true);
 }
 
-// Перечисление о типах относительных поворотов
-const enum WheelPivot {
-    //% block="left wheel"
-    //% block.loc.ru="левого колеса"
-    LeftWheel,
-    //% block="right wheel"
-    //% block.loc.ru="правого колеса"
-    RightWheel
-}
-
 // Функция для нормализации сырых значений с датчика
 function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS: number): number {
     let refValCS = Math.map(refRawValCS, bRefRawValCS, wRefRawValCS, 0, 100);

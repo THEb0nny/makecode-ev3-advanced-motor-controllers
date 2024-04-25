@@ -1,10 +1,20 @@
-enum MeasurementUnit {
+const enum MeasurementUnit {
     //% block="cm"
     //% block.loc.ru="см"
     Centimeters,
     //% block="mm"
     //% block.loc.ru="мм"
     Millimeters
+}
+
+// Перечисление о типах относительных поворотов
+const enum WheelPivot {
+    //% block="left wheel"
+    //% block.loc.ru="левого колеса"
+    LeftWheel,
+    //% block="right wheel"
+    //% block.loc.ru="правого колеса"
+    RightWheel
 }
 
 /**
