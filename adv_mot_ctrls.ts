@@ -162,6 +162,8 @@ namespace advmotctrls {
     //% blockId="AccTwoEncConfig"
     //% block="config accel/deceleration chassis control at minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist| decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорение/замедление управления шасси при minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist|decelDist = $decelDist"
+    //% minPwr.shadow="motorSpeedPicker"
+    //% maxPwr.shadow="motorSpeedPicker"
     export function accTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC2_minPwr = Math.abs(minPwr);
         ACC2_maxPwr = Math.abs(maxPwr);
@@ -184,6 +186,8 @@ namespace advmotctrls {
     //% blockId="AccTwoEnc"
     //% block="compute accel/deceleration chassis control at eLeft = $eLeft| eRight = $eRight"
     //% block.loc.ru="подсчёт ускорение/замедление управлешние шасси при eLeft = $eLeft| eRight = $eRight"
+    //% minPwr.shadow="motorSpeedPicker"
+    //% maxPwr.shadow="motorSpeedPicker"
     export function accTwoEnc(eLeft: number, eRight: number): AccTwoEncReturn {
         let done: boolean;
         let pwrOut: number;
