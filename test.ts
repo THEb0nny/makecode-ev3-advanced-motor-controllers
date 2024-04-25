@@ -239,12 +239,13 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
 }
 
 function Test() {
-    motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
-    motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false);
-    motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
+    // motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
+    // motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false);
+    // motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
     chassis.setWheelRadius(62.4);
     chassis.setBaseLength(190);
-    chassis.setChassisMotors(motors.mediumBC);
+    // chassis.setChassisMotors(motors.mediumBC);
+    chassis.setChassisMotors(motors.largeBC);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();

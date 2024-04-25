@@ -350,12 +350,12 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = chassis.leftMotor.angle() - emlPrev;
-            let emr = chassis.rightMotor.angle() - emrPrev;
+            let eml = leftMotor.angle() - emlPrev;
+            let emr = rightMotor.angle() - emrPrev;
             if ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
             let error = advmotctrls.getErrorSyncMotors(eml, emr);
-            chassis.pidChassisSync.setPoint(error);
-            let U = chassis.pidChassisSync.compute(dt, 0);
+            pidChassisSync.setPoint(error);
+            let U = pidChassisSync.compute(dt, 0);
             let powers = advmotctrls.getPwrSyncMotors(U);
             leftMotor.run(powers.pwrLeft);
             rightMotor.run(powers.pwrRight);
@@ -390,25 +390,6 @@ namespace chassis {
         rightMotor.stop();
         leftMotor.setBrakeSettleTime(10);
         rightMotor.setBrakeSettleTime(10);
-    }
-
-}
-
-namespace control {
-
-    /**
-     * Function to wait for a loop to complete for a specified time.
-     * @param startTime start time, eg: 0
-     * @param delay waiting time, eg: 10
-     */
-    //% blockId="PauseUntilTime"
-    //% block="wait $delay ms|at start at $startTime"
-    //% block.loc.ru="ждать $delay мс|при начале в $startTime|мс"
-    //% weight="6"
-    export function pauseUntilTime(startTime: number, ms: number) {
-        if (startTime == 0) startTime = control.millis();
-        const waitCompletionTime = startTime + ms;
-        while (control.millis() < waitCompletionTime) loops.pause(0.01);
     }
 
 }
