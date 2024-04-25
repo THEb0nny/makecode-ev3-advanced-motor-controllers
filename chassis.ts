@@ -236,7 +236,7 @@ namespace chassis {
     //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
     //% group="Move"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (!motorsPair) return;
+        // if (!motorsPair) return;
         if (!speed || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) {
             chassisStop(true);
             return;
@@ -278,7 +278,7 @@ namespace chassis {
     //% weight="98" blockGap="8"
     //% group="Move"
     export function syncChassisMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
-        if (!motorsPair) return;
+        // if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
             chassisStop(true);
             return;
@@ -330,8 +330,8 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% weight="97" blockGap="8"
     //% group="Move"
-    export function chassisSpinTurn(degress: number, speed: number) {
-        if (!motorsPair) return;
+    export function spinTurn(degress: number, speed: number) {
+        //if (!motorsPair) return;
         if (degress == 0 || speed <= 0) {
             chassisStop(true);
             return;
@@ -377,7 +377,7 @@ namespace chassis {
     //% weight="96" blockGap="8"
     //% group="Move"
     export function chassisStop(setBrake?: boolean) {
-        if (!motorsPair) return;
+        //if (!motorsPair) return;
         if (setBrake) {
             // motorsPair.setBrake(setBrake);
             leftMotor.setBrake(setBrake);

@@ -147,7 +147,7 @@ function SpinTurnExample(deg: number, speed: number) {
     if (deg > 0) advmotctrls.syncMotorsConfig(speed, -speed);
     else if (deg < 0) advmotctrls.syncMotorsConfig(-speed, speed);
 
-    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setGains(0.02, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
 
@@ -239,20 +239,19 @@ function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS
 }
 
 function Test() {
-    // motors.mediumB.setInverted(true); motors.mediumC.setInverted(false);
-    // motors.mediumB.setRegulated(false); motors.mediumC.setRegulated(false);
-    // motors.mediumB.setBrake(true); motors.mediumC.setBrake(true);
-    chassis.setWheelRadius(62.4);
-    chassis.setBaseLength(190);
     // chassis.setChassisMotors(motors.mediumBC);
-    chassis.setChassisMotors(motors.largeBC);
+    // chassis.setChassisMotors(motors.largeBC);
+    chassis.setSeparatelyChassisMotors(motors.mediumB, motors.mediumC, true, false);
+    chassis.setRegulatorGains(0.002, 0, 0.5);
+    chassis.setWheelRadius(62.4);
+    chassis.setBaseLength(180);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    brick.showPorts();
-    // chassis.SyncChassisMovement(-20, -20, -500, MoveUnit.Degrees);
+    // chassis.syncChassisMovement(-20, -20, -500, MoveUnit.Degrees);
     // PivotTurnExample(90, 30, WheelPivot.RightWheel);
     // SpinTurnExample(90, 20);
+    chassis.spinTurn(90, 20);
     // ArcMovementExample(25, 50);
     // chassis.SyncChassisMovement(20, 20, 360, MoveUnit.Degrees);
 }
