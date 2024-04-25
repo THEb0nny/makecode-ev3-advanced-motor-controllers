@@ -58,12 +58,12 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
 //     chassis.stop(true);
 // }
 
-const B_REF_RAW_CS2 = 636;
-const W_REF_RAW_CS2 = 490;
-const B_REF_RAW_CS3 = 665;
-const W_REF_RAW_CS3 = 501;
-
 function LineFollowExample(speed: number) {
+    const B_REF_RAW_CS2 = 636;
+    const W_REF_RAW_CS2 = 490;
+    const B_REF_RAW_CS3 = 665;
+    const W_REF_RAW_CS3 = 501;
+
     advmotctrls.syncMotorsConfig(speed, speed);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -100,6 +100,11 @@ function LineFollowExample(speed: number) {
 
 // Smooth acceleration and deceleration when moving along the line
 function AccelLineFollowExample() {
+    const B_REF_RAW_CS2 = 636;
+    const W_REF_RAW_CS2 = 490;
+    const B_REF_RAW_CS3 = 665;
+    const W_REF_RAW_CS3 = 501;
+
     advmotctrls.accTwoEncConfig(15, 70, 200, 300, 4000);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -136,9 +141,11 @@ function AccelLineFollowExample() {
 
 // Перечисление о типах относительных поворотов
 const enum WheelPivot {
-    //% block="левого колеса"
+    //% block="left wheel"
+    //% block.loc.ru="левого колеса"
     LeftWheel,
-    //% block="правого колеса"
+    //% block="right wheel"
+    //% block.loc.ru="правого колеса"
     RightWheel
 }
 
@@ -153,7 +160,7 @@ function Test() {
     // chassis.setChassisMotors(motors.mediumBC);
     // chassis.setChassisMotors(motors.largeBC);
     chassis.setSeparatelyChassisMotors(motors.mediumB, motors.mediumC, true, false);
-    chassis.setRegulatorGains(0.002, 0, 0.5);
+    chassis.setRegulatorGains(0.02, 0, 0.5);
     chassis.setWheelRadius(62.4);
     chassis.setBaseLength(185);
     brick.printString("RUN example", 7, 10);

@@ -36,8 +36,8 @@ namespace chassis {
      * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetChassisMotors"
-    //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse|$setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse|$setRightMotReverse"
+    //% block="set motors to chassis $newMotorsPair|| at reverse property $setLeftMotReverse| $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newMotorsPair|| с свойством реверса $setLeftMotReverse| $setRightMotReverse"
     //% newMotorsPair.fieldEditor="motors"
     //% newMotorsPair.fieldOptions.decompileLiterals="1"
     //% setLeftMotReverse.shadow="toggleOnOff"
@@ -100,8 +100,8 @@ namespace chassis {
      * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetSeparatelyChassisMotors"
-    //% block="set motors to chassis $newLeftMotors| $newRightMotors||at reverse property $setLeftMotReverse|$setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newLeftMotors| $newRightMotors||с свойством реверса $setLeftMotReverse|$setRightMotReverse"
+    //% block="set motors to chassis $newLeftMotors| $newRightMotors|| at reverse property $setLeftMotReverse| $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newLeftMotors| $newRightMotors|| с свойством реверса $setLeftMotReverse| $setRightMotReverse"
     //% newLeftMotors.fieldEditor="motors"
     //% newLeftMotors.fieldOptions.decompileLiterals="1"
     //% newRightMotors.fieldEditor="motors"
@@ -113,14 +113,11 @@ namespace chassis {
     //% weight="98"
     //% group="Properties"
     export function setSeparatelyChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
+        if (newLeftMotors == newRightMotors) return; // Identical motors were installed
         leftMotor = newLeftMotors; // Set left motor instance
         rightMotor = newRightMotors; // Set right motor instance
-        if (setLeftMotReverse != undefined) {
-            leftMotor.setInverted(setLeftMotReverse);
-        }
-        if (setRightMotReverse != undefined) {
-            rightMotor.setInverted(setRightMotReverse);
-        }
+        if (setLeftMotReverse != undefined) leftMotor.setInverted(setLeftMotReverse);
+        if (setRightMotReverse != undefined) rightMotor.setInverted(setRightMotReverse);
     }
 
     function strNameToOutput(outStr: string): Output {
@@ -170,7 +167,7 @@ namespace chassis {
     export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
         else if (unit == MeasurementUnit.Millimeters) return wheelRadius * 10;
-        else return 0;
+        return 0;
     }
 
     /**
@@ -186,7 +183,7 @@ namespace chassis {
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) baseLength = length;
         else if (unit == MeasurementUnit.Millimeters) baseLength = length / 10;
-        else return;
+        return;
     }
 
     /**
@@ -201,7 +198,7 @@ namespace chassis {
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) return baseLength;
         else if (unit == MeasurementUnit.Millimeters) return baseLength * 10;
-        else return 0;
+        return 0;
     }
 
     /**
@@ -226,7 +223,7 @@ namespace chassis {
      * Makes a differential drive robot move with a given speed (cm/s) and rotation rate (deg/s) using a unicycle model.
      * @param speed speed of the center point between motors, eg: 10
      * @param rotationSpeed rotation of the robot around the center point, eg: 30
-     * @param distance driving distance, eg: 150 (cm)
+     * @param distance driving distance, eg: 150 (mm)
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisDrive"
@@ -300,8 +297,8 @@ namespace chassis {
      * @param unit unit of the value, eg. MoveUnit.Degrees
      */
     //% blockId="ChassisSyncMovement"
-    //% block="sync chassis movement at $vLeft|\\%|$vRight|\\%|for value = $value|$unit"
-    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%|$vRight|\\%|на $value|$unit"
+    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%|vfor value = $value|$unit"
+    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit"
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
@@ -346,7 +343,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        stop(true);
+        stop(true); // Break
     }
 
     /**
@@ -355,11 +352,11 @@ namespace chassis {
      * @param maxSpeed max motor speed, eg. 50
      * @param accelDist accelerate length encoder value, eg. 50
      * @param decelDist decelerate length encoder value, eg. 100
-     * @param totalDist total length encoder value, eg. 500
+     * @param totalDist total length encoder value at, eg. 500
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at min speed $minSpeed|\\%| max = $maxSpeed|\\%|for accel dist = $accelDist| decel = $decelDist| total = $totalDist"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed|\\%| макс = $maxSpeed|\\%|на расстояние ускорения = $accelDist| замедление = $decelDist| вся = $totalDist"
+    //% block="sync chassis ramp movement at min speed $minSpeed|\\%| max = $maxSpeed|\\%| for acceleration distance = $accelDist| deceleration = $decelDist| total = $totalDist"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние ускорения = $accelDist| замедление = $decelDist| общая дистанция = $totalDist"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
@@ -387,18 +384,20 @@ namespace chassis {
             chassis.rightMotor.run(powers.pwrRight);
             control.pauseUntilTime(currTime, 5);
         }
-        chassis.stop(true);
+        chassis.stop(true); // Break
     }
 
     /**
-     * Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed. For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
+     * Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed.
+     * For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
      * @param degress rotation value in degrees, eg. 90
-     * @param speed turning speed value, eg. 40
+     * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisSpinTurn"
-    //% block="sync chassis spin turn at degress = $degress|°|for speed = $speed|\\%"
-    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|со скоростью = $speed|\\%"
+    //% block="sync chassis spin turn at degress = $degress|°| for speed = $speed|\\%"
+    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°| со скоростью = $speed|\\%"
     //% inlineInputMode="inline"
+    //% speed.shadow="motorSpeedPicker"
     //% weight="79" blockGap="8"
     //% group="Move"
     export function spinTurn(degress: number, speed: number) {
@@ -432,36 +431,36 @@ namespace chassis {
             rightMotor.run(powers.pwrRight);
             control.pauseUntilTime(currTime, 5);
         }
-        stop(true);
+        stop(true); // Break
     }
 
     /**
-     * Синхроннизированный поворот на двух средних моторах на нужный угол относительно одного из колёс.
+     * Synchronized rotation to the desired angle relative to one of the wheels.
      * @param degress rotation value in degrees, eg. 90
-     * @param speed turning speed value, eg. 40
+     * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisPivotTurn"
-    //% block="sync chassis pivot turn at degress = $degress|°|for speed = $speed|\\% pivot $wheelPivot"
-    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|со скоростью = $speed|\\% относительно $wheelPivot"
+    //% block="sync chassis pivot turn at degress = $degress|°| for speed = $speed|\\% pivot $wheelPivot"
+    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°| со скоростью = $speed|\\% относительно $wheelPivot"
     //% inlineInputMode="inline"
+    //% speed.shadow="motorSpeedPicker"
     //% weight="78" blockGap="8"
     //% group="Move"
     export function pivotTurn(deg: number, speed: number, wheelPivot: WheelPivot) {
         //if (!motorsPair) return;
-        if (deg == 0 || speed == 0 || deg > 0 && speed < 0 || deg < 0 && speed > 0) return;
-
+        if (deg == 0 || speed == 0 || deg > 0 && speed < 0 || deg < 0 && speed > 0) {
+            chassis.stop(true);
+            return;
+        }
         const emlPrev = chassis.leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
         const emrPrev = chassis.rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
         let calcMotRot = Math.round(((deg * chassis.getBaseLength()) / chassis.getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
-
-        chassis.stop(true);
+        chassis.stop(true); // Brake so that one of the motors is held when turning
         if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.syncMotorsConfig(0, speed);
         else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.syncMotorsConfig(speed, 0);
-
-        chassis.pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка значений регулятору
-        chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
-        chassis.pidChassisSync.reset(); // Сброс ПИДа
-
+        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
+        pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
+        pidChassisSync.reset(); // Reset pid controller
         let prevTime = 0;
         while (true) {
             let currTime = control.millis();
@@ -469,9 +468,6 @@ namespace chassis {
             prevTime = currTime;
             let eml = chassis.leftMotor.angle() - emlPrev;
             let emr = chassis.rightMotor.angle() - emrPrev;
-            // console.logValue("eml", eml);
-            // console.logValue("emr", emr);
-            // console.sendToScreen();
             if (wheelPivot == WheelPivot.LeftWheel) {
                 if (Math.abs(emr) >= Math.abs(calcMotRot)) break;
             } else if (wheelPivot == WheelPivot.RightWheel) {
@@ -487,7 +483,7 @@ namespace chassis {
             else if (wheelPivot == WheelPivot.RightWheel) chassis.leftMotor.run(powers.pwrLeft);
             control.pauseUntilTime(currTime, 5);
         }
-        stop(true);
+        stop(true); // Break
     }
 
 }
