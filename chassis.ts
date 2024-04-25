@@ -210,7 +210,7 @@ namespace chassis {
      * @param ki sync ki input value, eg. 0
      * @param kd sync kd input value, eg. 0.5
     */
-    //% blockId="SetRegulatorGains"
+    //% blockId="ChassisSetRegulatorGains"
     //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
     //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp|ki = $Ki|kd = $Kd"
     //% inlineInputMode="inline"
@@ -238,7 +238,7 @@ namespace chassis {
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
         if (!speed || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) {
-            chassisStop(true);
+            stop(true);
             return;
         }
 
@@ -271,16 +271,16 @@ namespace chassis {
      * @param value move duration or rotation
      * @param unit unit of the value, eg. MoveUnit.Degrees
      */
-    //% blockId="SyncChassisMovement"
+    //% blockId="ChassisSyncMovement"
     //% block="sync chassis movement at $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|for value = $value|$unit"
     //% block.loc.ru="синхронизированное управление шасси с $vLeft=motorSpeedPicker|\\%|$vRight=motorSpeedPicker|\\%|на $value|$unit"
     //% inlineInputMode="inline"
     //% weight="98" blockGap="8"
     //% group="Move"
-    export function syncChassisMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
+    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees) {
         // if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
-            chassisStop(true);
+            stop(true);
             return;
         }
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
@@ -316,7 +316,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        chassisStop(true);
+        stop(true);
     }
 
     /**
@@ -333,7 +333,7 @@ namespace chassis {
     export function spinTurn(degress: number, speed: number) {
         //if (!motorsPair) return;
         if (degress == 0 || speed <= 0) {
-            chassisStop(true);
+            stop(true);
             return;
         }
         speed = Math.clamp(-100, 100, speed >> 0); // We limit the speed of the motor from -100 to 100 and cut off the fractional part
@@ -361,7 +361,62 @@ namespace chassis {
             rightMotor.run(powers.pwrRight);
             control.pauseUntilTime(currTime, 5);
         }
-        chassisStop(true);
+        stop(true);
+    }
+
+    /**
+     * Синхроннизированный поворот на двух средних моторах на нужный угол относительно одного из колёс.
+     * @param degress rotation value in degrees, eg. 90
+     * @param speed turning speed value, eg. 40
+     */
+    //% blockId="ChassisPivotTurn"
+    //% block="sync chassis pivot turn at degress = $degress|°|for speed = $speed|\\% pivot $wheelPivot"
+    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°|со скоростью = $speed|\\% относительно $wheelPivot"
+    //% inlineInputMode="inline"
+    //% weight="96" blockGap="8"
+    //% group="Move"
+    export function pivotTurn(deg: number, speed: number, wheelPivot: WheelPivot) {
+        //if (!motorsPair) return;
+        if (deg == 0 || speed == 0 || deg > 0 && speed < 0 || deg < 0 && speed > 0) return;
+
+        const emlPrev = chassis.leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
+        const emrPrev = chassis.rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
+        let calcMotRot = Math.round(((deg * chassis.getBaseLength()) / chassis.getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
+
+        chassis.stop(true);
+        if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.syncMotorsConfig(0, speed);
+        else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.syncMotorsConfig(speed, 0);
+
+        chassis.pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка значений регулятору
+        chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+        chassis.pidChassisSync.reset(); // Сброс ПИДа
+
+        let prevTime = 0;
+        while (true) {
+            let currTime = control.millis();
+            let dt = currTime - prevTime;
+            prevTime = currTime;
+            let eml = chassis.leftMotor.angle() - emlPrev;
+            let emr = chassis.rightMotor.angle() - emrPrev;
+            // console.logValue("eml", eml);
+            // console.logValue("emr", emr);
+            // console.sendToScreen();
+            if (wheelPivot == WheelPivot.LeftWheel) {
+                if (Math.abs(emr) >= Math.abs(calcMotRot)) break;
+            } else if (wheelPivot == WheelPivot.RightWheel) {
+                if (Math.abs(eml) >= Math.abs(calcMotRot)) break;
+            }
+            let error = 0;
+            if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
+            else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
+            chassis.pidChassisSync.setPoint(error);
+            let U = chassis.pidChassisSync.compute(dt, 0);
+            let powers = advmotctrls.getPwrSyncMotors(U);
+            if (wheelPivot == WheelPivot.LeftWheel) chassis.rightMotor.run(powers.pwrRight);
+            else if (wheelPivot == WheelPivot.RightWheel) chassis.leftMotor.run(powers.pwrLeft);
+            control.pauseUntilTime(currTime, 5);
+        }
+        stop(true);
     }
 
     /**
@@ -374,9 +429,9 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% setBrake.shadow="toggleOnOff"
-    //% weight="96" blockGap="8"
+    //% weight="89" blockGap="8"
     //% group="Move"
-    export function chassisStop(setBrake?: boolean) {
+    export function stop(setBrake?: boolean) {
         //if (!motorsPair) return;
         if (setBrake) {
             // motorsPair.setBrake(setBrake);
