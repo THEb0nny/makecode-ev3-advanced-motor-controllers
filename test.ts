@@ -1,21 +1,18 @@
 // Arc synchronized movement
 function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
+    //if (!motorsPair) return;
     advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr);
-
     chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
-
     let prevTime = 0;
     while (true) {
         let currTime = control.millis();
         let dt = currTime - prevTime;
         prevTime = currTime;
-
         let encB = chassis.leftMotor.angle();
         let encC = chassis.rightMotor.angle();
         if ((encB + encC) / 2 >= 775) break;
-
         let error = advmotctrls.getErrorSyncMotors(encB, encC);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);

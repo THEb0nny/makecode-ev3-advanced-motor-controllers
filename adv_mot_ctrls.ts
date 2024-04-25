@@ -39,12 +39,16 @@ namespace advmotctrls {
     }
 
     /**
+     * Chassis motor synchronization configuration.
      * Конфигурация синхронизации моторов шассии.
      * @param vLeft входное значение скорости левого мотора, eg. 50
      * @param vRight входное значение скорости правого мотора, eg. 50
     **/
     //% blockId="SyncMotorsConfig"
-    //% block="config sync сhassis control vLeft = $vLeft|vRight = $vRight"
+    //% block="config sync сhassis control vLeft = $vLeft| vRight = $vRight"
+    //% block.loc.ru="конфигурирация синхронизации управления шасси vLeft = $vLeft| vRight = $vRight"
+    //% vLeft.shadow="motorSpeedPicker"
+    //% vRight.shadow="motorSpeedPicker"
     export function syncMotorsConfig(vLeft: number, vRight: number) {
         syncVLeft = vLeft;
         syncVRight = vRight;
@@ -53,24 +57,29 @@ namespace advmotctrls {
     }
 
     /**
-    * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров.
+     * Calculate the synchronization error of the chassis motors using the values from the encoders.
+     * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров.
      * Возвращает число ошибки для регулятора.
      * @param eLeft входное значение энкодера левого мотора
      * @param eRight входное значение энкодера правого мотора
     **/
     //% blockId="GetErrorSyncMotors"
-    //% block="get error sync chassis motors eLeft = $eLeft|eRight = $eRight"
+    //% block="get error sync chassis motors eLeft = $eLeft| eRight = $eRight"
+    //% block.loc.ru="получить ошибку синхронизации шасси eLeft = $eLeft| eRight = $eRight"
     export function getErrorSyncMotors(eLeft: number, eRight: number): number {
         return ((syncVRight * eLeft) - (syncVLeft * eRight));
     }
     
     /**
+     * To obtain the values of speeds (power) for the chassis motors based on the control action received from the regulator.
+     * Returns the interface of the speed (power) of the left and right motors.
      * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора.
      * Возвращает интерфейс скорости (мощности) левого и правого моторов.
      * @param U входное значение управляющего воздействия от регулятора
     **/
     //% blockId="GetPwrSyncMotors"
-    //% block="config sync сhassis control U = $U"
+    //% block="config sync сhassis control at U = $U"
+    //% block.loc.ru="конфигурирация синхронизации управления шасси при U = $U"
     export function getPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
         const pRight = syncVRight + syncVLeftSign * U;
@@ -142,6 +151,7 @@ namespace advmotctrls {
     */
 
     /**
+     * The configuration of acceleration and deceleration of the chassis of two motors.
      * Конфигурация ускорения и замедления шассии двух моторов.
      * @param minPwr входное значение скорости на старте, eg. 15
      * @param maxPwr входное значение максимальной скорости, eg. 50
@@ -150,7 +160,8 @@ namespace advmotctrls {
      * @param totalDist значение всей дистанции, eg. 500
     **/
     //% blockId="AccTwoEncConfig"
-    //% block="accel/deceleration config chassis control at minPwr = $minPwr|maxPwr = $maxPwr|accelDist = $accelDist|decelDist = $decelDist|totalDist = $totalDist"
+    //% block="config accel/deceleration chassis control at minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist| decelDist = $decelDist"
+    //% block.loc.ru="конфигурирация ускорение/замедление управления шасси при minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist|decelDist = $decelDist"
     export function accTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC2_minPwr = Math.abs(minPwr);
         ACC2_maxPwr = Math.abs(maxPwr);
@@ -163,6 +174,7 @@ namespace advmotctrls {
 
     /**
      * Конфигурация ускорения и замедления двумя моторами.
+     * The configuration of acceleration and deceleration by two motors.
      * @param minPwr входное значение скорости на старте, eg. 15
      * @param maxPwr входное значение максимальной скорости, eg. 50
      * @param accelDist значение дистанции ускорения, eg. 150
@@ -170,7 +182,8 @@ namespace advmotctrls {
      * @param totalDist значение всей дистанции, eg. 500
     **/
     //% blockId="AccTwoEnc"
-    //% block="accel/deceleration chassis control compute at encoder left = $eLeft|right = $eRight"
+    //% block="compute accel/deceleration chassis control at eLeft = $eLeft| eRight = $eRight"
+    //% block.loc.ru="подсчёт ускорение/замедление управлешние шасси при eLeft = $eLeft| eRight = $eRight"
     export function accTwoEnc(eLeft: number, eRight: number): AccTwoEncReturn {
         let done: boolean;
         let pwrOut: number;
