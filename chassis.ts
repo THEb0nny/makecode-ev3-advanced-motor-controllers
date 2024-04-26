@@ -372,19 +372,24 @@ namespace chassis {
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении.
      * @param minSpeed start motor speed, eg. 5
      * @param maxSpeed max motor speed, eg. 50
+     * @param totalDist total length encoder value at, eg. 500
      * @param accelDist accelerate length encoder value, eg. 50
      * @param decelDist decelerate length encoder value, eg. 100
-     * @param totalDist total length encoder value at, eg. 500
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at min speed $minSpeed|\\%| max = $maxSpeed|\\%| for distance = $totalDist| acceleration = $accelDist| deceleration = $decelDist"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на мин скорости $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние = $totalDist| ускорения = $accelDist| замедления = $decelDist"
+    //% block="sync chassis ramp movement at speed min $minSpeed|\\%| max = $maxSpeed|\\%| for distance = $totalDist| acceleration = $accelDist| deceleration = $decelDist"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние = $totalDist| ускорения = $accelDist| замедления = $decelDist"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
     //% weight="87" blockGap="8"
     //% group="Move"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, totalDist: number, accelDist: number, decelDist: number) {
+        //if (!motorsPair) return;
+        if (minSpeed <= 0 || maxSpeed <= 0 || totalDist == 0) {
+            stop(true);
+            return;
+        }
         advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
