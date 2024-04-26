@@ -64,9 +64,9 @@ function RampLineFollowExample() {
     const W_REF_RAW_CS2 = 490;
     const B_REF_RAW_CS3 = 665;
     const W_REF_RAW_CS3 = 501;
-    advmotctrls.accTwoEncConfig(15, 70, 200, 300, 4000);
+    advmotctrls.accTwoEncConfig(5, 50, 200, 300, 4000);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
-    automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
+    automation.pid1.setControlSaturation(-200, 200); // Ограничения ПИДа
     automation.pid1.reset(); // Сброс ПИДа
     let prevTime = 0;
     while (true) {

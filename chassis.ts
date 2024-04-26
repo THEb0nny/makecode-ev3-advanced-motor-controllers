@@ -18,7 +18,8 @@ const enum WheelPivot {
 }
 
 /**
- * A differential drive robot
+ * A differential drive robot.
+ * Робот с дифференциальным приводом.
  */
 //% block="Chassis"
 //% block.loc.ru="Шасси"
@@ -41,6 +42,7 @@ namespace chassis {
 
     /**
      * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
+     * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
      * @param newMotorsPair motors pair, eg: motors.largeBC
      * @param setLeftMotReverse left motor reverse property, eg: false
      * @param setRightMotReverse right motor reverse property, eg: false
@@ -106,6 +108,7 @@ namespace chassis {
 
     /**
      * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
+     * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
      * @param newLeftMotors left motors in chassis, eg: motors.largeB
      * @param newRightMotors right motors in chassis, eg: motors.largeC
      * @param setLeftMotReverse left motor reverse property, eg: false
@@ -153,6 +156,7 @@ namespace chassis {
 
     /**
      * Sets the wheel radius.
+     * Задает радиус колеса.
      * @param radius the radius of a wheel, eg: 56 (mm)
      * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
      */
@@ -169,6 +173,7 @@ namespace chassis {
 
     /**
      * Gets the wheel radius.
+     * Возвращает радиус колеса.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisGetWheelRadius"
@@ -184,6 +189,7 @@ namespace chassis {
 
     /**
      * Sets the base length.
+     * Устанавливает длину базы (коллеи).
      * @param length the base length, eg: 130 (mm)
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
@@ -200,6 +206,7 @@ namespace chassis {
 
     /**
      * Gets the base length.
+     * Получить длину базы (коллеи).
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisGetBaseLength"
@@ -215,6 +222,7 @@ namespace chassis {
 
     /**
      * Set the chassis synchronization control values.
+     * Установите управляющие значения синхронизации шасси.
      * @param kp sync kp input value, eg. 0.03
      * @param ki sync ki input value, eg. 0
      * @param kd sync kd input value, eg. 0.5
@@ -233,6 +241,7 @@ namespace chassis {
 
     /**
      * Makes a differential drive robot move with a given speed (cm/s) and rotation rate (deg/s) using a unicycle model.
+     * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с), используя модель одноколесного велосипеда.
      * @param speed speed of the center point between motors, eg: 10
      * @param rotationSpeed rotation of the robot around the center point, eg: 30
      * @param distance driving distance, eg: 150 (mm)
@@ -275,6 +284,7 @@ namespace chassis {
 
     /**
      * Stop the chassis motors.
+     * Заглушите двигатели шасси.
      * @param setBrake hold the motors when braking, eg. true
      */
     //% blockId="ChassisStop"
@@ -303,6 +313,7 @@ namespace chassis {
 
     /**
      * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
+     * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
      * @param vLeft left motor speed input value, eg. 50
      * @param vRight right motor speed input value, eg. 50
      * @param value move duration or rotation, eg. 500
@@ -358,6 +369,7 @@ namespace chassis {
 
     /**
      * Synchronization with smooth acceleration and deceleration during straight-line motion.
+     * Синхронизация с плавным ускорением и замедлением при прямолинейном движении.
      * @param minSpeed start motor speed, eg. 5
      * @param maxSpeed max motor speed, eg. 50
      * @param accelDist accelerate length encoder value, eg. 50
@@ -400,6 +412,8 @@ namespace chassis {
     /**
      * Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed.
      * For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
+     * Синхронизированный поворот шасси относительно центра на нужный угол с определенной скоростью.
+     * Например, если градусов > 0, то робот будет поворачиваться вправо, а если градусов < 0, то влево.
      * @param degress rotation value in degrees, eg. 90
      * @param speed turning speed value, eg. 30
      */
@@ -446,6 +460,7 @@ namespace chassis {
 
     /**
      * Synchronized rotation to the desired angle relative to one of the wheels.
+     * Синхронизированный поворот на нужный угол относительно одного из колес.
      * @param degress rotation value in degrees, eg. 90
      * @param speed turning speed value, eg. 30
      */
