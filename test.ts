@@ -1,8 +1,8 @@
 // Arc synchronized movement
-function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
+function ArcMovementExample(lMotPwr: number, rMotPwr: number, length: number) {
     //if (!motorsPair) return;
     advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr);
-    chassis.pidChassisSync.setGains(0.03, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setGains(0.02, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
     let prevTime = 0;
@@ -12,7 +12,7 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number) {
         prevTime = currTime;
         let encB = chassis.leftMotor.angle();
         let encC = chassis.rightMotor.angle();
-        if ((encB + encC) / 2 >= 775) break;
+        if ((encB + encC) / 2 >= length) break;
         let error = advmotctrls.getErrorSyncMotors(encB, encC);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);
@@ -113,7 +113,7 @@ function Test() {
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);
-    // ArcMovementExample(25, 50);
+    ArcMovementExample(25, 50, 775);
 }
 
 Test();
