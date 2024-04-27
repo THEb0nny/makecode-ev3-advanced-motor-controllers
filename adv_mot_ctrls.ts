@@ -78,8 +78,8 @@ namespace advmotctrls {
      * @param U входное значение управляющего воздействия от регулятора
     **/
     //% blockId="GetPwrSyncMotors"
-    //% block="config sync сhassis control at U = $U"
-    //% block.loc.ru="конфигурирация синхронизации управления шасси при U = $U"
+    //% block="get pwr sync сhassis control at U = $U"
+    //% block.loc.ru="получить скорости синхронизации управления шасси при U = $U"
     export function getPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
         const pRight = syncVRight + syncVLeftSign * U;
