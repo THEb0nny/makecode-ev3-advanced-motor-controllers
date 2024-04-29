@@ -318,10 +318,11 @@ namespace chassis {
      * @param vRight right motor speed input value, eg. 50
      * @param value move duration or rotation, eg. 500
      * @param unit unit of the value, eg. MoveUnit.Degrees
+     * @param setBreak holding the engine when braking, eg. true
      */
     //% blockId="ChassisSyncMovement"
-    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| break $setBrake"
-    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение с удержанием $setBrake"
+    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| break $setBreak"
+    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение с удержанием $setBreak"
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
@@ -466,12 +467,12 @@ namespace chassis {
     /**
      * Synchronized rotation to the desired angle relative to one of the wheels.
      * Синхронизированный поворот на нужный угол относительно одного из колес.
-     * @param degress rotation value in degrees, eg. 90
+     * @param deg rotation value in degrees, eg. 90
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisPivotTurn"
-    //% block="sync chassis pivot turn at degress = $degress|°| for speed = $speed|\\% pivot $wheelPivot"
-    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°| со скоростью = $speed|\\% относительно $wheelPivot"
+    //% block="sync chassis pivot turn at degress = $deg|°| for speed = $speed|\\% pivot $wheelPivot"
+    //% block.loc.ru="синхронизированный поворот шасси на угол = $deg|°| со скоростью = $speed|\\% относительно $wheelPivot"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="78" blockGap="8"
