@@ -250,7 +250,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% setBrake.shadow="toggleOnOff"
-    //% weight="98"
+    //% weight="99"
     //% group="Move"
     export function stop(setBrake?: boolean) {
         //if (!motorsPair) return;
