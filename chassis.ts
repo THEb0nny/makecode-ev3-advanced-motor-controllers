@@ -155,6 +155,25 @@ namespace chassis {
     */
 
     /**
+     * Set the chassis synchronization control values.
+     * Установите управляющие значения синхронизации шасси.
+     * @param Kp sync kp input value, eg. 0.03
+     * @param Ki sync ki input value, eg. 0
+     * @param Kd sync kd input value, eg. 0.5
+    */
+    //% blockId="ChassisSetRegulatorGains"
+    //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
+    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp|ki = $Ki|kd = $Kd"
+    //% inlineInputMode="inline"
+    //% weight="97"
+    //% group="Properties"
+    export function setRegulatorGains(Kp: number, Ki: number, Kd: number) {
+        syncKp = Kp;
+        syncKi = Ki;
+        syncKd = Kd;
+    }
+
+    /**
      * Sets the wheel radius.
      * Задает радиус колеса.
      * @param radius the radius of a wheel, eg: 56 (mm)
@@ -163,7 +182,7 @@ namespace chassis {
     //% blockId="ChassisSetWheelRadius"
     //% block="set wheel radius = $radius|$unit"
     //% block.loc.ru="установить радиус колёс шасси = $radius|$unit"
-    //% weight="97" blockGap="8"
+    //% weight="96" blockGap="8"
     //% group="Properties"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) wheelRadius = radius;
@@ -178,8 +197,8 @@ namespace chassis {
      */
     //% blockId="ChassisGetWheelRadius"
     //% block="get wheel radius $unit"
-    //% block.loc.ru="получить радиус колёс шасси в $unit"
-    //% weight="96"
+    //% block.loc.ru="радиус колёс шасси в $unit"
+    //% weight="95"
     //% group="Properties"
     export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
@@ -196,7 +215,7 @@ namespace chassis {
     //% blockId="ChassisSetBaseLength"
     //% block="set base length = $length|$unit"
     //% block.loc.ru="установить размер коллеи шасси = $length|$unit"
-    //% weight="95" blockGap="8"
+    //% weight="94" blockGap="8"
     //% group="Properties"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) baseLength = length;
@@ -211,32 +230,13 @@ namespace chassis {
      */
     //% blockId="ChassisGetBaseLength"
     //% block="get base length $unit"
-    //% block.loc.ru="получить размер коллеи шасси в $unit"
-    //% weight="94"
+    //% block.loc.ru="размер коллеи шасси в $unit"
+    //% weight="93"
     //% group="Properties"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) return baseLength;
         else if (unit == MeasurementUnit.Millimeters) return baseLength * 10;
         return 0;
-    }
-
-    /**
-     * Set the chassis synchronization control values.
-     * Установите управляющие значения синхронизации шасси.
-     * @param Kp sync kp input value, eg. 0.03
-     * @param Ki sync ki input value, eg. 0
-     * @param Kd sync kd input value, eg. 0.5
-    */
-    //% blockId="ChassisSetRegulatorGains"
-    //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
-    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp|ki = $Ki|kd = $Kd"
-    //% inlineInputMode="inline"
-    //% weight="93"
-    //% group="Properties"
-    export function setRegulatorGains(Kp: number, Ki: number, Kd: number) {
-        syncKp = Kp;
-        syncKi = Ki;
-        syncKd = Kd;
     }
 
     /**
