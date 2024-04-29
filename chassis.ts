@@ -392,6 +392,8 @@ namespace chassis {
             stop(true);
             return;
         }
+        const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
+        const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
         advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
@@ -401,8 +403,8 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = leftMotor.angle();
-            let emr = rightMotor.angle();
+            let eml = leftMotor.angle() - emlPrev;
+            let emr = rightMotor.angle() - emrPrev;
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
