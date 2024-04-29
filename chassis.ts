@@ -167,7 +167,7 @@ namespace chassis {
     //% group="Properties"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) wheelRadius = radius;
-        else if (unit == MeasurementUnit.Millimeters) wheelRadius = radius / 10;
+        else if (unit == MeasurementUnit.Millimeters) wheelRadius = radius;
         else return;
     }
 
@@ -183,7 +183,7 @@ namespace chassis {
     //% group="Properties"
     export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
-        else if (unit == MeasurementUnit.Millimeters) return wheelRadius * 10;
+        else if (unit == MeasurementUnit.Millimeters) return wheelRadius;
         return 0;
     }
 
@@ -200,7 +200,7 @@ namespace chassis {
     //% group="Properties"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) baseLength = length;
-        else if (unit == MeasurementUnit.Millimeters) baseLength = length / 10;
+        else if (unit == MeasurementUnit.Millimeters) baseLength = length;
         return;
     }
 
@@ -216,7 +216,7 @@ namespace chassis {
     //% group="Properties"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) return baseLength;
-        else if (unit == MeasurementUnit.Millimeters) return baseLength * 10;
+        else if (unit == MeasurementUnit.Millimeters) return baseLength;
         return 0;
     }
 
