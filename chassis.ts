@@ -162,8 +162,8 @@ namespace chassis {
      * @param Kd sync kd input value, eg. 0.5
     */
     //% blockId="ChassisSetRegulatorGains"
-    //% block="set chassis sync pid gains kp = $Kp|ki = $Ki|kd = $Kd"
-    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp|ki = $Ki|kd = $Kd"
+    //% block="set chassis sync pid gains kp = $Kp| ki = $Ki| kd = $Kd"
+    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp| ki = $Ki| kd = $Kd"
     //% inlineInputMode="inline"
     //% weight="97"
     //% group="Properties"
@@ -294,7 +294,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% setBrake.shadow="toggleOnOff"
-    //% weight="89" blockGap="8"
+    //% weight="98" blockGap="8"
     //% group="Move"
     export function stop(setBrake?: boolean) {
         //if (!motorsPair) return;
