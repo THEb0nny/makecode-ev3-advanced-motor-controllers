@@ -254,6 +254,7 @@ namespace chassis {
     //% weight="89" blockGap="8"
     //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
     //% group="Move"
+    //% blockHidden="true"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
         if (!speed || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) {
@@ -400,19 +401,19 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = chassis.leftMotor.angle();
-            let emr = chassis.rightMotor.angle();
+            let eml = leftMotor.angle();
+            let emr = rightMotor.angle();
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
-            chassis.pidChassisSync.setPoint(error);
-            let U = chassis.pidChassisSync.compute(dt, 0);
+            pidChassisSync.setPoint(error);
+            let U = pidChassisSync.compute(dt, 0);
             let powers = advmotctrls.getPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
             chassis.leftMotor.run(powers.pwrLeft);
             chassis.rightMotor.run(powers.pwrRight);
             control.pauseUntilTime(currTime, 5);
         }
-        chassis.stop(true); // Break
+        stop(true); // Break
     }
 
     /**
@@ -429,7 +430,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="79" blockGap="8"
-    //% group="Move"
+    //% group="Turns"
     export function spinTurn(degress: number, speed: number) {
         //if (!motorsPair) return;
         if (degress == 0 || speed <= 0) {
@@ -476,17 +477,17 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="78" blockGap="8"
-    //% group="Move"
+    //% group="Turns"
     export function pivotTurn(deg: number, speed: number, wheelPivot: WheelPivot) {
         //if (!motorsPair) return;
         if (deg == 0 || speed == 0 || deg > 0 && speed < 0 || deg < 0 && speed > 0) {
-            chassis.stop(true);
+            stop(true);
             return;
         }
-        const emlPrev = chassis.leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
-        const emrPrev = chassis.rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
-        let calcMotRot = Math.round(((deg * chassis.getBaseLength()) / chassis.getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
-        chassis.stop(true); // Brake so that one of the motors is held when turning
+        const emlPrev = leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
+        const emrPrev = rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
+        let calcMotRot = Math.round(((deg * getBaseLength()) / getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
+        stop(true); // Brake so that one of the motors is held when turning
         if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.syncMotorsConfig(0, speed);
         else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.syncMotorsConfig(speed, 0);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
@@ -497,18 +498,18 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = chassis.leftMotor.angle() - emlPrev;
-            let emr = chassis.rightMotor.angle() - emrPrev;
+            let eml = leftMotor.angle() - emlPrev;
+            let emr = rightMotor.angle() - emrPrev;
             if (wheelPivot == WheelPivot.LeftWheel && Math.abs(emr) >= Math.abs(calcMotRot)) break;
             else if (wheelPivot == WheelPivot.RightWheel && Math.abs(eml) >= Math.abs(calcMotRot)) break;
             let error = 0;
             if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
             else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
-            chassis.pidChassisSync.setPoint(error);
-            let U = chassis.pidChassisSync.compute(dt, 0);
+            pidChassisSync.setPoint(error);
+            let U = pidChassisSync.compute(dt, 0);
             let powers = advmotctrls.getPwrSyncMotors(U);
-            if (wheelPivot == WheelPivot.LeftWheel) chassis.rightMotor.run(powers.pwrRight);
-            else if (wheelPivot == WheelPivot.RightWheel) chassis.leftMotor.run(powers.pwrLeft);
+            if (wheelPivot == WheelPivot.LeftWheel) rightMotor.run(powers.pwrRight);
+            else if (wheelPivot == WheelPivot.RightWheel) leftMotor.run(powers.pwrLeft);
             control.pauseUntilTime(currTime, 5);
         }
         stop(true); // Break
