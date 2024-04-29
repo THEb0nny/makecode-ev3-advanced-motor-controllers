@@ -427,8 +427,8 @@ namespace chassis {
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisSpinTurn"
-    //% block="sync chassis spin turn at degress = $degress|°| for speed = $speed|\\%"
-    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°| со скоростью = $speed|\\%"
+    //% block="sync chassis spin turn at degress = $degress|°| for speed = $speed|\\%| relative to center"
+    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°| со скоростью = $speed|\\%| относительно центра"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="99" blockGap="8"
