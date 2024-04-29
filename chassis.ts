@@ -240,6 +240,35 @@ namespace chassis {
     }
 
     /**
+     * Stop the chassis motors.
+     * Заглушите двигатели шасси.
+     * @param setBrake hold the motors when braking, eg. true
+     */
+    //% blockId="ChassisStop"
+    //% block="chassis stop|| at hold $setBrake"
+    //% block.loc.ru="остановить шасси|| с удержанием $setBrake"
+    //% inlineInputMode="inline"
+    //% expandableArgumentMode="toggle"
+    //% setBrake.shadow="toggleOnOff"
+    //% weight="98"
+    //% group="Move"
+    export function stop(setBrake?: boolean) {
+        //if (!motorsPair) return;
+        if (setBrake) {
+            // motorsPair.setBrake(setBrake);
+            leftMotor.setBrake(setBrake);
+            rightMotor.setBrake(setBrake);
+        }
+        // motorsPair.stop();
+        leftMotor.setBrakeSettleTime(0);
+        rightMotor.setBrakeSettleTime(0);
+        leftMotor.stop();
+        rightMotor.stop();
+        leftMotor.setBrakeSettleTime(10);
+        rightMotor.setBrakeSettleTime(10);
+    }
+
+    /**
      * Makes a differential drive robot move with a given speed (cm/s) and rotation rate (deg/s) using a unicycle model.
      * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с), используя модель одноколесного велосипеда.
      * @param speed speed of the center point between motors, eg: 10
@@ -281,35 +310,6 @@ namespace chassis {
         const seconds = distance / speed; // cm / (cm/s) = s
 
         motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
-    }
-
-    /**
-     * Stop the chassis motors.
-     * Заглушите двигатели шасси.
-     * @param setBrake hold the motors when braking, eg. true
-     */
-    //% blockId="ChassisStop"
-    //% block="chassis stop||at hold $setBrake"
-    //% block.loc.ru="остановить шасси||с удержанием $setBrake"
-    //% inlineInputMode="inline"
-    //% expandableArgumentMode="toggle"
-    //% setBrake.shadow="toggleOnOff"
-    //% weight="98" blockGap="8"
-    //% group="Move"
-    export function stop(setBrake?: boolean) {
-        //if (!motorsPair) return;
-        if (setBrake) {
-            // motorsPair.setBrake(setBrake);
-            leftMotor.setBrake(setBrake);
-            rightMotor.setBrake(setBrake);
-        }
-        // motorsPair.stop();
-        leftMotor.setBrakeSettleTime(0);
-        rightMotor.setBrakeSettleTime(0);
-        leftMotor.stop();
-        rightMotor.stop();
-        leftMotor.setBrakeSettleTime(10);
-        rightMotor.setBrakeSettleTime(10);
     }
 
     /**
