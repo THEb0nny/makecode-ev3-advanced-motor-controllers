@@ -431,7 +431,7 @@ namespace chassis {
     //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°| со скоростью = $speed|\\%"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
-    //% weight="79" blockGap="8"
+    //% weight="69" blockGap="8"
     //% group="Turns"
     export function spinTurn(degress: number, speed: number) {
         //if (!motorsPair) return;
@@ -478,7 +478,7 @@ namespace chassis {
     //% block.loc.ru="синхронизированный поворот шасси на угол = $deg|°| со скоростью = $speed|\\% относительно $wheelPivot"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
-    //% weight="78" blockGap="8"
+    //% weight="68" blockGap="8"
     //% group="Turns"
     export function pivotTurn(deg: number, speed: number, wheelPivot: WheelPivot) {
         //if (!motorsPair) return;
