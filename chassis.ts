@@ -162,7 +162,7 @@ namespace chassis {
      */
     //% blockId="ChassisSetWheelRadius"
     //% block="set wheel radius = $radius|$unit"
-    //% block.loc.ru="установить радиус колёс шасси $radius|$unit"
+    //% block.loc.ru="установить радиус колёс шасси = $radius|$unit"
     //% weight="97" blockGap="8"
     //% group="Properties"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
@@ -388,7 +388,7 @@ namespace chassis {
     //% group="Move"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, totalDist: number, accelDist: number, decelDist: number) {
         //if (!motorsPair) return;
-        if (minSpeed <= 0 || maxSpeed <= 0 || totalDist == 0) {
+        if (minSpeed == 0 || maxSpeed == 0 || totalDist == 0) {
             stop(true);
             return;
         }
