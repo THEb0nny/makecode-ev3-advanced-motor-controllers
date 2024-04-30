@@ -170,7 +170,7 @@ namespace advmotctrls {
         ACC2_accelDist = accelDist;
         ACC2_decelDist = decelDist;
         ACC2_totalDist = totalDist;
-        if (minPwr < 0 && maxPwr < 0) ACC2_isNEG = 1;
+        if (minPwr <= 0 && maxPwr < 0) ACC2_isNEG = 1;
         else ACC2_isNEG = 0;
     }
 
