@@ -17,6 +17,19 @@ const enum WheelPivot {
     RightWheel
 }
 
+// Перечислении о типах торможения
+const enum Braking {
+    //% block="break at hold"
+    //% block.loc.ru="торможение с удержанием"
+    Hold,
+    //% block="no break"
+    //% block.loc.ru="торможение без удержания"
+    NoBreak,
+    //% block="nothing"
+    //% block.loc.ru="не тормозить"
+    NoStop
+}
+
 /**
  * A differential drive robot.
  * Робот с дифференциальным приводом.
@@ -319,7 +332,7 @@ namespace chassis {
      * @param vRight right motor speed input value, eg. 50
      * @param value move duration or rotation, eg. 500
      * @param unit unit of the value, eg. MoveUnit.Degrees
-     * @param setBreak holding the engine when braking, eg. true
+     * @param setBreak holding the engine when braking, eg. Braking.Hold
      */
     //% blockId="ChassisSyncMovement"
     //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| break $setBreak"
@@ -330,7 +343,7 @@ namespace chassis {
     //% setBreak.shadow="toggleOnOff"
     //% weight="88" blockGap="8"
     //% group="Синхронизированное движение"
-    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, setBreak: boolean = true) {
+    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, setBreak: Braking = Braking.Hold) {
         // if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
             stop(true);
@@ -366,7 +379,10 @@ namespace chassis {
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        stop(setBreak); // Break
+        if (setBreak != Braking.NoStop) {
+            if (setBreak == Braking.Hold) stop(true); // Break at hold
+            else stop(false); // No hold break
+        }
     }
 
     /**
