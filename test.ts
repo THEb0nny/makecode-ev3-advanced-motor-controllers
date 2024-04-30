@@ -26,6 +26,7 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number, length: number) {
 }
 */
 
+/*
 function LineFollowExample(speed: number) {
     const B_REF_RAW_CS2 = 636;
     const W_REF_RAW_CS2 = 490;
@@ -42,8 +43,10 @@ function LineFollowExample(speed: number) {
         prevTime = currTime;
         let rrcs2 = sensors.color2.light(LightIntensityMode.ReflectedRaw);
         let rrcs3 = sensors.color3.light(LightIntensityMode.ReflectedRaw);
-        let rcs2 = GetNormRefValCS(rrcs2, B_REF_RAW_CS2, W_REF_RAW_CS2);
-        let rcs3 = GetNormRefValCS(rrcs3, B_REF_RAW_CS3, W_REF_RAW_CS3);
+        let rcs2 = Math.map(rrcs2, B_REF_RAW_CS2, W_REF_RAW_CS2, 0, 100);
+        rcs2 = Math.constrain(rcs2, 0, 100);
+        let rcs3 = Math.map(rrcs3, B_REF_RAW_CS3, B_REF_RAW_CS3, 0, 100);
+        rcs3 = Math.constrain(rcs3, 0, 100);
         let eml = chassis.leftMotor.angle();
         let emr = chassis.rightMotor.angle();
         //let sync_error = advmotctrls.GetErrorSyncMotors(eml, emr);
@@ -59,6 +62,7 @@ function LineFollowExample(speed: number) {
     }
     chassis.stop(true);
 }
+*/
 
 // Smooth acceleration and deceleration when moving along the line
 function RampLineFollowExample() {
@@ -81,8 +85,10 @@ function RampLineFollowExample() {
         if (out.isDone) break;
         let rrcs2 = sensors.color2.light(LightIntensityMode.ReflectedRaw);
         let rrcs3 = sensors.color3.light(LightIntensityMode.ReflectedRaw);
-        let rcs2 = GetNormRefValCS(rrcs2, B_REF_RAW_CS2, W_REF_RAW_CS2);
-        let rcs3 = GetNormRefValCS(rrcs3, B_REF_RAW_CS3, W_REF_RAW_CS3);
+        let rcs2 = Math.map(rrcs2, B_REF_RAW_CS2, W_REF_RAW_CS2, 0, 100);
+        rcs2 = Math.constrain(rcs2, 0, 100);
+        let rcs3 = Math.map(rrcs3, B_REF_RAW_CS3, B_REF_RAW_CS3, 0, 100);
+        rcs3 = Math.constrain(rcs3, 0, 100);
         let error = rcs2 - rcs3;
         automation.pid1.setPoint(error);
         let U = automation.pid1.compute(dt, 0);
@@ -93,13 +99,6 @@ function RampLineFollowExample() {
         control.pauseUntilTime(currTime, 10);
     }
     chassis.stop(true);
-}
-
-// Функция для нормализации сырых значений с датчика
-function GetNormRefValCS(refRawValCS: number, bRefRawValCS: number, wRefRawValCS: number): number {
-    let refValCS = Math.map(refRawValCS, bRefRawValCS, wRefRawValCS, 0, 100);
-    refValCS = Math.constrain(refValCS, 0, 100);
-    return refValCS;
 }
 
 function Test() {

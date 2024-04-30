@@ -157,7 +157,7 @@ namespace advmotctrls {
     **/
     //% blockId="AccTwoEncConfig"
     //% block="config accel/deceleration chassis control at minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist| decelDist = $decelDist"
-    //% block.loc.ru="конфигурирация ускорение/замедление управления шасси при minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist|decelDist = $decelDist"
+    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist|decelDist = $decelDist"
     //% minPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
     export function accTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
