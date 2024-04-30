@@ -12,14 +12,12 @@ namespace advmotctrls {
     let syncVLeftSign: number;
     let syncVRightSign: number;
 
-    /*
     let ACC1_minPwr: number;
     let ACC1_maxPwr: number;
     let ACC1_accelDist: number;
     let ACC1_decelDist: number;
     let ACC1_totalDist: number;
     let ACC1_isNEG: number;
-    */
 
     let ACC2_minPwr: number;
     let ACC2_maxPwr: number;
@@ -102,15 +100,14 @@ namespace advmotctrls {
         };
     }
 
-    /*
-    export function accOneEncConfig(minPwr_in: number, maxPwr_in: number, accelDist_in: number, decelDist_in: number, totalDist_in: number) {
-        ACC1_minPwr = Math.abs(minPwr_in);
-        ACC1_maxPwr = Math.abs(maxPwr_in);
-        ACC1_accelDist = accelDist_in;
-        ACC1_decelDist = decelDist_in;
-        ACC1_totalDist = totalDist_in;
+    export function accOneEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+        ACC1_minPwr = Math.abs(minPwr);
+        ACC1_maxPwr = Math.abs(maxPwr);
+        ACC1_accelDist = accelDist;
+        ACC1_decelDist = decelDist;
+        ACC1_totalDist = totalDist;
 
-        if (minPwr_in < 0) ACC1_isNEG = 1;
+        if (minPwr <= 0 && maxPwr < 0) ACC1_isNEG = 1;
         else ACC1_isNEG = 0;
     }
 
@@ -148,7 +145,6 @@ namespace advmotctrls {
         }
         return done;
     }
-    */
 
     /**
      * The configuration of acceleration and deceleration of the chassis of two motors.
