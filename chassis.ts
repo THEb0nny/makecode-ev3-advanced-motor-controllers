@@ -282,7 +282,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% weight="89" blockGap="8"
     //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
-    //% group="Move"
+    //% group="Синхронизированное движение"
     //% blockHidden="true"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
@@ -329,7 +329,7 @@ namespace chassis {
     //% vRight.shadow="motorSpeedPicker"
     //% setBreak.shadow="toggleOnOff"
     //% weight="88" blockGap="8"
-    //% group="Move"
+    //% group="Синхронизированное движение"
     export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, setBreak: boolean = true) {
         // if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
@@ -385,7 +385,7 @@ namespace chassis {
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
     //% weight="87"
-    //% group="Move"
+    //% group="Синхронизированное движение"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, totalDist: number, accelDist: number, decelDist: number) {
         //if (!motorsPair) return;
         if (maxSpeed == 0 || totalDist == 0) {
