@@ -1,4 +1,5 @@
 // Arc synchronized movement
+/*
 function ArcMovementExample(lMotPwr: number, rMotPwr: number, length: number) {
     //if (!motorsPair) return;
     advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr);
@@ -23,6 +24,7 @@ function ArcMovementExample(lMotPwr: number, rMotPwr: number, length: number) {
     }
     chassis.stop(true);
 }
+*/
 
 function LineFollowExample(speed: number) {
     const B_REF_RAW_CS2 = 636;
@@ -113,7 +115,7 @@ function Test() {
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);
-    ArcMovementExample(25, 50, 775);
+    // ArcMovementExample(25, 50, 775);
 }
 
 // Test();
