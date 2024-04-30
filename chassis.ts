@@ -388,7 +388,7 @@ namespace chassis {
     //% group="Move"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, totalDist: number, accelDist: number, decelDist: number) {
         //if (!motorsPair) return;
-        if (minSpeed == 0 || maxSpeed == 0 || totalDist == 0) {
+        if (maxSpeed == 0 || totalDist == 0) {
             stop(true);
             return;
         }

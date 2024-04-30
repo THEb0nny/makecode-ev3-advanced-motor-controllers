@@ -175,8 +175,8 @@ namespace advmotctrls {
     }
 
     /**
-     * Конфигурация ускорения и замедления двумя моторами.
      * The configuration of acceleration and deceleration by two motors.
+     * Конфигурация ускорения и замедления двумя моторами.
      * @param minPwr входное значение скорости на старте, eg. 15
      * @param maxPwr входное значение максимальной скорости, eg. 50
      * @param accelDist значение дистанции ускорения, eg. 150
