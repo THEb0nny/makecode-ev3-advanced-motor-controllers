@@ -340,7 +340,6 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
-    //% setBreak.shadow="toggleOnOff"
     //% weight="88" blockGap="8"
     //% group="Синхронизированное движение"
     export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, setBreak: Braking = Braking.Hold) {
