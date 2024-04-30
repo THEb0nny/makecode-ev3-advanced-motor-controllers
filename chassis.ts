@@ -372,15 +372,15 @@ namespace chassis {
     /**
      * Synchronization with smooth acceleration and deceleration during straight-line motion.
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении.
-     * @param minSpeed start motor speed, eg. 5
+     * @param minSpeed start motor speed, eg. 10
      * @param maxSpeed max motor speed, eg. 50
      * @param totalDist total length encoder value at, eg. 500
      * @param accelDist accelerate length encoder value, eg. 50
      * @param decelDist decelerate length encoder value, eg. 100
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at speed min $minSpeed|\\%| max = $maxSpeed|\\%| for distance = $totalDist| acceleration = $accelDist| deceleration = $decelDist"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние = $totalDist| ускорения = $accelDist| замедления = $decelDist"
+    //% block="sync chassis ramp movement at speed min = $minSpeed|\\%| max = $maxSpeed|\\%| for distance = $totalDist| acceleration = $accelDist| deceleration = $decelDist"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин = $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние = $totalDist| ускорения = $accelDist| замедления = $decelDist"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
@@ -415,7 +415,7 @@ namespace chassis {
             chassis.rightMotor.run(powers.pwrRight);
             control.pauseUntilTime(currTime, 5);
         }
-        stop(true); // Break
+        stop(true); // Break at hold
     }
 
     /**
@@ -464,7 +464,7 @@ namespace chassis {
             rightMotor.run(powers.pwrRight);
             control.pauseUntilTime(currTime, 5);
         }
-        stop(true); // Break
+        stop(true); // Break at hold
     }
 
     /**
@@ -514,7 +514,7 @@ namespace chassis {
             else if (wheelPivot == WheelPivot.RightWheel) leftMotor.run(powers.pwrLeft);
             control.pauseUntilTime(currTime, 5);
         }
-        stop(true); // Break
+        stop(true); // Break at hold
     }
 
 }
