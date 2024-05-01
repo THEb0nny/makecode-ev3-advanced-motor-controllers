@@ -332,11 +332,11 @@ namespace chassis {
      * @param vRight right motor speed input value, eg. 50
      * @param value move duration or rotation, eg. 500
      * @param unit unit of the value, eg. MoveUnit.Degrees
-     * @param setBreak holding the engine when braking, eg. Braking.Hold
+     * @param setBreak braking type, eg. Braking.Hold
      */
     //% blockId="ChassisSyncMovement"
-    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| break $setBreak"
-    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение с удержанием $setBreak"
+    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| braking $setBreak"
+    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение  $setBreak"
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
