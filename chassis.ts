@@ -47,9 +47,9 @@ namespace chassis {
     let wheelRadius: number = 0; // The radius of the wheel (cm)
     let baseLength: number = 0; // The distance between the wheels (cm)
 
-    let syncKp: number = 0.03; // Proportional synchronization gain
-    let syncKi: number = 0; // Integral synchronization gain
-    let syncKd: number = 0.5; // Differential synchronization gain
+    export let syncKp: number = 0.03; // Proportional synchronization gain
+    export let syncKi: number = 0; // Integral synchronization gain
+    export let syncKd: number = 0.5; // Differential synchronization gain
 
     export const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
