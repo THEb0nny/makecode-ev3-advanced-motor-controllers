@@ -332,17 +332,17 @@ namespace chassis {
      * @param vRight right motor speed input value, eg. 50
      * @param value move duration or rotation, eg. 500
      * @param unit unit of the value, eg. MoveUnit.Degrees
-     * @param setBreak braking type, eg. Braking.Hold
+     * @param braking braking type, eg. Braking.Hold
      */
     //% blockId="ChassisSyncMovement"
-    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| braking $setBreak"
-    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение  $setBreak"
+    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| braking $braking"
+    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение $braking"
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
     //% weight="88" blockGap="8"
     //% group="Синхронизированное движение"
-    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, setBreak: Braking = Braking.Hold) {
+    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
         // if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
             stop(true);
@@ -378,8 +378,8 @@ namespace chassis {
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
             control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
         }
-        if (setBreak != Braking.NoStop) {
-            if (setBreak == Braking.Hold) stop(true); // Break at hold
+        if (braking != Braking.NoStop) {
+            if (braking == Braking.Hold) stop(true); // Break at hold
             else stop(false); // No hold break
         }
     }
