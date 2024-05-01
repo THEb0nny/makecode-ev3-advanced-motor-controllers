@@ -47,9 +47,9 @@ namespace chassis {
     let wheelRadius: number = 0; // The radius of the wheel (cm)
     let baseLength: number = 0; // The distance between the wheels (cm)
 
-    export let syncKp: number = 0.03; // Proportional synchronization gain
-    export let syncKi: number = 0; // Integral synchronization gain
-    export let syncKd: number = 0.5; // Differential synchronization gain
+    let syncKp: number = 0.03; // Proportional synchronization gain
+    let syncKi: number = 0; // Integral synchronization gain
+    let syncKd: number = 0.5; // Differential synchronization gain
 
     export const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
@@ -174,16 +174,28 @@ namespace chassis {
      * @param Ki sync ki input value, eg. 0
      * @param Kd sync kd input value, eg. 0.5
     */
-    //% blockId="ChassisSetRegulatorGains"
+    //% blockId="ChassisSetSyncRegulatorGains"
     //% block="set chassis sync pid gains kp = $Kp| ki = $Ki| kd = $Kd"
     //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp| ki = $Ki| kd = $Kd"
     //% inlineInputMode="inline"
     //% weight="97"
     //% group="Properties"
-    export function setRegulatorGains(Kp: number, Ki: number, Kd: number) {
+    export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number) {
         syncKp = Kp;
         syncKi = Ki;
         syncKd = Kd;
+    }
+
+    export function getSyncRegulatorKp(): number {
+        return syncKp;
+    }
+
+    export function getSyncRegulatorKi(): number {
+        return syncKi;
+    }
+
+    export function getSyncRegulatorKd(): number {
+        return syncKd;
     }
 
     /**
