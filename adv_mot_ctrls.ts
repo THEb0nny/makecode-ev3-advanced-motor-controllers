@@ -2,7 +2,7 @@
 * Motor controllers based OFDL Advanced Motor Controller Block module (algorithm part).
 * Based 1.1 ver, 2023/09/27.
 */
-//% block="AdvMotCtrls" weight=84 color=#02ab38 icon="\uf3fd"
+//% block="AdvMotCtrls" weight="84" color="#02ab38" icon="\uf3fd"
 namespace advmotctrls {
 
     let pwr: number;
@@ -43,8 +43,9 @@ namespace advmotctrls {
      * @param vRight входное значение скорости правого мотора, eg. 50
     **/
     //% blockId="SyncMotorsConfig"
-    //% block="config sync сhassis control vLeft = $vLeft| vRight = $vRight"
-    //% block.loc.ru="конфигурирация синхронизации управления шасси vLeft = $vLeft| vRight = $vRight"
+    //% block="config sync сhassis control vLeft = $vLeft vRight = $vRight"
+    //% block.loc.ru="конфигурирация синхронизации управления шасси vLeft = $vLeft vRight = $vRight"
+    //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
     export function syncMotorsConfig(vLeft: number, vRight: number) {
@@ -62,8 +63,9 @@ namespace advmotctrls {
      * @param eRight входное значение энкодера правого мотора
     **/
     //% blockId="GetErrorSyncMotors"
-    //% block="get error sync chassis motors eLeft = $eLeft| eRight = $eRight"
-    //% block.loc.ru="получить ошибку синхронизации шасси eLeft = $eLeft| eRight = $eRight"
+    //% block="get error sync chassis motors eLeft = $eLeft eRight = $eRight"
+    //% block.loc.ru="получить ошибку синхронизации шасси eLeft = $eLeft eRight = $eRight"
+    //% inlineInputMode="inline"
     export function getErrorSyncMotors(eLeft: number, eRight: number): number {
         return ((syncVRight * eLeft) - (syncVLeft * eRight));
     }
@@ -78,6 +80,7 @@ namespace advmotctrls {
     //% blockId="GetPwrSyncMotors"
     //% block="get pwr sync сhassis control at U = $U"
     //% block.loc.ru="получить скорости синхронизации управления шасси при U = $U"
+    //% inlineInputMode="inline"
     export function getPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
         const pRight = syncVRight + syncVLeftSign * U;
@@ -156,8 +159,9 @@ namespace advmotctrls {
      * @param totalDist значение всей дистанции, eg. 500
     **/
     //% blockId="AccTwoEncConfig"
-    //% block="config accel/deceleration chassis control at minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist| decelDist = $decelDist"
-    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minPwr = $minPwr| maxPwr = $maxPwr| totalDist = $totalDist| accelDist = $accelDist|decelDist = $decelDist"
+    //% block="config accel/deceleration chassis control at minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
     export function accTwoEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
@@ -180,8 +184,9 @@ namespace advmotctrls {
      * @param totalDist значение всей дистанции, eg. 500
     **/
     //% blockId="AccTwoEnc"
-    //% block="compute accel/deceleration chassis control at eLeft = $eLeft| eRight = $eRight"
-    //% block.loc.ru="подсчёт ускорение/замедление управлешние шасси при eLeft = $eLeft| eRight = $eRight"
+    //% block="compute accel/deceleration chassis control at eLeft = $eLeft eRight = $eRight"
+    //% block.loc.ru="расчитать ускорение/замедление управления шасси при eLeft = $eLeft eRight = $eRight"
+    //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
     export function accTwoEnc(eLeft: number, eRight: number): AccTwoEncReturn {
