@@ -454,8 +454,8 @@ namespace chassis {
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisSpinTurn"
-    //% block="sync chassis spin turn at degress = $degress|°| for speed = $speed|\\%| relative to center"
-    //% block.loc.ru="синхронизированный поворот шасси на угол = $degress|°| со скоростью = $speed|\\%| относительно центра"
+    //% block="sync chassis spin turn $degress ° at speed = $speed\\% relative to center"
+    //% block.loc.ru="синхронизированный поворот шасси на $degress ° с $speed\\% относительно центра"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="99" blockGap="8"
@@ -501,8 +501,8 @@ namespace chassis {
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisPivotTurn"
-    //% block="sync chassis pivot turn at degress = $deg|°| for speed = $speed|\\% pivot $wheelPivot| wheel"
-    //% block.loc.ru="синхронизированный поворот шасси на угол = $deg|°| со скоростью = $speed|\\% относительно $wheelPivot| колеса"
+    //% block="sync chassis pivot turn $deg ° at $speed\\% pivot $wheelPivot wheel"
+    //% block.loc.ru="синхронизированный поворот шасси на $deg ° с $speed\\% относительно $wheelPivot колеса"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98"
@@ -531,9 +531,10 @@ namespace chassis {
             let emr = rightMotor.angle() - emrPrev;
             if (wheelPivot == WheelPivot.LeftWheel && Math.abs(emr) >= Math.abs(calcMotRot)) break;
             else if (wheelPivot == WheelPivot.RightWheel && Math.abs(eml) >= Math.abs(calcMotRot)) break;
-            let error = 0;
-            if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
-            else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
+            // let error = 0;
+            // if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
+            // else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
+            let error = advmotctrls.getErrorSyncMotors(eml, emr);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
             let powers = advmotctrls.getPwrSyncMotors(U);
