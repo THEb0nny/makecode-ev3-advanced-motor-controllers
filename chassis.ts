@@ -36,7 +36,7 @@ const enum Braking {
  */
 //% block="Chassis"
 //% block.loc.ru="Шасси"
-//% color="#02909D" weight="89" icon="\uf1b9"
+//% color="#02909D" weight="88" icon="\uf1b9"
 namespace chassis {
 
     export let motorsPair: motors.SynchedMotorPair; // The motors pair
@@ -61,8 +61,8 @@ namespace chassis {
      * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetChassisMotors"
-    //% block="set motors to chassis $newMotorsPair|| at reverse property $setLeftMotReverse| $setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newMotorsPair|| с свойством реверса $setLeftMotReverse| $setRightMotReverse"
+    //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse $setRightMotReverse"
     //% newMotorsPair.fieldEditor="motors"
     //% newMotorsPair.fieldOptions.decompileLiterals="1"
     //% setLeftMotReverse.shadow="toggleOnOff"
@@ -128,8 +128,8 @@ namespace chassis {
      * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetSeparatelyChassisMotors"
-    //% block="set motors to chassis $newLeftMotors| $newRightMotors|| at reverse property $setLeftMotReverse| $setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newLeftMotors| $newRightMotors|| с свойством реверса $setLeftMotReverse| $setRightMotReverse"
+    //% block="set motors to chassis $newLeftMotors $newRightMotors||at reverse property $setLeftMotReverse $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newLeftMotors $newRightMotors||с свойством реверса $setLeftMotReverse $setRightMotReverse"
     //% newLeftMotors.fieldEditor="motors"
     //% newLeftMotors.fieldOptions.decompileLiterals="1"
     //% newRightMotors.fieldEditor="motors"
@@ -175,8 +175,8 @@ namespace chassis {
      * @param Kd sync kd input value, eg. 0.5
     */
     //% blockId="ChassisSetSyncRegulatorGains"
-    //% block="set chassis sync pid gains kp = $Kp| ki = $Ki| kd = $Kd"
-    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp| ki = $Ki| kd = $Kd"
+    //% block="set chassis sync pid gains kp = $Kp ki = $Ki kd = $Kd"
+    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp ki = $Ki kd = $Kd"
     //% inlineInputMode="inline"
     //% weight="97"
     //% group="Properties"
@@ -201,12 +201,12 @@ namespace chassis {
     /**
      * Sets the wheel radius.
      * Задает радиус колеса.
-     * @param radius the radius of a wheel, eg: 56 (mm)
+     * @param radius the radius of a wheel, eg: 56
      * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetWheelRadius"
-    //% block="set wheel radius = $radius|$unit"
-    //% block.loc.ru="установить радиус колёс шасси = $radius|$unit"
+    //% block="set wheel radius = $radius $unit"
+    //% block.loc.ru="установить радиус колёс шасси = $radius $unit"
     //% weight="96" blockGap="8"
     //% group="Properties"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
@@ -238,8 +238,8 @@ namespace chassis {
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetBaseLength"
-    //% block="set base length = $length|$unit"
-    //% block.loc.ru="установить размер коллеи шасси = $length|$unit"
+    //% block="set base length = $length $unit"
+    //% block.loc.ru="установить размер коллеи шасси = $length $unit"
     //% weight="94" blockGap="8"
     //% group="Properties"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
@@ -270,8 +270,8 @@ namespace chassis {
      * @param setBrake hold the motors when braking, eg. true
      */
     //% blockId="ChassisStop"
-    //% block="chassis stop|| at hold $setBrake"
-    //% block.loc.ru="остановить шасси|| с удержанием $setBrake"
+    //% block="chassis stop||at hold $setBrake"
+    //% block.loc.ru="остановить шасси||с удержанием $setBrake"
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% setBrake.shadow="toggleOnOff"
@@ -302,8 +302,8 @@ namespace chassis {
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisDrive"
-    //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance|$unit"
-    //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance|$unit"
+    //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance $unit"
+    //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance $unit"
     //% inlineInputMode="inline"
     //% weight="89" blockGap="8"
     //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
@@ -347,8 +347,8 @@ namespace chassis {
      * @param braking braking type, eg. Braking.Hold
      */
     //% blockId="ChassisSyncMovement"
-    //% block="sync chassis movement at $vLeft|\\%| $vRight|\\%| for value = $value|$unit| braking $braking"
-    //% block.loc.ru="синхронизированное управление шасси с $vLeft|\\%| $vRight|\\%| на $value|$unit| торможение $braking"
+    //% block="sync chassis movement at $vLeft\\% $vRight\\% for value = $value $unit braking $braking"
+    //% block.loc.ru="синхронизированное управление шасси с $vLeft\\% $vRight\\% на $value $unit торможение $braking"
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
@@ -406,8 +406,8 @@ namespace chassis {
      * @param decelDist decelerate length encoder value, eg. 100
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at speed min = $minSpeed|\\%| max = $maxSpeed|\\%| for distance = $totalDist| acceleration = $accelDist| deceleration = $decelDist"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин = $minSpeed|\\%| макс = $maxSpeed|\\%| на расстояние = $totalDist| ускорения = $accelDist| замедления = $decelDist"
+    //% block="sync chassis ramp movement at speed min = $minSpeed\\% max = $maxSpeed\\%|for distance = $totalDist acceleration = $accelDist deceleration = $decelDist"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин = $minSpeed\\% макс = $maxSpeed\\%|на расстояние = $totalDist ускорения = $accelDist замедления = $decelDist"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
@@ -454,8 +454,8 @@ namespace chassis {
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisSpinTurn"
-    //% block="sync chassis spin turn $degress ° at speed = $speed\\% relative to center"
-    //% block.loc.ru="синхронизированный поворот шасси на $degress ° с $speed\\% относительно центра"
+    //% block="sync chassis spin turn $degress\\° at speed = $speed\\% relative to center"
+    //% block.loc.ru="синхронизированный поворот шасси на $degress\\° с $speed\\% относительно центра"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="99" blockGap="8"
@@ -501,8 +501,8 @@ namespace chassis {
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisPivotTurn"
-    //% block="sync chassis pivot turn $deg ° at $speed\\% pivot $wheelPivot wheel"
-    //% block.loc.ru="синхронизированный поворот шасси на $deg ° с $speed\\% относительно $wheelPivot колеса"
+    //% block="sync chassis pivot turn $deg\\° at $speed\\% pivot $wheelPivot wheel"
+    //% block.loc.ru="синхронизированный поворот шасси на $deg\\° с $speed\\% относительно $wheelPivot колеса"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98"
