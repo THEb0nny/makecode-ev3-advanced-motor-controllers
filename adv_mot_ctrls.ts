@@ -41,10 +41,10 @@ namespace advmotctrls {
      * Конфигурация синхронизации моторов шассии.
      * @param vLeft входное значение скорости левого мотора, eg. 50
      * @param vRight входное значение скорости правого мотора, eg. 50
-    **/
+     */
     //% blockId="SyncMotorsConfig"
-    //% block="config sync сhassis control vLeft = $vLeft vRight = $vRight"
-    //% block.loc.ru="конфигурирация синхронизации управления шасси vLeft = $vLeft vRight = $vRight"
+    //% block="config sync сhassis control at vLeft = $vLeft vRight = $vRight"
+    //% block.loc.ru="конфигурирация синхронизации управления шасси при vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
@@ -61,13 +61,13 @@ namespace advmotctrls {
      * Возвращает число ошибки для регулятора.
      * @param eLeft входное значение энкодера левого мотора
      * @param eRight входное значение энкодера правого мотора
-    **/
+     */
     //% blockId="GetErrorSyncMotors"
-    //% block="get error sync chassis motors eLeft = $eLeft eRight = $eRight"
-    //% block.loc.ru="получить ошибку синхронизации шасси eLeft = $eLeft eRight = $eRight"
+    //% block="get error sync chassis at eLeft = $eLeft eRight = $eRight"
+    //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
     export function getErrorSyncMotors(eLeft: number, eRight: number): number {
-        return ((syncVRight * eLeft) - (syncVLeft * eRight));
+        return (syncVRight * eLeft) - (syncVLeft * eRight);
     }
     
     /**
@@ -76,10 +76,10 @@ namespace advmotctrls {
      * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора.
      * Возвращает интерфейс скорости (мощности) левого и правого моторов.
      * @param U входное значение управляющего воздействия от регулятора
-    **/
+     */
     //% blockId="GetPwrSyncMotors"
-    //% block="get pwr sync сhassis control at U = $U"
-    //% block.loc.ru="получить скорости синхронизации управления шасси при U = $U"
+    //% block="get pwr sync сhassis at U = $U"
+    //% block.loc.ru="получить скорости синхронизации шасси при U = $U"
     //% inlineInputMode="inline"
     export function getPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
@@ -90,10 +90,18 @@ namespace advmotctrls {
         };
     }
 
+    //% blockId="GetErrorSyncMotorsInPwr"
+    //% block="get error sync сhassis at eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
+    //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
+    //% inlineInputMode="inline"
     export function getErrorSyncMotorsInPwr(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
         return ((vRight * eLeft) - (vLeft * eRight));
     }
 
+    //% blockId="GetPwrSyncMotorsInPwr"
+    //% block="get pwr sync сhassis at U = $U vLeft = $vLeft vRight = $vRight"
+    //% block.loc.ru="получить скорости синхронизации шасси при U = $U vLeft = $vLeft vRight = $vRight"
+    //% inlineInputMode="inline"
     export function getPwrSyncMotorsInPwr(U: number, vLeft: number, vRight: number) {
         const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * U;
         const pRight = vRight + (Math.abs(vLeft + 1) - Math.abs(vLeft)) * U;
@@ -103,6 +111,10 @@ namespace advmotctrls {
         };
     }
 
+    //% blockId="AccOneEncConfig"
+    //% inlineInputMode="inline"
+    //% minPwr.shadow="motorSpeedPicker"
+    //% maxPwr.shadow="motorSpeedPicker"
     export function accOneEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC1_minPwr = Math.abs(minPwr);
         ACC1_maxPwr = Math.abs(maxPwr);
@@ -113,39 +125,33 @@ namespace advmotctrls {
         if (minPwr <= 0 && maxPwr < 0) ACC1_isNEG = 1;
         else ACC1_isNEG = 0;
     }
-
-    export function accOneEnc(e1: number, pwrOut: number): boolean {
+    
+    //% blockId="AccOneEnc"
+    //% block="compute accel/deceleration motor at enc = $enc pwrOut = $pwrOut"
+    //% block.loc.ru="расчитать ускорение/замедление управления мотора при enc = $enc pwrOut = $pwrOut"
+    //% inlineInputMode="inline"
+    //% minPwr.shadow="motorSpeedPicker"
+    //% maxPwr.shadow="motorSpeedPicker"
+    export function accOneEnc(enc: number, pwrOut: number): boolean {
         let done: boolean;
-        let currEnc = Math.abs(e1);
-        if (currEnc >= ACC1_totalDist) {
-            done = true;
-        } else if (currEnc > ACC1_totalDist / 2) {
-            if (ACC1_decelDist == 0) {
-                pwr = ACC1_maxPwr;
-            } else {
-                pwr = (ACC1_maxPwr - ACC1_minPwr) / Math.pow(ACC1_decelDist, 2) * Math.pow(currEnc - ACC1_totalDist, 2) + ACC1_minPwr;
-            }
+        let currEnc = Math.abs(enc);
+        if (currEnc >= ACC1_totalDist) done = true;
+        else if (currEnc > ACC1_totalDist / 2) {
+            if (ACC1_decelDist == 0) pwr = ACC1_maxPwr;
+            else pwr = (ACC1_maxPwr - ACC1_minPwr) / Math.pow(ACC1_decelDist, 2) * Math.pow(currEnc - ACC1_totalDist, 2) + ACC1_minPwr;
             done = false;
         } else {
-            if (ACC1_accelDist == 0) {
-                pwr = ACC1_maxPwr;
-            } else {
-                pwr = (ACC1_maxPwr - ACC1_minPwr) / Math.pow(ACC1_accelDist, 2) * Math.pow(currEnc - 0, 2) + ACC1_minPwr;
-            }
+            if (ACC1_accelDist == 0) pwr = ACC1_maxPwr;
+            else pwr = (ACC1_maxPwr - ACC1_minPwr) / Math.pow(ACC1_accelDist, 2) * Math.pow(currEnc - 0, 2) + ACC1_minPwr;
             done = false;
         }
 
-        if (pwr < ACC1_minPwr) {
-            pwr = ACC1_minPwr;
-        } else if (pwr > ACC1_maxPwr) {
-            pwr = ACC1_maxPwr;
-        }
+        if (pwr < ACC1_minPwr) pwr = ACC1_minPwr;
+        else if (pwr > ACC1_maxPwr) pwr = ACC1_maxPwr;
 
-        if (ACC1_isNEG == 1) {
-            pwrOut = 0 - pwr;
-        } else {
-            pwrOut = pwr;
-        }
+        if (ACC1_isNEG == 1) pwrOut = 0 - pwr;
+        else pwrOut = pwr;
+
         return done;
     }
 
@@ -157,9 +163,9 @@ namespace advmotctrls {
      * @param accelDist значение дистанции ускорения, eg. 150
      * @param decelDist значение дистанции замедления, eg. 150
      * @param totalDist значение всей дистанции, eg. 500
-    **/
+     */
     //% blockId="AccTwoEncConfig"
-    //% block="config accel/deceleration chassis control at minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block="config accel/deceleration chassis at minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"
@@ -182,9 +188,9 @@ namespace advmotctrls {
      * @param accelDist значение дистанции ускорения, eg. 150
      * @param decelDist значение дистанции замедления, eg. 150
      * @param totalDist значение всей дистанции, eg. 500
-    **/
+     */
     //% blockId="AccTwoEnc"
-    //% block="compute accel/deceleration chassis control at eLeft = $eLeft eRight = $eRight"
+    //% block="compute accel/deceleration chassis at eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"

@@ -10,10 +10,10 @@ const enum MeasurementUnit {
 // Перечисление о типах относительных поворотов
 const enum WheelPivot {
     //% block="left"
-    //% block.loc.ru="левого"
+    //% block.loc.ru="левого колеса"
     LeftWheel,
     //% block="right"
-    //% block.loc.ru="правого"
+    //% block.loc.ru="правого колеса"
     RightWheel
 }
 
@@ -270,8 +270,8 @@ namespace chassis {
      * @param setBrake hold the motors when braking, eg. true
      */
     //% blockId="ChassisStop"
-    //% block="chassis stop||at hold $setBrake"
-    //% block.loc.ru="остановить шасси||с удержанием $setBrake"
+    //% block="chassis stop||hold $setBrake"
+    //% block.loc.ru="остановить шасси||удержание $setBrake"
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% setBrake.shadow="toggleOnOff"
@@ -406,8 +406,8 @@ namespace chassis {
      * @param decelDist decelerate length encoder value, eg. 100
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at speed min = $minSpeed\\% max = $maxSpeed\\%|for distance = $totalDist acceleration = $accelDist deceleration = $decelDist"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин = $minSpeed\\% макс = $maxSpeed\\%|на расстояние = $totalDist ускорения = $accelDist замедления = $decelDist"
+    //% block="sync chassis ramp movement at speed min $minSpeed\\% max $maxSpeed\\% for distance $totalDist acceleration $accelDist deceleration $decelDist"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed\\% макс $maxSpeed\\% на расстояние $totalDist ускорения $accelDist замедления $decelDist"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
@@ -454,8 +454,8 @@ namespace chassis {
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisSpinTurn"
-    //% block="sync chassis spin turn $degress\\° at speed = $speed\\% relative to center"
-    //% block.loc.ru="синхронизированный поворот шасси на $degress\\° с $speed\\% относительно центра"
+    //% block="sync chassis spin turn $degress\\° at $speed\\% relative to center"
+    //% block.loc.ru="синхронизированный поворот шасси на $degress\\° на $speed\\% относительно центра"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="99" blockGap="8"
@@ -501,8 +501,8 @@ namespace chassis {
      * @param speed turning speed value, eg. 30
      */
     //% blockId="ChassisPivotTurn"
-    //% block="sync chassis pivot turn $deg\\° at $speed\\% pivot $wheelPivot wheel"
-    //% block.loc.ru="синхронизированный поворот шасси на $deg\\° с $speed\\% относительно $wheelPivot колеса"
+    //% block="sync chassis pivot turn $deg\\° at $speed\\% pivot $wheelPivot"
+    //% block.loc.ru="синхронизированный поворот шасси на $deg\\° на $speed\\% относительно $wheelPivot"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98"
@@ -531,9 +531,6 @@ namespace chassis {
             let emr = rightMotor.angle() - emrPrev;
             if (wheelPivot == WheelPivot.LeftWheel && Math.abs(emr) >= Math.abs(calcMotRot)) break;
             else if (wheelPivot == WheelPivot.RightWheel && Math.abs(eml) >= Math.abs(calcMotRot)) break;
-            // let error = 0;
-            // if (wheelPivot == WheelPivot.LeftWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
-            // else if (wheelPivot == WheelPivot.RightWheel) error = advmotctrls.getErrorSyncMotors(eml, emr);
             let error = advmotctrls.getErrorSyncMotors(eml, emr);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
