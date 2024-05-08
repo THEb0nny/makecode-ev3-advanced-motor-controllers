@@ -89,7 +89,16 @@ namespace advmotctrls {
             pwrRight: pRight
         };
     }
-
+    
+    /**
+     * Calculate the synchronization error of the chassis motors using the values from the encoders.
+     * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров и с учётом установки скоростей для моторов.
+     * Возвращает число ошибки для регулятора.
+     * @param eLeft входное значение энкодера левого мотора
+     * @param eRight входное значение энкодера правого мотора
+     * @param vLeft входное значение скорости левого мотора, eg. 50
+     * @param vRight входное значение скорости правого мотора, eg. 50
+     */
     //% blockId="GetErrorSyncMotorsInPwr"
     //% block="get error sync сhassis at eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
@@ -183,11 +192,8 @@ namespace advmotctrls {
     /**
      * The configuration of acceleration and deceleration by two motors.
      * Конфигурация ускорения и замедления двумя моторами.
-     * @param minPwr входное значение скорости на старте, eg. 15
-     * @param maxPwr входное значение максимальной скорости, eg. 50
-     * @param accelDist значение дистанции ускорения, eg. 150
-     * @param decelDist значение дистанции замедления, eg. 150
-     * @param totalDist значение всей дистанции, eg. 500
+     * @param eLeft входное значение энкодера левого мотора
+     * @param eRight входное значение энкодера правого мотора
      */
     //% blockId="AccTwoEnc"
     //% block="compute accel/deceleration chassis at eLeft = $eLeft eRight = $eRight"
