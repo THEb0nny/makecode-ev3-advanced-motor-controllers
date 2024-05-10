@@ -468,7 +468,7 @@ namespace chassis {
             stop(true);
             return;
         } else if (speed < 0) { // Предупреждение не верности введённых данных
-            music.playSoundEffect(sounds.systemGeneralAlert);
+            music.playSoundEffectUntilDone(sounds.systemGeneralAlert);
             control.panic(2);
         }
         speed = Math.clamp(-100, 100, speed >> 0); // We limit the speed of the motor from -100 to 100 and cut off the fractional part
@@ -522,7 +522,7 @@ namespace chassis {
             stop(true);
             return;
         } else if (deg < 0) { // Предупреждение не верности введённых данных
-            music.playSoundEffect(sounds.systemGeneralAlert);
+            music.playSoundEffectUntilDone(sounds.systemGeneralAlert);
             control.panic(3);
         }
         const emlPrev = leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
