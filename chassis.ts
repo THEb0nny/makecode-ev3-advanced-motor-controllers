@@ -308,7 +308,7 @@ namespace chassis {
     //% speed.shadow="motorSpeedPicker"
     //% weight="98"
     //% group="Move"
-    export function ChassisSteeringCommand(turnRatio: number, speed: number) {
+    export function steeringCommand(turnRatio: number, speed: number) {
         speed = Math.clamp(-100, 100, speed >> 0);
         turnRatio = Math.floor(turnRatio);
         turnRatio = Math.clamp(-200, 200, turnRatio >> 0);
