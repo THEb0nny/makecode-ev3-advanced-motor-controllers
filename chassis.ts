@@ -305,7 +305,7 @@ namespace chassis {
     //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance $unit"
     //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance $unit"
     //% inlineInputMode="inline"
-    //% weight="89" blockGap="8"
+    //% weight="99" blockGap="8"
     //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
     //% group="Синхронизированное движение"
     //% blockHidden="true"
@@ -352,7 +352,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
-    //% weight="88" blockGap="8"
+    //% weight="98" blockGap="8"
     //% group="Синхронизированное движение"
     export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
         // if (!motorsPair) return;
@@ -411,8 +411,8 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
-    //% weight="87"
-    //% group="Синхронизированное движение"
+    //% weight="99"
+    //% group="Синхронизированное движение с ускорениями/замедлениями"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, totalDist: number, accelDist: number, decelDist: number) {
         //if (!motorsPair) return;
         if (maxSpeed == 0 || totalDist == 0) {
