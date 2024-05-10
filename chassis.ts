@@ -293,22 +293,8 @@ namespace chassis {
         rightMotor.setBrakeSettleTime(10);
     }
 
-    /**
-     * Chassis steer motor control command.
-     * Команда рулевого управления моторами шасси.
-     * @param turnRatio рулевой параметр, если больше 0 то поворачиваем вправо, а если меньше, то влево, eg: 0
-     * @param speed скорость движения, eg: 50
-     */
-    //% blockId="ChassisSteeringCommand"
-    //% block="steering command $turnRatio at $speed\\%"
-    //% block.loc.ru="команда рулевого управления $turnRatio на $speed\\%"
-    //% inlineInputMode="inline"
-    //% turnRatio.shadow="motorTurnRatioPicker"
-    //% turnRatio.min="-200" turnRatio.max="200"
-    //% speed.shadow="motorSpeedPicker"
-    //% weight="98"
-    //% group="Move"
-    export function steeringCommand(turnRatio: number, speed: number) {
+    // Получить скорости моторов при рулевом управлении
+    export function getMotorsSpeedsAtSteering(turnRatio: number, speed: number): { speedLeft: number, speedRight: number } {
         speed = Math.clamp(-100, 100, speed >> 0);
         turnRatio = Math.floor(turnRatio);
         turnRatio = Math.clamp(-200, 200, turnRatio >> 0);
@@ -335,8 +321,27 @@ namespace chassis {
             speedLeft = speed;
             speedRight = speed;
         }
+        return { speedLeft, speedRight };
+    }
+
+    /**
+     * Chassis steer motor control command.
+     * Команда рулевого управления моторами шасси.
+     * @param turnRatio рулевой параметр, если больше 0 то поворачиваем вправо, а если меньше, то влево, eg: 0
+     * @param speed скорость движения, eg: 50
+     */
+    //% blockId="ChassisSteeringCommand"
+    //% block="steering command in direction $turnRatio at $speed\\%"
+    //% block.loc.ru="команда рулевого управления по направлению $turnRatio на $speed\\%"
+    //% inlineInputMode="inline"
+    //% turnRatio.shadow="motorTurnRatioPicker"
+    //% turnRatio.min="-200" turnRatio.max="200"
+    //% speed.shadow="motorSpeedPicker"
+    //% weight="98"
+    //% group="Move"
+    export function steeringCommand(turnRatio: number, speed: number) {
+        const { speedLeft, speedRight } = getMotorsSpeedsAtSteering(turnRatio, speed);
         leftMotor.run(speedLeft); rightMotor.run(speedRight);
-        // return { speedLeft, speedRight };
     }
 
     /**
@@ -440,6 +445,28 @@ namespace chassis {
             if (braking == Braking.Hold) stop(true); // Break at hold
             else stop(false); // No hold break
         }
+    }
+
+    /**
+     * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
+     * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
+     * @param vLeft left motor speed input value, eg. 50
+     * @param vRight right motor speed input value, eg. 50
+     * @param value move duration or rotation, eg. 500
+     * @param unit unit of the value, eg. MoveUnit.Degrees
+     * @param braking braking type, eg. Braking.Hold
+     */
+    //% blockId="ChassisSyncSteeringMovement"
+    //% block="sync chassis movement in direction $turnRatio at $speed\\% for value = $value $unit braking $braking"
+    //% block.loc.ru="синхронизированное управление шасси по направлению $turnRatio на $speed\\% при $value $unit торможение $braking"
+    //% inlineInputMode="inline"
+    //% turnRatio.shadow="motorTurnRatioPicker"
+    //% speed.shadow="motorSpeedPicker"
+    //% weight="98" blockGap="8"
+    //% group="Синхронизированное движение"
+    export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
+        const { speedLeft, speedRight } = getMotorsSpeedsAtSteering(turnRatio, speed);
+        syncMovement(speedLeft, speedRight, value, unit, braking);
     }
 
     /**
