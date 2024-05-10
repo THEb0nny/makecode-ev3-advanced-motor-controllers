@@ -523,7 +523,7 @@ namespace chassis {
             return;
         } else if (deg < 0) { // Предупреждение не верности введённых данных
             music.playSoundEffect(sounds.systemGeneralAlert);
-            control.panic(1);
+            control.panic(3);
         }
         const emlPrev = leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
         const emrPrev = rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
