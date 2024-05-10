@@ -448,8 +448,10 @@ namespace chassis {
     /**
      * Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed.
      * For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
+     * The speed must be positive!
      * Синхронизированный поворот шасси относительно центра на нужный угол с определенной скоростью.
      * Например, если градусов > 0, то робот будет поворачиваться вправо, а если градусов < 0, то влево.
+     * Скорость должна быть положительной!
      * @param degress rotation value in degrees, eg. 90
      * @param speed turning speed value, eg. 30
      */
@@ -462,11 +464,11 @@ namespace chassis {
     //% group="Синхронизированные повороты"
     export function spinTurn(degress: number, speed: number) {
         //if (!motorsPair) return;
-        if (degress == 0 || speed <= 0) {
+        if (degress == 0 || speed == 0) {
             stop(true);
-            music.playSoundEffect(sounds.systemGeneralAlert);
-            pause(2000);
             return;
+        } else if (speed < 0) { // Предупреждение не верности введённых данных
+            music.playSoundEffect(sounds.systemGeneralAlert);
         }
         speed = Math.clamp(-100, 100, speed >> 0); // We limit the speed of the motor from -100 to 100 and cut off the fractional part
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
@@ -498,7 +500,11 @@ namespace chassis {
 
     /**
      * Synchronized rotation to the desired angle relative to one of the wheels.
+     * A positive speed is set for forward rotation, and a negative speed is set for backward rotation.
+     * The value of the rotation angle is always positive!
      * Синхронизированный поворот на нужный угол относительно одного из колес.
+     * Для вращения вперёд устанавливается положительная скорость, а назад - отрицательная.
+     * Значение угла поворота всегда положительное!
      * @param deg rotation value in degrees, eg. 90
      * @param speed turning speed value, eg. 30
      */
@@ -513,13 +519,13 @@ namespace chassis {
         //if (!motorsPair) return;
         if (deg == 0 || speed == 0) {
             stop(true);
-            music.playSoundEffect(sounds.systemGeneralAlert);
-            pause(2000);
             return;
+        } else if (deg < 0) { // Предупреждение о ошибке
+            music.playSoundEffect(sounds.systemGeneralAlert);
         }
         const emlPrev = leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
         const emrPrev = rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
-        let calcMotRot = Math.round(((deg * getBaseLength()) / getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
+        let calcMotRot = Math.round(((Math.abs(deg) * getBaseLength()) / getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
         stop(true); // Brake so that one of the motors is held when turning
         if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.syncMotorsConfig(0, speed);
         else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.syncMotorsConfig(speed, 0);
@@ -533,8 +539,8 @@ namespace chassis {
             prevTime = currTime;
             let eml = leftMotor.angle() - emlPrev;
             let emr = rightMotor.angle() - emrPrev;
-            if (wheelPivot == WheelPivot.LeftWheel && Math.abs(emr) >= Math.abs(calcMotRot)) break;
-            else if (wheelPivot == WheelPivot.RightWheel && Math.abs(eml) >= Math.abs(calcMotRot)) break;
+            if (wheelPivot == WheelPivot.LeftWheel && Math.abs(emr) >= calcMotRot) break;
+            else if (wheelPivot == WheelPivot.RightWheel && Math.abs(eml) >= calcMotRot) break;
             let error = advmotctrls.getErrorSyncMotors(eml, emr);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
