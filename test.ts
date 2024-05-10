@@ -1,3 +1,7 @@
+// ОШИБКИ при панике
+// 1) Функции spinTurn передана отрицательная скорость speed
+// 2) Функции pivotTurn передан отрицательный угол deg
+
 // Arc synchronized movement
 /*
 function ArcMovementExample(lMotPwr: number, rMotPwr: number, length: number) {

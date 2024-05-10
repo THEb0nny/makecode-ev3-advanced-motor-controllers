@@ -467,9 +467,9 @@ namespace chassis {
         if (degress == 0 || speed == 0) {
             stop(true);
             return;
-        } else if (speed < 0) { // Предупреждение не верности введённых данных
+        } else if (speed < 0) {
             music.playSoundEffectUntilDone(sounds.systemGeneralAlert);
-            control.panic(2);
+            control.panic(1);
         }
         speed = Math.clamp(-100, 100, speed >> 0); // We limit the speed of the motor from -100 to 100 and cut off the fractional part
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
@@ -521,9 +521,9 @@ namespace chassis {
         if (deg == 0 || speed == 0) {
             stop(true);
             return;
-        } else if (deg < 0) { // Предупреждение не верности введённых данных
+        } else if (deg < 0) {
             music.playSoundEffectUntilDone(sounds.systemGeneralAlert);
-            control.panic(3);
+            control.panic(2);
         }
         const emlPrev = leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
         const emrPrev = rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
