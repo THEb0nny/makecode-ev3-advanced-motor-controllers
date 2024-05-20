@@ -474,7 +474,7 @@ namespace chassis {
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении.
      * @param minSpeed start motor speed, eg. 10
      * @param maxSpeed max motor speed, eg. 50
-     * @param totalDist total length encoder value at, eg. 500
+     * @param totalDist total length encoder value at, eg. 300
      * @param accelDist accelerate length encoder value, eg. 50
      * @param decelDist decelerate length encoder value, eg. 100
      */
