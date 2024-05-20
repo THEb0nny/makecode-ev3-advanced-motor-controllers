@@ -1,6 +1,6 @@
 {
     "name": "adv-motor-controllers",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "Motors controller based OFDL Advanced Motor Controller Block module (algorithm part) - beta",
     "license": "MIT",
     "dependencies": {
