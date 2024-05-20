@@ -530,7 +530,7 @@ namespace chassis {
      */
     //% blockId="ChassisSpinTurn"
     //% block="sync chassis spin turn $degress\\° at $speed\\% relative to center wheel axis"
-    //% block.loc.ru="синхронизированный поворот шасси на $degress\\° при $speed\\% относительно центра оси колёс"
+    //% block.loc.ru="синхронизированный поворот шасси на $degress\\° с $speed\\% относительно центра оси колёс"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="99" blockGap="8"
@@ -584,7 +584,7 @@ namespace chassis {
      */
     //% blockId="ChassisPivotTurn"
     //% block="sync chassis pivot turn $deg\\° at $speed\\% pivot $wheelPivot"
-    //% block.loc.ru="синхронизированный поворот шасси на $deg\\° при $speed\\% относительно $wheelPivot"
+    //% block.loc.ru="синхронизированный поворот шасси на $deg\\° с $speed\\% относительно $wheelPivot"
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98"
