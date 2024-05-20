@@ -458,7 +458,7 @@ namespace chassis {
      */
     //% blockId="ChassisSyncSteeringMovement"
     //% block="sync chassis movement in direction $turnRatio at $speed\\% for value = $value $unit braking $braking"
-    //% block.loc.ru="синхронизированное управление шасси по направлению $turnRatio на $speed\\% при $value $unit торможение $braking"
+    //% block.loc.ru="синхронизированное управление шасси по направлению $turnRatio с $speed\\% при $value $unit торможение $braking"
     //% inlineInputMode="inline"
     //% turnRatio.shadow="motorTurnRatioPicker"
     //% speed.shadow="motorSpeedPicker"
