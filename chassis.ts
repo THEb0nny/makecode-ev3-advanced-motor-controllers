@@ -234,7 +234,7 @@ namespace chassis {
     /**
      * Sets the base length.
      * Устанавливает длину базы (коллеи).
-     * @param length the base length, eg: 130 (mm)
+     * @param length the base length, eg: 130
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetBaseLength"
@@ -267,7 +267,7 @@ namespace chassis {
     /**
      * Stop the chassis motors.
      * Заглушите двигатели шасси.
-     * @param setBrake hold the motors when braking, eg. true
+     * @param setBrake hold the motors when braking, eg: true
      */
     //% blockId="ChassisStop"
     //% block="chassis stop||hold $setBrake"
@@ -349,7 +349,7 @@ namespace chassis {
      * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с), используя модель одноколесного велосипеда.
      * @param speed speed of the center point between motors, eg: 10
      * @param rotationSpeed rotation of the robot around the center point, eg: 30
-     * @param distance driving distance, eg: 150 (mm)
+     * @param distance driving distance, eg: 150
      * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisDrive"
@@ -391,11 +391,11 @@ namespace chassis {
     /**
      * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
      * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
-     * @param vLeft left motor speed input value, eg. 50
-     * @param vRight right motor speed input value, eg. 50
-     * @param value move duration or rotation, eg. 500
-     * @param unit unit of the value, eg. MoveUnit.Degrees
-     * @param braking braking type, eg. Braking.Hold
+     * @param vLeft left motor speed input value, eg: 50
+     * @param vRight right motor speed input value, eg: 50
+     * @param value move duration or rotation, eg: 500
+     * @param unit unit of the value, eg: MoveUnit.Degrees
+     * @param braking braking type, eg: Braking.Hold
      */
     //% blockId="ChassisSyncMovement"
     //% block="sync chassis movement at $vLeft\\% $vRight\\% for value = $value $unit braking $braking"
@@ -450,11 +450,11 @@ namespace chassis {
     /**
      * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
      * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
-     * @param vLeft left motor speed input value, eg. 50
-     * @param vRight right motor speed input value, eg. 50
-     * @param value move duration or rotation, eg. 500
-     * @param unit unit of the value, eg. MoveUnit.Degrees
-     * @param braking braking type, eg. Braking.Hold
+     * @param vLeft left motor speed input value, eg: 50
+     * @param vRight right motor speed input value, eg: 50
+     * @param value move duration or rotation, eg: 500
+     * @param unit unit of the value, eg: MoveUnit.Degrees
+     * @param braking braking type, eg: Braking.Hold
      */
     //% blockId="ChassisSyncSteeringMovement"
     //% block="sync chassis movement in direction $turnRatio at $speed\\% for value = $value $unit braking $braking"
@@ -472,11 +472,11 @@ namespace chassis {
     /**
      * Synchronization with smooth acceleration and deceleration during straight-line motion.
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении.
-     * @param minSpeed start motor speed, eg. 10
-     * @param maxSpeed max motor speed, eg. 50
-     * @param totalDist total length encoder value at, eg. 300
-     * @param accelDist accelerate length encoder value, eg. 50
-     * @param decelDist decelerate length encoder value, eg. 100
+     * @param minSpeed start motor speed, eg: 10
+     * @param maxSpeed max motor speed, eg: 50
+     * @param totalDist total length encoder value at, eg: 300
+     * @param accelDist accelerate length encoder value, eg: 50
+     * @param decelDist decelerate length encoder value, eg: 100
      */
     //% blockId="ChassisSyncRampMovement"
     //% block="sync chassis ramp movement at speed min $minSpeed\\% max $maxSpeed\\% for distance $totalDist acceleration $accelDist deceleration $decelDist"
@@ -525,8 +525,8 @@ namespace chassis {
      * Синхронизированный поворот шасси относительно центра на нужный угол с определенной скоростью.
      * Например, если градусов > 0, то робот будет поворачиваться вправо, а если градусов < 0, то влево.
      * Скорость должна быть положительной!
-     * @param degress rotation value in degrees, eg. 90
-     * @param speed turning speed value, eg. 30
+     * @param degress rotation value in degrees, eg: 90
+     * @param speed turning speed value, eg: 30
      */
     //% blockId="ChassisSpinTurn"
     //% block="sync chassis spin turn $degress\\° at $speed\\% relative to center"
@@ -579,8 +579,8 @@ namespace chassis {
      * Синхронизированный поворот на нужный угол относительно одного из колес.
      * Для вращения вперёд устанавливается положительная скорость, а назад - отрицательная.
      * Значение угла поворота всегда положительное!
-     * @param deg rotation value in degrees, eg. 90
-     * @param speed turning speed value, eg. 30
+     * @param deg rotation value in degrees, eg: 90
+     * @param speed turning speed value, eg: 30
      */
     //% blockId="ChassisPivotTurn"
     //% block="sync chassis pivot turn $deg\\° at $speed\\% pivot $wheelPivot"

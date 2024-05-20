@@ -39,8 +39,8 @@ namespace advmotctrls {
     /**
      * Chassis motor synchronization configuration.
      * Конфигурация синхронизации моторов шассии.
-     * @param vLeft входное значение скорости левого мотора, eg. 50
-     * @param vRight входное значение скорости правого мотора, eg. 50
+     * @param vLeft входное значение скорости левого мотора, eg: 50
+     * @param vRight входное значение скорости правого мотора, eg: 50
      */
     //% blockId="SyncMotorsConfig"
     //% block="config sync сhassis control at vLeft = $vLeft vRight = $vRight"
@@ -96,8 +96,8 @@ namespace advmotctrls {
      * Возвращает число ошибки для регулятора.
      * @param eLeft входное значение энкодера левого мотора
      * @param eRight входное значение энкодера правого мотора
-     * @param vLeft входное значение скорости левого мотора, eg. 50
-     * @param vRight входное значение скорости правого мотора, eg. 50
+     * @param vLeft входное значение скорости левого мотора, eg: 50
+     * @param vRight входное значение скорости правого мотора, eg: 50
      */
     //% blockId="GetErrorSyncMotorsInPwr"
     //% block="get error sync сhassis at eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
@@ -167,11 +167,11 @@ namespace advmotctrls {
     /**
      * The configuration of acceleration and deceleration of the chassis of two motors.
      * Конфигурация ускорения и замедления шассии двух моторов.
-     * @param minPwr входное значение скорости на старте, eg. 15
-     * @param maxPwr входное значение максимальной скорости, eg. 50
-     * @param accelDist значение дистанции ускорения, eg. 150
-     * @param decelDist значение дистанции замедления, eg. 150
-     * @param totalDist значение всей дистанции, eg. 500
+     * @param minPwr входное значение скорости на старте, eg: 15
+     * @param maxPwr входное значение максимальной скорости, eg: 50
+     * @param accelDist значение дистанции ускорения, eg: 150
+     * @param decelDist значение дистанции замедления, eg: 150
+     * @param totalDist значение всей дистанции, eg: 500
      */
     //% blockId="AccTwoEncConfig"
     //% block="config accel/deceleration chassis at minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
