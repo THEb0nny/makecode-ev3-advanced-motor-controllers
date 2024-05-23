@@ -470,8 +470,8 @@ namespace chassis {
     }
 
     /**
-     * Synchronization with smooth acceleration and deceleration during straight-line motion.
-     * Синхронизация с плавным ускорением и замедлением при прямолинейном движении.
+     * Synchronization with smooth acceleration and deceleration during straight-line motion. The distance values are set in encoder ticks.
+     * Синхронизация с плавным ускорением и замедлением при прямолинейном движении. Значения расстояний устанавливается в тиках энкодера.
      * @param minSpeed start motor speed, eg: 10
      * @param maxSpeed max motor speed, eg: 50
      * @param totalDist total length encoder value at, eg: 300
