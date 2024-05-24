@@ -11,7 +11,8 @@
     "files": [
         "README.md",
         "adv_mot_ctrls.ts",
-        "chassis.ts"
+        "chassis.ts",
+        "enums.ts"
     ],
     "testFiles": [
         "test.ts"
