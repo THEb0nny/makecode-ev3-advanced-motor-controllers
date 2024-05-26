@@ -207,7 +207,7 @@ namespace advmotctrls {
      * @param totalDist значение всей дистанции, eg: 500
      */
     //% blockId="AccTwoEncConfig2"
-    //% block="config accel/deceleration chassis at minStartPwr = $minPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block="config accel/deceleration chassis at minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
     //% minStartPwr.shadow="motorSpeedPicker"
