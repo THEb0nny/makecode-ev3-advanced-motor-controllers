@@ -462,7 +462,7 @@ namespace chassis {
         }
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
         const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
-        advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, accelDist, decelDist, totalDist);
+        advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
