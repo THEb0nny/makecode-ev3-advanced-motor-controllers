@@ -199,18 +199,20 @@ namespace advmotctrls {
     /**
      * The configuration of acceleration and deceleration of the chassis of two motors.
      * Конфигурация ускорения и замедления шассии двух моторов.
-     * @param minPwr входное значение скорости на старте, eg: 15
+     * @param minStartPwr входное значение скорости на старте, eg: 15
      * @param maxPwr входное значение максимальной скорости, eg: 50
+     * @param minEndPwr входное значение скорости при замедлении, eg: 15
      * @param accelDist значение дистанции ускорения, eg: 150
      * @param decelDist значение дистанции замедления, eg: 150
      * @param totalDist значение всей дистанции, eg: 500
      */
     //% blockId="AccTwoEncConfig2"
-    //% block="config accel/deceleration chassis at minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
-    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minPwr = $minPwr maxPwr = $maxPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block="config accel/deceleration chassis at minStartPwr = $minPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
-    //% minPwr.shadow="motorSpeedPicker"
+    //% minStartPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
+    //% minEndPwr.shadow="motorSpeedPicker"
     export function accTwoEncConfig2(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         ACC2_minStartPwr = Math.abs(minStartPwr);
         ACC2_maxPwr = Math.abs(maxPwr);
@@ -218,7 +220,7 @@ namespace advmotctrls {
         ACC2_accelDist = accelDist;
         ACC2_decelDist = decelDist;
         ACC2_totalDist = totalDist;
-        if (minStartPwr <= 0 && maxPwr < 0) ACC2_isNEG = 1; // minEndPwr ?
+        if (minStartPwr <= 0 && maxPwr < 0 && minEndPwr <= 0) ACC2_isNEG = 1;
         else ACC2_isNEG = 0;
     }
 
@@ -234,8 +236,7 @@ namespace advmotctrls {
     //% inlineInputMode="inline"
     export function accTwoEnc(eLeft: number, eRight: number): AccEncReturn {
         let done: boolean;
-        let pwr: number;
-        let pwrOut: number;
+        let pwr, pwrOut: number;
         let currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
         if (currEnc >= ACC2_totalDist) done = true;
         else if (currEnc > ACC2_totalDist / 2) {
@@ -272,8 +273,7 @@ namespace advmotctrls {
     //% inlineInputMode="inline"
     export function accTwoEnc2(eLeft: number, eRight: number): AccEncReturn {
         let done: boolean;
-        let pwr: number;
-        let pwrOut: number;
+        let pwr: number, pwrOut: number;
         let currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
         if (currEnc >= ACC2_totalDist) done = true;
         else if (currEnc > ACC2_totalDist / 2) {
@@ -287,7 +287,8 @@ namespace advmotctrls {
         }
 
         // ToDo
-        if (pwr < ACC2_minPwr) pwr = ACC2_minPwr;
+        if (currEnc > ACC2_totalDist / 2 && pwr < ACC2_minEndPwr) pwr = ACC2_minEndPwr;
+        else if (pwr < ACC2_minStartPwr) pwr = ACC2_minStartPwr;
         else if (pwr > ACC2_maxPwr) pwr = ACC2_maxPwr;
 
         if (ACC2_isNEG == 1) pwrOut = -pwr;
