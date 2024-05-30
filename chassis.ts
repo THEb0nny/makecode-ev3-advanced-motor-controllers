@@ -259,6 +259,7 @@ namespace chassis {
         rightMotor.stop();
         leftMotor.setBrakeSettleTime(10);
         rightMotor.setBrakeSettleTime(10);
+        pause(10);
     }
 
     // Получить скорости моторов при рулевом управлении
