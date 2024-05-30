@@ -410,13 +410,14 @@ namespace chassis {
             pidChassisSync.setPoint(error); // Transfer control error to controller
             let U = pidChassisSync.compute(dt, 0); // Find out and record the control action of the regulator
             let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
-            leftMotor.run(powers.pwrLeft); // Set power/speed left motor
-            rightMotor.run(powers.pwrRight); // Set power/speed right motor
+            setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
             control.pauseUntilTime(currTime, 1); // Wait until the control cycle reaches the set amount of time passed
         }
         if (braking != Braking.NoStop) {
             if (braking == Braking.Hold) stop(true); // Break at hold
             else stop(false); // No hold break
+        } else {
+            setSpeedsCommand(vLeft, vRight); // Forward
         }
     }
 
@@ -484,8 +485,7 @@ namespace chassis {
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
             let powers = advmotctrls.getPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
-            chassis.leftMotor.run(powers.pwrLeft);
-            chassis.rightMotor.run(powers.pwrRight);
+            setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
             control.pauseUntilTime(currTime, 1);
         }
         stop(true); // Break at hold
@@ -538,8 +538,7 @@ namespace chassis {
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
             let powers = advmotctrls.getPwrSyncMotors(U);
-            leftMotor.run(powers.pwrLeft);
-            rightMotor.run(powers.pwrRight);
+            setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
             control.pauseUntilTime(currTime, 1);
         }
         stop(true); // Break at hold
