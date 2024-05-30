@@ -413,12 +413,9 @@ namespace chassis {
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
             control.pauseUntilTime(currTime, 1); // Wait until the control cycle reaches the set amount of time passed
         }
-        if (braking != Braking.NoStop) {
-            if (braking == Braking.Hold) stop(true); // Break at hold
-            else stop(false); // No hold break
-        } else {
-            setSpeedsCommand(vLeft, vRight); // Forward
-        }
+        if (braking == Braking.Hold) stop(true); // Break at hold
+        else if (braking == Braking.NoBreak) stop(false); // No hold break
+        else setSpeedsCommand(vLeft, vRight); // Forward
     }
 
     /**
