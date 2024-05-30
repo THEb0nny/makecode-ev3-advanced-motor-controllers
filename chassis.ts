@@ -304,12 +304,16 @@ namespace chassis {
     //% block.loc.ru="команда рулевого управления по направлению $turnRatio на $speed\\%"
     //% inlineInputMode="inline"
     //% turnRatio.shadow="motorTurnRatioPicker"
-    //% turnRatio.min="-200" turnRatio.max="200"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98"
     //% group="Move"
     export function steeringCommand(turnRatio: number, speed: number) {
         const { speedLeft, speedRight } = getMotorsSpeedsAtSteering(turnRatio, speed);
+        leftMotor.run(speedLeft); rightMotor.run(speedRight);
+    }
+
+    // Команда установки моторам скоростей
+    export function setSpeedsCommand(speedLeft: number, speedRight: number) {
         leftMotor.run(speedLeft); rightMotor.run(speedRight);
     }
 
