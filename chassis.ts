@@ -408,7 +408,7 @@ namespace chassis {
             let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
             leftMotor.run(powers.pwrLeft); // Set power/speed left motor
             rightMotor.run(powers.pwrRight); // Set power/speed right motor
-            control.pauseUntilTime(currTime, 5); // Wait until the control cycle reaches the set amount of time passed
+            control.pauseUntilTime(currTime, 1); // Wait until the control cycle reaches the set amount of time passed
         }
         if (braking != Braking.NoStop) {
             if (braking == Braking.Hold) stop(true); // Break at hold
@@ -482,7 +482,7 @@ namespace chassis {
             let powers = advmotctrls.getPwrSyncMotorsInPwr(U, out.pwrOut, out.pwrOut);
             chassis.leftMotor.run(powers.pwrLeft);
             chassis.rightMotor.run(powers.pwrRight);
-            control.pauseUntilTime(currTime, 5);
+            control.pauseUntilTime(currTime, 1);
         }
         stop(true); // Break at hold
     }
@@ -536,7 +536,7 @@ namespace chassis {
             let powers = advmotctrls.getPwrSyncMotors(U);
             leftMotor.run(powers.pwrLeft);
             rightMotor.run(powers.pwrRight);
-            control.pauseUntilTime(currTime, 5);
+            control.pauseUntilTime(currTime, 1);
         }
         stop(true); // Break at hold
     }
@@ -591,7 +591,7 @@ namespace chassis {
             let powers = advmotctrls.getPwrSyncMotors(U);
             if (wheelPivot == WheelPivot.LeftWheel) rightMotor.run(powers.pwrRight);
             else if (wheelPivot == WheelPivot.RightWheel) leftMotor.run(powers.pwrLeft);
-            control.pauseUntilTime(currTime, 5);
+            control.pauseUntilTime(currTime, 1);
         }
         stop(true); // Break at hold
     }
