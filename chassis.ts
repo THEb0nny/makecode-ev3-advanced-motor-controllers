@@ -125,18 +125,18 @@ namespace chassis {
     }
 
     /**
-     * Set the standard control state for the chassis motors.
-     * Установить стандартное регулирование для моторов шасси.
-     * @param standard regulation, eg: false
+     * Set the speed regulated for the chassis motors.
+     * Установить регулирование скоростей для моторов шасси.
+     * @param speed regulation, eg: false
      */
-    //% blockId="ChassisSetDefaultRegulated"
-    //% block="set default regulated motors to chassis $regulated"
-    //% block.loc.ru="установить стандартное регулирование моторов шасси $regulated"
+    //% blockId="ChassisSetSpeedRegulated"
+    //% block="set speed regulated motors to chassis $regulated"
+    //% block.loc.ru="установить регулирование скоростей моторов шасси $regulated"
     //% regulated.shadow="toggleOnOff"
     //% inlineInputMode="inline"
     //% weight="97"
     //% group="Properties"
-    export function setDefaultRegulated(regulated: boolean) {
+    export function setSpeedRegulated(regulated: boolean) {
         leftMotor.setRegulated(regulated);
         rightMotor.setRegulated(regulated);
     }
