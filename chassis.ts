@@ -135,6 +135,7 @@ namespace chassis {
     //% regulated.shadow="toggleOnOff"
     //% inlineInputMode="inline"
     //% weight="97"
+    //% subcategory="Properties"
     //% group="Properties"
     export function setSpeedRegulated(regulated: boolean) {
         leftMotor.setRegulated(regulated);
@@ -164,6 +165,7 @@ namespace chassis {
     //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp ki = $Ki kd = $Kd"
     //% inlineInputMode="inline"
     //% weight="96"
+    //% subcategory="Properties"
     //% group="Properties"
     export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number) {
         syncKp = Kp;
@@ -193,6 +195,7 @@ namespace chassis {
     //% block="set wheel radius = $radius $unit"
     //% block.loc.ru="установить радиус колёс шасси = $radius $unit"
     //% weight="95" blockGap="8"
+    //% subcategory="Properties"
     //% group="Properties"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) wheelRadius = radius;
@@ -209,6 +212,7 @@ namespace chassis {
     //% block="get wheel radius $unit"
     //% block.loc.ru="радиус колёс шасси в $unit"
     //% weight="94"
+    //% subcategory="Properties"
     //% group="Properties"
     export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
@@ -226,6 +230,7 @@ namespace chassis {
     //% block="set base length = $length $unit"
     //% block.loc.ru="установить размер коллеи шасси = $length $unit"
     //% weight="93" blockGap="8"
+    //% subcategory="Properties"
     //% group="Properties"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) baseLength = length;
@@ -242,6 +247,7 @@ namespace chassis {
     //% block="get base length $unit"
     //% block.loc.ru="размер коллеи шасси в $unit"
     //% weight="92"
+    //% subcategory="Properties"
     //% group="Properties"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) return baseLength;

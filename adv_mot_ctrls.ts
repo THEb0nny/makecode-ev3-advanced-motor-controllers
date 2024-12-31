@@ -147,7 +147,7 @@ namespace advmotctrls {
     export function accOneEnc(enc: number): AccEncReturn {
         let done: boolean;
         let pwr: number, pwrOut: number;
-        let currEnc = Math.abs(enc);
+        const currEnc = Math.abs(enc);
         if (currEnc >= ACC1_totalDist) done = true;
         else if (currEnc > ACC1_totalDist / 2) {
             if (ACC1_decelDist == 0) pwr = ACC1_maxPwr;
@@ -212,7 +212,7 @@ namespace advmotctrls {
     export function accTwoEnc(eLeft: number, eRight: number): AccEncReturn {
         let done: boolean;
         let pwr: number, pwrOut: number;
-        let currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
+        const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
         if (currEnc >= ACC2_totalDist) done = true;
         else if (currEnc > ACC2_totalDist / 2) {
             if (ACC2_decelDist == 0) pwr = ACC2_maxPwr;
