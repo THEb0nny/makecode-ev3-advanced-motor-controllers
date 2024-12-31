@@ -21,6 +21,25 @@ namespace chassis {
 
     const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
+    /*
+    // Only a double output at a time
+    function splitDoubleOutput(out: Output): Output[] {
+        if (out == Output.BC) return [Output.B, Output.C];
+        else if (out == Output.AB) return [Output.A, Output.B];
+        else if (out == Output.CD) return [Output.C, Output.D];
+        else if (out == Output.AD) return [Output.A, Output.D];
+        return [];
+    }
+    */
+
+    function strNameToOutput(outStr: string): Output {
+        if (outStr == "B+C") return Output.BC;
+        else if (outStr == "A+B") return Output.AB;
+        else if (outStr == "C+D") return Output.CD;
+        else if (outStr == "A+D") return Output.AD;
+        return Output.ALL;
+    }
+
     /**
      * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
      * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
@@ -38,7 +57,8 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% weight="99"
-    //% group="Properties"
+    //% subcategory="Свойства"
+    //% group="Установить"
     //% blockHidden="true"
     export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
         return;
@@ -117,14 +137,6 @@ namespace chassis {
         if (setRightMotReverse != undefined) rightMotor.setInverted(setRightMotReverse);
     }
 
-    function strNameToOutput(outStr: string): Output {
-        if (outStr == "B+C") return Output.BC;
-        else if (outStr == "A+B") return Output.AB;
-        else if (outStr == "C+D") return Output.CD;
-        else if (outStr == "A+D") return Output.AD;
-        return Output.ALL;
-    }
-
     /**
      * Set the speed regulated for the chassis motors.
      * Установить регулирование скоростей для моторов шасси.
@@ -142,17 +154,6 @@ namespace chassis {
         leftMotor.setRegulated(regulated);
         rightMotor.setRegulated(regulated);
     }
-
-    /*
-    // Only a double output at a time
-    function splitDoubleOutput(out: Output): Output[] {
-        if (out == Output.BC) return [Output.B, Output.C];
-        else if (out == Output.AB) return [Output.A, Output.B];
-        else if (out == Output.CD) return [Output.C, Output.D];
-        else if (out == Output.AD) return [Output.A, Output.D];
-        return [];
-    }
-    */
 
     /**
      * Set the chassis synchronization control values.
@@ -197,7 +198,7 @@ namespace chassis {
     //% block.loc.ru="установить радиус колёс шасси = $radius $unit"
     //% weight="95" blockGap="8"
     //% subcategory="Свойства"
-    //% group="Установить"
+    //% group="Колёса"
     export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) wheelRadius = radius;
         else if (unit == MeasurementUnit.Millimeters) wheelRadius = radius / 10;
@@ -214,7 +215,7 @@ namespace chassis {
     //% block.loc.ru="радиус колёс шасси в $unit"
     //% weight="94"
     //% subcategory="Свойства"
-    //% group="Получить"
+    //% group="Колёса"
     export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
         else if (unit == MeasurementUnit.Millimeters) return wheelRadius * 10;
@@ -232,7 +233,7 @@ namespace chassis {
     //% block.loc.ru="установить размер коллеи шасси = $length $unit"
     //% weight="93" blockGap="8"
     //% subcategory="Свойства"
-    //% group="Установить"
+    //% group="Колея"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) baseLength = length;
         else if (unit == MeasurementUnit.Millimeters) baseLength = length / 10;
@@ -249,7 +250,7 @@ namespace chassis {
     //% block.loc.ru="размер коллеи шасси в $unit"
     //% weight="92"
     //% subcategory="Свойства"
-    //% group="Получить"
+    //% group="Колея"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) return baseLength;
         else if (unit == MeasurementUnit.Millimeters) return baseLength * 10;
@@ -325,7 +326,7 @@ namespace chassis {
      */
     //% blockId="ChassisSteeringCommand"
     //% block="steering command in direction $turnRatio at $speed\\%"
-    //% block.loc.ru="команда рулевого управления по направлению $turnRatio на $speed\\%"
+    //% block.loc.ru="рулевое управление по направлению $turnRatio на $speed\\%"
     //% inlineInputMode="inline"
     //% turnRatio.shadow="motorTurnRatioPicker"
     //% speed.shadow="motorSpeedPicker"
