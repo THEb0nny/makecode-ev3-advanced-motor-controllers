@@ -283,7 +283,7 @@ namespace chassis {
         rightMotor.stop();
         leftMotor.setBrakeSettleTime(10);
         rightMotor.setBrakeSettleTime(10);
-        pause(10);
+        pause(10); // Settle delay
     }
 
     // Получить скорости моторов при рулевом управлении
@@ -355,7 +355,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% weight="99" blockGap="8"
     //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
-    //% group="Синхронизированное движение"
+    //% group="Move"
     //% blockHidden="true"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
@@ -384,7 +384,7 @@ namespace chassis {
 
         motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
     }
-
+    
     /**
      * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
      * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
@@ -528,6 +528,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="99" blockGap="8"
+    //% subcategory="Повороты"
     //% group="Синхронизированные повороты"
     export function spinTurn(degress: number, speed: number) {
         //if (!motorsPair) return;
@@ -581,6 +582,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98"
+    //% subcategory="Повороты"
     //% group="Синхронизированные повороты"
     export function pivotTurn(deg: number, speed: number, wheelPivot: WheelPivot) {
         //if (!motorsPair) return;
@@ -618,6 +620,50 @@ namespace chassis {
             control.pauseUntilTime(currTime, 1);
         }
         stop(true); // Break at hold
+    }
+
+    /**
+     * Synchronized rotation of the chassis relative to the center at the desired angle at a certain speed.
+     * For example, if degress > 0, then the robot will rotate to the right, and if degress < 0, then to the left.
+     * The speed must be positive!
+     * Синхронизированный поворот шасси относительно центра на нужный угол с определенной скоростью.
+     * Например, если градусов > 0, то робот будет поворачиваться вправо, а если градусов < 0, то влево.
+     * Скорость должна быть положительной!
+     * @param degress rotation value in degrees, eg: 90
+     * @param speed turning speed value, eg: 30
+     */
+    //% blockId="ChassisRampSpinTurn"
+    //% block="sync chassis spin turn $degress\\° at $speed\\% relative to center wheel axis"
+    //% block.loc.ru="синхронизированный поворот шасси на $degress\\° с $speed\\% относительно центра оси колёс"
+    //% inlineInputMode="inline"
+    //% speed.shadow="motorSpeedPicker"
+    //% weight="89" blockGap="8"
+    //% subcategory="Повороты"
+    //% group="Синхронизированные повороты с ускорениями"
+    function rampSpinTurn(degress: number, minSpeed: number, maxSpeed: number) {
+        return;
+    }
+
+    /**
+     * Synchronized rotation to the desired angle relative to one of the wheels.
+     * A positive speed is set for forward rotation, and a negative speed is set for backward rotation.
+     * The value of the rotation angle is always positive!
+     * Синхронизированный поворот на нужный угол относительно одного из колес.
+     * Для вращения вперёд устанавливается положительная скорость, а назад - отрицательная.
+     * Значение угла поворота всегда положительное!
+     * @param deg rotation value in degrees, eg: 90
+     * @param speed turning speed value, eg: 30
+     */
+    //% blockId="ChassisRampPivotTurn"
+    //% block="sync chassis pivot turn $deg\\° at $minSpeed\\% $maxSpeed\\% pivot $wheelPivot"
+    //% block.loc.ru="синхронизированный поворот шасси на $deg\\° с $minSpeed\\% $maxSpeed\\% относительно $wheelPivot"
+    //% inlineInputMode="inline"
+    //% speed.shadow="motorSpeedPicker"
+    //% weight="88"
+    //% subcategory="Повороты"
+    //% group="Синхронизированные повороты с ускорениями"
+    function rampPivotTurn(deg: number, minSpeed: number, maxSpeed: number, wheelPivot: WheelPivot) {
+        return;
     }
 
 }
