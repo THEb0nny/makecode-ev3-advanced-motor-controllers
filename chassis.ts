@@ -640,7 +640,7 @@ namespace chassis {
     //% speed.shadow="motorSpeedPicker"
     //% weight="89" blockGap="8"
     //% subcategory="Повороты"
-    //% group="Синхронизированные повороты с ускорениями"
+    //% group="Синхронизированные повороты с ускорениями/замедлениями"
     function rampSpinTurn(degress: number, minSpeed: number, maxSpeed: number) {
         return;
     }
@@ -662,7 +662,7 @@ namespace chassis {
     //% speed.shadow="motorSpeedPicker"
     //% weight="88"
     //% subcategory="Повороты"
-    //% group="Синхронизированные повороты с ускорениями"
+    //% group="Синхронизированные повороты с ускорениями/замедлениями"
     function rampPivotTurn(deg: number, minSpeed: number, maxSpeed: number, wheelPivot: WheelPivot) {
         return;
     }
