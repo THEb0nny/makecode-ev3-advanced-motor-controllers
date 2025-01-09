@@ -188,35 +188,35 @@ namespace chassis {
     }
 
     /**
-     * Sets the wheel radius.
-     * Задает радиус колеса.
-     * @param radius the radius of a wheel, eg: 56
-     * @param unit dimension of the unit of radius, eg: MeasurementUnit.Millimeters
+     * Sets the wheel diametr.
+     * Задает диаметр колеса.
+     * @param diametr the diametr of a wheel, eg: 56
+     * @param unit dimension of the unit of diametr, eg: MeasurementUnit.Millimeters
      */
-    //% blockId="ChassisSetWheelRadius"
-    //% block="set wheel radius = $radius $unit"
-    //% block.loc.ru="установить радиус колёс шасси = $radius $unit"
+    //% blockId="ChassisSetWheelВiametr"
+    //% block="set wheel diametr = $diametr $unit"
+    //% block.loc.ru="установить диаметр колёс шасси = $diametr $unit"
     //% weight="95" blockGap="8"
     //% subcategory="Свойства"
     //% group="Колёса"
-    export function setWheelRadius(radius: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (unit == MeasurementUnit.Centimeters) wheelRadius = radius;
-        else if (unit == MeasurementUnit.Millimeters) wheelRadius = radius / 10;
+    export function setWheelDiametr(diametr: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
+        if (unit == MeasurementUnit.Centimeters) wheelRadius = diametr;
+        else if (unit == MeasurementUnit.Millimeters) wheelRadius = diametr / 10;
         else return;
     }
 
     /**
-     * Gets the wheel radius.
-     * Возвращает радиус колеса.
+     * Gets the wheel diametr.
+     * Возвращает диаметр колеса.
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
-    //% blockId="ChassisGetWheelRadius"
-    //% block="get wheel radius $unit"
-    //% block.loc.ru="радиус колёс шасси в $unit"
+    //% blockId="ChassisGetWheelDiametr"
+    //% block="get wheel diametr $unit"
+    //% block.loc.ru="диаметр колёс шасси в $unit"
     //% weight="94"
     //% subcategory="Свойства"
     //% group="Колёса"
-    export function getWheelRadius(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
+    export function getWheelDiametr(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
         else if (unit == MeasurementUnit.Millimeters) return wheelRadius * 10;
         return 0;
@@ -428,7 +428,9 @@ namespace chassis {
             let eml = leftMotor.angle() - emlPrev; // Get left motor encoder current value
             let emr = rightMotor.angle() - emrPrev; // Get right motor encoder current value
             if (unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) {
-                if (Math.abs(eml) >= Math.abs(value) && Math.abs(emr) >= Math.abs(value)) break;
+                if (Math.abs(vLeft) > 0 && Math.abs(vRight) > 0 && Math.abs(eml) >= Math.abs(value) && Math.abs(emr) >= Math.abs(value)) break;
+                else if (Math.abs(vLeft) > 0 && Math.abs(eml) >= Math.abs(value)) break;
+                else if (Math.abs(vRight) > 0 && Math.abs(emr) >= Math.abs(value)) break;
             } else if (unit == MoveUnit.MilliSeconds && control.millis() >= endTime) break;
             else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break;
             let error = advmotctrls.getErrorSyncMotors(eml, emr); // Find out the error in motor speed control
@@ -543,7 +545,7 @@ namespace chassis {
         speed = Math.clamp(-100, 100, speed >> 0); // We limit the speed of the motor from -100 to 100 and cut off the fractional part
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
         const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
-        const calcMotRot = Math.round(degress * getBaseLength() / getWheelRadius()); // Расчёт угла поворота моторов для поворота
+        const calcMotRot = Math.round(degress * getBaseLength() / getWheelDiametr()); // Расчёт угла поворота моторов для поворота
         if (degress > 0) advmotctrls.syncMotorsConfig(speed, -speed);
         else if (degress < 0) advmotctrls.syncMotorsConfig(-speed, speed);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
@@ -596,7 +598,7 @@ namespace chassis {
         }
         const emlPrev = leftMotor.angle(); // Считываем с левого мотора значения энкодера перед стартом алгаритма
         const emrPrev = rightMotor.angle(); // Считываем с правого мотора значения энкодера перед стартом алгаритма
-        let calcMotRot = Math.round(((Math.abs(deg) * getBaseLength()) / getWheelRadius()) * 2); // Расчёт угла поворота моторов для поворота
+        let calcMotRot = Math.round(((Math.abs(deg) * getBaseLength()) / getWheelDiametr()) * 2); // Расчёт угла поворота моторов для поворота
         stop(true); // Brake so that one of the motors is held when turning
         if (wheelPivot == WheelPivot.LeftWheel) advmotctrls.syncMotorsConfig(0, speed);
         else if (wheelPivot == WheelPivot.RightWheel) advmotctrls.syncMotorsConfig(speed, 0);

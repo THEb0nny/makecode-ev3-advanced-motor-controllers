@@ -110,7 +110,7 @@ function Test() {
     // chassis.setChassisMotors(motors.largeBC);
     chassis.setSeparatelyChassisMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setSyncRegulatorGains(0.02, 0, 0.5);
-    chassis.setWheelRadius(62.4);
+    chassis.setWheelDiametr(62.4);
     chassis.setBaseLength(185);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
