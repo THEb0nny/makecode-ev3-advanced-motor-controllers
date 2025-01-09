@@ -477,22 +477,22 @@ namespace chassis {
      * @param decelDist decelerate length encoder value, eg: 100
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at speed min $minSpeed\\% max $maxSpeed\\% for distance $totalDist acceleration $accelDist deceleration $decelDist"
+    //% block="sync chassis ramp movement at speed min $minSpeed\\% max $maxSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
     //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed\\% макс $maxSpeed\\% на расстояние $totalDist ускорения $accelDist замедления $decelDist"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
     //% weight="99"
     //% group="Синхронизированное движение с ускорениями/замедлениями"
-    export function syncRampMovement(minSpeed: number, maxSpeed: number, totalDist: number, accelDist: number, decelDist: number) {
+    export function syncRampMovement(minSpeed: number, maxSpeed: number, totalValue: number, accelValue: number, decelValue: number, unit: MoveUnit = MoveUnit.Degrees) {
         //if (!motorsPair) return;
-        if (maxSpeed == 0 || totalDist == 0) {
+        if (maxSpeed == 0 || totalValue == 0) {
             stop(true);
             return;
         }
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
         const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
-        advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelDist, decelDist, totalDist);
+        advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
