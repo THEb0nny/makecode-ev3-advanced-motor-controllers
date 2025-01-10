@@ -360,7 +360,7 @@ namespace chassis {
     //% blockHidden="true"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
-        if (!speed || wheelRadius == 0 || baseLength == 0 || motorMaxRPM == 0) {
+        if (!speed || wheelRadius == 0 || baseLength == 0) {
             stop(true);
             return;
         }
