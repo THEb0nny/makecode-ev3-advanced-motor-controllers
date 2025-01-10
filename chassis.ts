@@ -479,7 +479,7 @@ namespace chassis {
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
     //% weight="99"
-    //% group="Синхронизированное движение с ускорениями/замедлениями"
+    //% group="Синхронизированное движение с ускорениями"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, totalValue: number, accelValue: number, decelValue: number, unit: MoveUnit = MoveUnit.Degrees) {
         //if (!motorsPair) return;
         if (maxSpeed == 0 || totalValue == 0) {
@@ -638,7 +638,7 @@ namespace chassis {
     //% speed.shadow="motorSpeedPicker"
     //% weight="89" blockGap="8"
     //% subcategory="Повороты"
-    //% group="Синхронизированные повороты с ускорениями/замедлениями"
+    //% group="Синхронизированные повороты с ускорениями"
     function rampSpinTurn(degress: number, minSpeed: number, maxSpeed: number) {
         return;
     }
@@ -660,7 +660,7 @@ namespace chassis {
     //% speed.shadow="motorSpeedPicker"
     //% weight="88"
     //% subcategory="Повороты"
-    //% group="Синхронизированные повороты с ускорениями/замедлениями"
+    //% group="Синхронизированные повороты с ускорениями"
     function rampPivotTurn(deg: number, minSpeed: number, maxSpeed: number, wheelPivot: WheelPivot) {
         return;
     }
