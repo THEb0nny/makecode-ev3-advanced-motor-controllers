@@ -21,8 +21,7 @@ namespace chassis {
 
     const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
-    /*
-    // Only a double output at a time
+    // Only a double motor output at a time
     function splitDoubleOutput(out: Output): Output[] {
         if (out == Output.BC) return [Output.B, Output.C];
         else if (out == Output.AB) return [Output.A, Output.B];
@@ -30,8 +29,8 @@ namespace chassis {
         else if (out == Output.AD) return [Output.A, Output.D];
         return [];
     }
-    */
-
+    
+    // Get motor Output from output string
     function strNameToOutput(outStr: string): Output {
         if (outStr == "B+C") return Output.BC;
         else if (outStr == "A+B") return Output.AB;
@@ -47,7 +46,7 @@ namespace chassis {
      * @param setLeftMotReverse left motor reverse property, eg: false
      * @param setRightMotReverse right motor reverse property, eg: false
      */
-    //% blockId="ChassisSetChassisMotors"
+    //% blockId="ChassisSetChassis"
     //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse $setRightMotReverse"
     //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse $setRightMotReverse"
     //% newMotorsPair.fieldEditor="motors"
@@ -60,9 +59,8 @@ namespace chassis {
     //% subcategory="Свойства"
     //% group="Установить"
     //% blockHidden="true"
-    export function setChassisMotors(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
-        return;
-        /*
+    /*
+    export function setChassis(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
         motorsPair = newMotorsPair;
         const motorsName = motorsPair.toString();
         const motorsType = motorsName.split(" ")[0];
@@ -104,8 +102,8 @@ namespace chassis {
         }
         if (motorsType == "large") motorMaxRPM = 170;
         else if (motorsType == "medium") motorMaxRPM = 250;
-        */
     }
+    */
 
     /**
      * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
@@ -115,7 +113,7 @@ namespace chassis {
      * @param setLeftMotReverse left motor reverse property, eg: false
      * @param setRightMotReverse right motor reverse property, eg: false
      */
-    //% blockId="ChassisSetSeparatelyChassisMotors"
+    //% blockId="ChassisSetChassisMotors"
     //% block="set motors to chassis $newLeftMotors $newRightMotors||at reverse property $setLeftMotReverse $setRightMotReverse"
     //% block.loc.ru="установить моторы шасси $newLeftMotors $newRightMotors||с свойством реверса $setLeftMotReverse $setRightMotReverse"
     //% newLeftMotors.fieldEditor="motors"
@@ -129,7 +127,7 @@ namespace chassis {
     //% weight="98"
     //% subcategory="Свойства"
     //% group="Установить"
-    export function setSeparatelyChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
+    export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
         if (newLeftMotors == newRightMotors) return; // Identical motors were installed
         leftMotor = newLeftMotors; // Set left motor instance
         rightMotor = newRightMotors; // Set right motor instance

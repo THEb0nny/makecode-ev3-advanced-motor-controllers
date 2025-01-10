@@ -108,7 +108,7 @@ function RampLineFollowExample() {
 function Test() {
     // chassis.setChassisMotors(motors.mediumBC);
     // chassis.setChassisMotors(motors.largeBC);
-    chassis.setSeparatelyChassisMotors(motors.mediumB, motors.mediumC, true, false);
+    chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setSyncRegulatorGains(0.02, 0, 0.5);
     chassis.setWheelDiametr(62.4);
     chassis.setBaseLength(185);
