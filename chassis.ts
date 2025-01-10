@@ -123,7 +123,6 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% weight="98"
-    //% subcategory="Свойства"
     //% group="Установить"
     export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
         if (newLeftMotors == newRightMotors) return; // Identical motors were installed
@@ -144,7 +143,6 @@ namespace chassis {
     //% regulated.shadow="toggleOnOff"
     //% inlineInputMode="inline"
     //% weight="97"
-    //% subcategory="Свойства"
     //% group="Установить"
     export function setSpeedRegulated(regulated: boolean) {
         leftMotor.setRegulated(regulated);
@@ -163,7 +161,6 @@ namespace chassis {
     //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp ki = $Ki kd = $Kd"
     //% inlineInputMode="inline"
     //% weight="96"
-    //% subcategory="Свойства"
     //% group="Установить"
     export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number) {
         syncKp = Kp;
@@ -193,7 +190,6 @@ namespace chassis {
     //% block="set wheel diametr = $diametr $unit"
     //% block.loc.ru="установить диаметр колёс шасси = $diametr $unit"
     //% weight="95" blockGap="8"
-    //% subcategory="Свойства"
     //% group="Колёса"
     export function setWheelDiametr(diametr: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) wheelRadius = diametr;
@@ -210,7 +206,6 @@ namespace chassis {
     //% block="get wheel diametr $unit"
     //% block.loc.ru="диаметр колёс шасси в $unit"
     //% weight="94"
-    //% subcategory="Свойства"
     //% group="Колёса"
     export function getWheelDiametr(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
         if (unit == MeasurementUnit.Centimeters) return wheelRadius;
@@ -228,7 +223,6 @@ namespace chassis {
     //% block="set base length = $length $unit"
     //% block.loc.ru="установить размер коллеи шасси = $length $unit"
     //% weight="93" blockGap="8"
-    //% subcategory="Свойства"
     //% group="Колея"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) baseLength = length;
@@ -245,7 +239,6 @@ namespace chassis {
     //% block="get base length $unit"
     //% block.loc.ru="размер коллеи шасси в $unit"
     //% weight="92"
-    //% subcategory="Свойства"
     //% group="Колея"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (unit == MeasurementUnit.Centimeters) return baseLength;
