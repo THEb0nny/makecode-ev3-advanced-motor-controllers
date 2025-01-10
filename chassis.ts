@@ -476,7 +476,7 @@ namespace chassis {
      */
     //% blockId="ChassisSyncRampMovement"
     //% block="sync chassis ramp movement at speed min $minSpeed\\% max $maxSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed\\% макс $maxSpeed\\% на расстояние $totalDist ускорения $accelDist замедления $decelDist"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed\\% макс $maxSpeed\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
     //% inlineInputMode="inline"
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
