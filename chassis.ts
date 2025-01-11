@@ -19,7 +19,7 @@ namespace chassis {
     let syncKi: number = 0; // Integral synchronization gain
     let syncKd: number = 0.5; // Differential synchronization gain
 
-    const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
+    export const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
     // Set the retention property for two chassis motors at once
     export function setBrake(hold: boolean) {
@@ -397,7 +397,6 @@ namespace chassis {
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
     //% weight="98" blockGap="8"
-    //% subcategory="Движение"
     //% group="Синхронизированное движение"
     export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
         // if (!motorsPair) return;
@@ -459,7 +458,6 @@ namespace chassis {
     //% turnRatio.shadow="motorTurnRatioPicker"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98" blockGap="8"
-    //% subcategory="Движение"
     //% group="Синхронизированное движение"
     export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
         const { speedLeft, speedRight } = getMotorsSpeedsAtSteering(turnRatio, speed);
@@ -482,7 +480,6 @@ namespace chassis {
     //% minSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
     //% weight="99"
-    //% subcategory="Движение"
     //% group="Синхронизированное движение с ускорениями"
     export function syncRampMovement(minSpeed: number, maxSpeed: number, totalValue: number, accelValue: number, decelValue: number, unit: MoveUnit = MoveUnit.Degrees) {
         //if (!motorsPair) return;
