@@ -265,7 +265,7 @@ namespace chassis {
     //% setBrake.shadow="toggleOnOff"
     //% weight="99"
     //% group="Move"
-    export function stop(setBrake?: boolean) {
+    export function stop(setBrake?: boolean, settleTime: number = 10) {
         //if (!motorsPair) return;
         if (setBrake) {
             // motorsPair.setBrake(setBrake);
@@ -279,7 +279,7 @@ namespace chassis {
         rightMotor.stop();
         leftMotor.setBrakeSettleTime(10);
         rightMotor.setBrakeSettleTime(10);
-        pause(10); // Settle delay
+        pause(Math.max(0, settleTime)); // Settle delay
     }
 
     // Получить скорости моторов при рулевом управлении
