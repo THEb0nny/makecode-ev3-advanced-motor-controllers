@@ -21,6 +21,12 @@ namespace chassis {
 
     const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
+    // Set the retention property for two chassis motors at once
+    export function setBrake(hold: boolean) {
+        leftMotor.setBrake(hold);
+        rightMotor.setBrake(hold);
+    }
+
     // Only a double motor output at a time
     function splitDoubleOutput(out: Output): Output[] {
         if (out == Output.BC) return [Output.B, Output.C];
