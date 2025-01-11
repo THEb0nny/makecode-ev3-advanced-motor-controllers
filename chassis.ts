@@ -395,7 +395,9 @@ namespace chassis {
     //% group="Синхронизированное движение"
     export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
         // if (!motorsPair) return;
-        if (vLeft == 0 && vRight == 0 || ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) || ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
+        if (vLeft == 0 && vRight == 0 ||
+            ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) ||
+            ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
             stop(true);
             return;
         }
@@ -404,6 +406,8 @@ namespace chassis {
         const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
         const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
+        let emlValue = (Math.abs(vLeft) != 0 ? value : 0); // The value that the left motor must pass
+        let emrValue = (Math.abs(vRight) != 0 ? value : 0); // The value that the right motor must pass
         advmotctrls.syncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
@@ -417,11 +421,9 @@ namespace chassis {
             prevTime = currTime;
             let eml = leftMotor.angle() - emlPrev; // Get left motor encoder current value
             let emr = rightMotor.angle() - emrPrev; // Get right motor encoder current value
-            if (unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) {
-                if (Math.abs(vLeft) > 0 && Math.abs(vRight) > 0 && Math.abs(eml) >= Math.abs(value) && Math.abs(emr) >= Math.abs(value)) break;
-                else if (Math.abs(vLeft) > 0 && Math.abs(eml) >= Math.abs(value)) break;
-                else if (Math.abs(vRight) > 0 && Math.abs(emr) >= Math.abs(value)) break;
-            } else if (unit == MoveUnit.MilliSeconds && control.millis() >= endTime) break;
+            if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations)
+                && Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break;
+            else if (unit == MoveUnit.MilliSeconds && control.millis() >= endTime) break;
             else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break;
             let error = advmotctrls.getErrorSyncMotors(eml, emr); // Find out the error in motor speed control
             pidChassisSync.setPoint(error); // Transfer control error to controller
