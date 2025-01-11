@@ -112,8 +112,8 @@ namespace chassis {
      * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetChassisMotors"
-    //% block="set motors to chassis $newLeftMotors $newRightMotors||at reverse property $setLeftMotReverse $setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newLeftMotors $newRightMotors||с свойством реверса $setLeftMotReverse $setRightMotReverse"
+    //% block="set motors to chassis $newLeftMotors $newRightMotors|at reverse property $setLeftMotReverse $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newLeftMotors $newRightMotors|с свойством реверса $setLeftMotReverse $setRightMotReverse"
     //% newLeftMotors.fieldEditor="motors"
     //% newLeftMotors.fieldOptions.decompileLiterals="1"
     //% newRightMotors.fieldEditor="motors"
@@ -121,15 +121,15 @@ namespace chassis {
     //% setLeftMotReverse.shadow="toggleOnOff"
     //% setRightMotReverse.shadow="toggleOnOff"
     //% inlineInputMode="inline"
-    //% expandableArgumentMode="toggle"
+    //% expandableArgumentMode="disabled"
     //% weight="98"
     //% group="Установить"
-    export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
+    export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
         if (newLeftMotors == newRightMotors) return; // Identical motors were installed
         leftMotor = newLeftMotors; // Set left motor instance
         rightMotor = newRightMotors; // Set right motor instance
-        if (setLeftMotReverse != undefined) leftMotor.setInverted(setLeftMotReverse);
-        if (setRightMotReverse != undefined) rightMotor.setInverted(setRightMotReverse);
+        leftMotor.setInverted(setLeftMotReverse);
+        rightMotor.setInverted(setRightMotReverse);
     }
 
     /**
