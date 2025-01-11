@@ -12,7 +12,7 @@ namespace chassis {
     export let rightMotor: motors.Motor; // The right motor in chassis
 
     let motorMaxRPM: number = 0; // Motor maximum rpm
-    let wheelRadius: number = 0; // The radius of the wheel (cm)
+    let wheelDiametr: number = 0; // The radius of the wheel (cm)
     let baseLength: number = 0; // The distance between the wheels (cm)
 
     let syncKp: number = 0.03; // Proportional synchronization gain
@@ -198,8 +198,8 @@ namespace chassis {
     //% weight="95" blockGap="8"
     //% group="Колёса"
     export function setWheelDiametr(diametr: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (unit == MeasurementUnit.Centimeters) wheelRadius = diametr;
-        else if (unit == MeasurementUnit.Millimeters) wheelRadius = diametr / 10;
+        if (unit == MeasurementUnit.Centimeters) wheelDiametr = diametr;
+        else if (unit == MeasurementUnit.Millimeters) wheelDiametr = diametr / 10;
         else return;
     }
 
@@ -214,8 +214,8 @@ namespace chassis {
     //% weight="94"
     //% group="Колёса"
     export function getWheelDiametr(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
-        if (unit == MeasurementUnit.Centimeters) return wheelRadius;
-        else if (unit == MeasurementUnit.Millimeters) return wheelRadius * 10;
+        if (unit == MeasurementUnit.Centimeters) return wheelDiametr;
+        else if (unit == MeasurementUnit.Millimeters) return wheelDiametr * 10;
         return 0;
     }
 
@@ -355,13 +355,14 @@ namespace chassis {
     //% blockHidden="true"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
-        if (!speed || wheelRadius == 0 || baseLength == 0) {
+        if (!speed || wheelDiametr == 0 || baseLength == 0) {
             stop(true);
             return;
         }
 
         // Speed is expressed in %
-        const R = wheelRadius; // cm
+        const D = wheelDiametr; // cm
+        const R = D / 2; // cm
         const L = baseLength; // cm
 
         const maxw = motorMaxRPM / 60 * 2 * Math.PI; // rad/s
