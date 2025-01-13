@@ -104,7 +104,7 @@ namespace advmotctrls {
     //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
     export function getErrorSyncMotorsInPwr(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
-        return ((vRight * eLeft) - (vLeft * eRight));
+        return (vRight * eLeft) - (vLeft * eRight);
     }
 
     //% blockId="GetPwrSyncMotorsInPwr"
