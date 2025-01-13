@@ -424,10 +424,12 @@ namespace chassis {
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
         let emlValue = (Math.abs(vLeft) != 0 ? value : 0); // The value that the left motor must pass
         let emrValue = (Math.abs(vRight) != 0 ? value : 0); // The value that the right motor must pass
+
         advmotctrls.syncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
+
         let prevTime = 0; // Last time time variable for loop
         const startTime = control.millis() * (unit == MoveUnit.Seconds ? 0.001 : 1); // We fix the time before the start of the regulation cycle
         const endTime = (unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds ? startTime + value : 0); // We record the end time of the regulation cycle if the appropriate mode is selected
@@ -435,8 +437,7 @@ namespace chassis {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = leftMotor.angle() - emlPrev; // Get left motor encoder current value
-            let emr = rightMotor.angle() - emrPrev; // Get right motor encoder current value
+            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
             if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) &&
                 Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break;
             else if (unit == MoveUnit.MilliSeconds && control.millis() >= endTime) break;
@@ -498,19 +499,19 @@ namespace chassis {
             stop(true);
             return;
         }
-        const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
-        const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
+
         advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
-        let prevTime = 0;
+
+        let prevTime = 0; // Last time time variable for loop
         while (true) {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = leftMotor.angle() - emlPrev;
-            let emr = rightMotor.angle() - emrPrev;
+            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsInPwr(eml, emr, out.pwrOut, out.pwrOut);
