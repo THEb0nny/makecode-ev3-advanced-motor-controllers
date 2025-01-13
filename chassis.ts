@@ -433,8 +433,8 @@ namespace chassis {
             prevTime = currTime;
             let eml = leftMotor.angle() - emlPrev; // Get left motor encoder current value
             let emr = rightMotor.angle() - emrPrev; // Get right motor encoder current value
-            if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations)
-                && Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break;
+            if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) &&
+                Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break;
             else if (unit == MoveUnit.MilliSeconds && control.millis() >= endTime) break;
             else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break;
             let error = advmotctrls.getErrorSyncMotors(eml, emr); // Find out the error in motor speed control
@@ -476,9 +476,9 @@ namespace chassis {
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении. Значения расстояний устанавливается в тиках энкодера.
      * @param minSpeed start motor speed, eg: 10
      * @param maxSpeed max motor speed, eg: 50
-     * @param totalDist total length encoder value at, eg: 300
-     * @param accelDist accelerate length encoder value, eg: 50
-     * @param decelDist decelerate length encoder value, eg: 100
+     * @param totalValue total length encoder value at, eg: 300
+     * @param accelValue accelerate length encoder value, eg: 50
+     * @param decelValue decelerate length encoder value, eg: 100
      */
     //% blockId="ChassisSyncRampMovement"
     //% block="sync chassis ramp movement at speed min $minSpeed\\% max $maxSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
