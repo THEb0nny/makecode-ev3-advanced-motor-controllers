@@ -140,8 +140,12 @@ namespace chassis {
         }
         leftMotor = newLeftMotors; // Set left motor instance
         rightMotor = newRightMotors; // Set right motor instance
-        leftMotor.setInverted(setLeftMotReverse);
-        rightMotor.setInverted(setRightMotReverse);
+        leftMotor.setInverted(setLeftMotReverse); // Set left motor revers property
+        rightMotor.setInverted(setRightMotReverse); // Set right motor revers property
+        const motorLeftType = leftMotor.toString().split(" ")[0][0];
+        const motorRightType = leftMotor.toString().split(" ")[0][0];
+        if (motorLeftType === "M" && motorRightType === "M") motorMaxRPM = 250;
+        else motorMaxRPM = 170;
     }
 
     /**
