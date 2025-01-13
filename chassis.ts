@@ -45,69 +45,72 @@ namespace chassis {
         return Output.ALL;
     }
 
-    // /**
-    //  * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
-    //  * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
-    //  * @param newMotorsPair motors pair, eg: motors.largeBC
-    //  * @param setLeftMotReverse left motor reverse property, eg: false
-    //  * @param setRightMotReverse right motor reverse property, eg: false
-    //  */
-    // //% blockId="ChassisSetChassis"
-    // //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse $setRightMotReverse"
-    // //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse $setRightMotReverse"
-    // //% newMotorsPair.fieldEditor="motors"
-    // //% newMotorsPair.fieldOptions.decompileLiterals="1"
-    // //% setLeftMotReverse.shadow="toggleOnOff"
-    // //% setRightMotReverse.shadow="toggleOnOff"
-    // //% inlineInputMode="inline"
-    // //% expandableArgumentMode="toggle"
-    // //% weight="99"
-    // //% subcategory="Свойства"
-    // //% group="Установить"
-    // //% blockHidden="true"
-    // export function setChassis(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
-    //     motorsPair = newMotorsPair;
-    //     const motorsName = motorsPair.toString();
-    //     const motorsType = motorsName.split(" ")[0];
-    //     const motorsPort = motorsName.split(" ")[1];
-    //     const motorsPortArr = motorsName.split(" ")[1].split("+");
-    //     const allUsedSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
-    //     // allUsedSingleMotors.forEach((motor) => {
-    //     //     console.log(`motor: ${motor}`);
-    //     // });
-    //     if (allUsedSingleMotors.length >= 1) { // Ищем из существующих моторов
-    //         leftMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[0])[0]; // Set left motor instance
-    //         rightMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[1])[0]; // Set right motor instance
-    //         // console.log(`leftMotor1: ${leftMotor}, rightMotor1: ${rightMotor}`);
-    //     }
-    //     if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
-    //         const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsPort));
-    //         // console.log(`motorsName: ${motorsName}, motorsName: ${motorsPort[0]}, motorsOut: ${motorsOut[0]}, ${motorsOut[1]}`);
-    //         // motorsOut.forEach((port) => {
-    //         //     console.log(`motorsOut: ${port}`);
-    //         // });
-    //         const isLargeMotor = (motorsType == "large" ? true : false);
-    //         if (!leftMotor) {
-    //             leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
-    //             //console.log(`new leftMotor2: ${leftMotor}`);
-    //         }
-    //         if (!rightMotor) {
-    //             rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
-    //             //console.log(`new rightMotor2: ${rightMotor}`);
-    //         }
-    //     }
-    //     //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
-    //     if (setLeftMotReverse != undefined) {
-    //         leftMotor.setInverted(setLeftMotReverse);
-    //         //console.log(`reverse leftMotor: ${setLeftMotReverse}`);
-    //     }
-    //     if (setRightMotReverse != undefined) {
-    //         rightMotor.setInverted(setRightMotReverse);
-    //         //console.log(`reverse rightMotor: ${setRightMotReverse}`);
-    //     }
-    //     if (motorsType == "large") motorMaxRPM = 170;
-    //     else if (motorsType == "medium") motorMaxRPM = 250;
-    // }
+    /**
+     * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
+     * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
+     * @param newMotorsPair motors pair, eg: motors.largeBC
+     * @param setLeftMotReverse left motor reverse property, eg: false
+     * @param setRightMotReverse right motor reverse property, eg: false
+     */
+    //% blockId="ChassisSetChassis"
+    //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse $setRightMotReverse"
+    //% newMotorsPair.fieldEditor="motors"
+    //% newMotorsPair.fieldOptions.decompileLiterals="1"
+    //% setLeftMotReverse.shadow="toggleOnOff"
+    //% setRightMotReverse.shadow="toggleOnOff"
+    //% inlineInputMode="inline"
+    //% expandableArgumentMode="toggle"
+    //% weight="99"
+    //% subcategory="Свойства"
+    //% group="Установить"
+    //% blockHidden="true"
+    function setChassis(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
+        return;
+        /*
+        motorsPair = newMotorsPair;
+        const motorsName = motorsPair.toString();
+        const motorsType = motorsName.split(" ")[0];
+        const motorsPort = motorsName.split(" ")[1];
+        const motorsPortArr = motorsName.split(" ")[1].split("+");
+        const allUsedSingleMotors = motors.Motor.getAllInstances(); // Get all motors instances
+        // allUsedSingleMotors.forEach((motor) => {
+        //     console.log(`motor: ${motor}`);
+        // });
+        if (allUsedSingleMotors.length >= 1) { // Ищем из существующих моторов
+            leftMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[0])[0]; // Set left motor instance
+            rightMotor = allUsedSingleMotors.filter((motor) => motor.toString().split(" ")[1] == motorsPortArr[1])[0]; // Set right motor instance
+            // console.log(`leftMotor1: ${leftMotor}, rightMotor1: ${rightMotor}`);
+        }
+        if (!leftMotor || !rightMotor) { // Если моторы не были найдены, тогда уже создать свои классы
+            const motorsOut = motors.splitDoubleOutput(strNameToOutput(motorsPort));
+            // console.log(`motorsName: ${motorsName}, motorsName: ${motorsPort[0]}, motorsOut: ${motorsOut[0]}, ${motorsOut[1]}`);
+            // motorsOut.forEach((port) => {
+            //     console.log(`motorsOut: ${port}`);
+            // });
+            const isLargeMotor = (motorsType == "large" ? true : false);
+            if (!leftMotor) {
+                leftMotor = new motors.Motor(motorsOut[0], isLargeMotor);
+                //console.log(`new leftMotor2: ${leftMotor}`);
+            }
+            if (!rightMotor) {
+                rightMotor = new motors.Motor(motorsOut[1], isLargeMotor);
+                //console.log(`new rightMotor2: ${rightMotor}`);
+            }
+        }
+        //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
+        if (setLeftMotReverse != undefined) {
+            leftMotor.setInverted(setLeftMotReverse);
+            //console.log(`reverse leftMotor: ${setLeftMotReverse}`);
+        }
+        if (setRightMotReverse != undefined) {
+            rightMotor.setInverted(setRightMotReverse);
+            //console.log(`reverse rightMotor: ${setRightMotReverse}`);
+        }
+        if (motorsType == "large") motorMaxRPM = 170;
+        else if (motorsType == "medium") motorMaxRPM = 250;
+        */
+    }
 
     /**
      * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
@@ -131,7 +134,10 @@ namespace chassis {
     //% weight="98"
     //% group="Установить"
     export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
-        if (newLeftMotors == newRightMotors) return; // Identical motors were installed
+        if (newLeftMotors == newRightMotors) {
+            control.panic(0); // Error in installation of chassis motors
+            return; // Identical motors were installed
+        }
         leftMotor = newLeftMotors; // Set left motor instance
         rightMotor = newRightMotors; // Set right motor instance
         leftMotor.setInverted(setLeftMotReverse);
