@@ -185,8 +185,9 @@ namespace advmotctrls {
     //% block="config accel/deceleration chassis at minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
-    //% minPwr.shadow="motorSpeedPicker"
+    //% minStartPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
+    //% minEndPwr.shadow="motorSpeedPicker"
     export function accTwoEncConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // ACC2_minPwr = Math.abs(minPwr);
         ACC2_minStartPwr = Math.abs(minStartPwr);
