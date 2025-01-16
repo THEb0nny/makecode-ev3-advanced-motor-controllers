@@ -1,6 +1,7 @@
 /**
  * Motor controllers based OFDL Advanced Motor Controller Block module (algorithm part). There are some changes.
  * Based 1.1 ver, 2023/09/27.
+ * https://github.com/ofdl-robotics-tw/EV3-CLEV3R-Modules/blob/main/Mods/AdvMtCtrls.bpm
  */
 //% block="AdvMotCtrls" weight="89" color="#02ab38" icon="\uf3fd"
 namespace advmotctrls {
