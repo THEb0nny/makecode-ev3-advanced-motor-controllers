@@ -419,11 +419,10 @@ namespace chassis {
         }
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
         vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
-        const emlPrev = leftMotor.angle(); // We read the value from the encoder from the left motor before starting
-        const emrPrev = rightMotor.angle(); // We read the value from the encoder from the right motor before starting
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left and right motor before starting
         if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
-        let emlValue = (Math.abs(vLeft) != 0 ? value : 0); // The value that the left motor must pass
-        let emrValue = (Math.abs(vRight) != 0 ? value : 0); // The value that the right motor must pass
+        const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // The value that the left and right motor must pass
+        const emrValue = (Math.abs(vRight) != 0 ? value : 0); // The value that the right motor must pass
 
         advmotctrls.syncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
