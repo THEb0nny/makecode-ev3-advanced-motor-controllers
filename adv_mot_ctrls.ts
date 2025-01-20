@@ -58,7 +58,10 @@ namespace advmotctrls {
 
     /**
      * Calculate the synchronization error of the chassis motors using the values from the encoders.
+     * Speed ​​(power) is constant.
+     * Returns the error number for the controller.
      * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров.
+     * Скорость постоянная.
      * Возвращает число ошибки для регулятора.
      * @param eLeft входное значение энкодера левого мотора
      * @param eRight входное значение энкодера правого мотора
@@ -93,7 +96,8 @@ namespace advmotctrls {
     
     /**
      * Calculate the synchronization error of the chassis motors using the values from the encoders.
-     * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров и с учётом установки скоростей для моторов.
+     * Returns the error number for the controller.
+     * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров и с учётом необходимых скоростей (мощностей) для моторов.
      * Возвращает число ошибки для регулятора.
      * @param eLeft входное значение энкодера левого мотора
      * @param eRight входное значение энкодера правого мотора
@@ -108,6 +112,13 @@ namespace advmotctrls {
         return (vRight * eLeft) - (vLeft * eRight);
     }
 
+    /**
+     * Get speeds (powers) for motors by U action of the regulator and the required speeds (powers).
+     * Получить speeds (powers) для моторов по U воздействию регулятора и с необходимыми скоростями (мощностями).
+     * @param U входное значение с регулятора
+     * @param vLeft входное значение скорости левого мотора, eg: 50
+     * @param vRight входное значение скорости правого мотора, eg: 50
+     */
     //% blockId="GetPwrSyncMotorsInPwr"
     //% block="get pwr sync сhassis at U = $U vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить скорости синхронизации шасси при U = $U vLeft = $vLeft vRight = $vRight"
