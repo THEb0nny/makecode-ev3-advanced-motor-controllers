@@ -492,7 +492,7 @@ namespace chassis {
     //% maxSpeed.shadow="motorSpeedPicker"
     //% weight="99"
     //% group="Синхронизированное движение с ускорениями"
-    export function syncRampMovement(minSpeed: number, maxSpeed: number, totalValue: number, accelValue: number, decelValue: number, unit: MoveUnit = MoveUnit.Degrees) {
+    export function syncRampMovement(minSpeed: number, maxSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
         //if (!motorsPair) return;
         if (maxSpeed == 0 || totalValue == 0) {
             stop(true);
