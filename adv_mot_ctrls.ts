@@ -38,8 +38,8 @@ namespace advmotctrls {
     }
 
     /**
-     * Chassis motor synchronization configuration.
-     * Конфигурация синхронизации моторов шассии.
+     * Configuration of synchronization of chassis motors at the required speed (power).
+     * Конфигурация синхронизации моторов шассии на нужной скорости (мощности).
      * @param vLeft входное значение скорости левого мотора, eg: 50
      * @param vRight входное значение скорости правого мотора, eg: 50
      */
