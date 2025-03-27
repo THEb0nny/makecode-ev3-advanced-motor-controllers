@@ -20,10 +20,10 @@ const enum WheelPivot {
 // Перечислении о типах торможения
 const enum Braking {
     //% block="break at hold"
-    //% block.loc.ru="торможение с удержанием"
+    //% block.loc.ru="тормоз с удержанием"
     Hold,
     //% block="no break"
-    //% block.loc.ru="торможение без удержания"
+    //% block.loc.ru="тормоз без удержания"
     NoBreak,
     //% block="nothing"
     //% block.loc.ru="не тормозить"
