@@ -339,7 +339,7 @@ namespace chassis {
     //% group="Move"
     export function steeringCommand(turnRatio: number, speed: number) {
         const { speedLeft, speedRight } = getMotorsSpeedsAtSteering(turnRatio, speed);
-        leftMotor.run(speedLeft); rightMotor.run(speedRight);
+        setSpeedsCommand(speedLeft, speedRight);
     }
 
     // Команда установки моторам скоростей
