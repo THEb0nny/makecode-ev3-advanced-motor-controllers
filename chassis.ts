@@ -168,9 +168,9 @@ namespace chassis {
     /**
      * Set the chassis synchronization control values.
      * Установите управляющие значения синхронизации шасси.
-     * @param Kp sync kp input value, eg. 0.03
-     * @param Ki sync ki input value, eg. 0
-     * @param Kd sync kd input value, eg. 0.5
+     * @param Kp sync kp input value, eg: 0.03
+     * @param Ki sync ki input value, eg: 0
+     * @param Kd sync kd input value, eg: 0.5
     */
     //% blockId="ChassisSetSyncRegulatorGains"
     //% block="set chassis sync pid gains kp = $Kp ki = $Ki kd = $Kd"
