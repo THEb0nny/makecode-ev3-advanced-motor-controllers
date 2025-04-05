@@ -53,8 +53,8 @@ namespace chassis {
      * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetChassis"
-    //% block="set motors to chassis $newMotorsPair||at reverse property $setLeftMotReverse $setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newMotorsPair||с свойством реверса $setLeftMotReverse $setRightMotReverse"
+    //% block="set motors to chassis $newMotorsPair||at reverse $setLeftMotReverse $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newMotorsPair||с реверсом $setLeftMotReverse $setRightMotReverse"
     //% newMotorsPair.fieldEditor="motors"
     //% newMotorsPair.fieldOptions.decompileLiterals="1"
     //% setLeftMotReverse.shadow="toggleOnOff"
@@ -121,8 +121,8 @@ namespace chassis {
      * @param setRightMotReverse right motor reverse property, eg: false
      */
     //% blockId="ChassisSetChassisMotors"
-    //% block="set motors to chassis $newLeftMotors $newRightMotors|at reverse property $setLeftMotReverse $setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newLeftMotors $newRightMotors|с свойством реверса $setLeftMotReverse $setRightMotReverse"
+    //% block="set motors to chassis $newLeftMotors $newRightMotors|at reverse $setLeftMotReverse $setRightMotReverse"
+    //% block.loc.ru="установить моторы шасси $newLeftMotors $newRightMotors|с реверсом $setLeftMotReverse $setRightMotReverse"
     //% newLeftMotors.fieldEditor="motors"
     //% newLeftMotors.fieldOptions.decompileLiterals="1"
     //% newRightMotors.fieldEditor="motors"
