@@ -231,13 +231,13 @@ namespace chassis {
 
     /**
      * Sets the base length.
-     * Устанавливает длину базы (коллеи).
+     * Устанавливает длину базы (колеи).
      * @param length the base length, eg: 130
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetBaseLength"
     //% block="set base length = $length $unit"
-    //% block.loc.ru="установить размер коллеи шасси = $length $unit"
+    //% block.loc.ru="установить размер колеи шасси = $length $unit"
     //% weight="93" blockGap="8"
     //% group="Колея"
     export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
@@ -248,12 +248,12 @@ namespace chassis {
 
     /**
      * Gets the base length.
-     * Получить длину базы (коллеи).
+     * Получить длину базы (колеи).
      * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisGetBaseLength"
     //% block="get base length $unit"
-    //% block.loc.ru="размер коллеи шасси в $unit"
+    //% block.loc.ru="размер колеи шасси в $unit"
     //% weight="92"
     //% group="Колея"
     export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
