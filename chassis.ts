@@ -19,6 +19,8 @@ namespace chassis {
     let syncKi: number = 0; // Integral synchronization gain
     let syncKd: number = 0.5; // Differential synchronization gain
 
+    let brakeSettleTime = 10; // Chassis brake settle time (msec)
+
     export const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
 
     // Set the retention property for two chassis motors at once
@@ -166,6 +168,21 @@ namespace chassis {
     }
 
     /**
+     * Set chasiss brake settle time.
+     * Установить время стабилизации тормоза шасси.
+     * @param settleTime время стабилизации шасси в мсек, eg: 100
+     */
+    //% blockId="ChassisSetBrakeSettleTime"
+    //% block="set settle time after stop $settleTime"
+    //% block.loc.ru="установить время стабилизации после остановки $settleTime"
+    //% inlineInputMode="inline"
+    //% weight="96"
+    //% group="Установить"
+    export function setBrakeSettleTime(settleTime: number) {
+        brakeSettleTime = Math.max(0, settleTime);
+    }
+
+    /**
      * Set the chassis synchronization control values.
      * Установите управляющие значения синхронизации шасси.
      * @param Kp sync kp input value, eg: 0.03
@@ -176,7 +193,7 @@ namespace chassis {
     //% block="set chassis sync pid gains kp = $Kp ki = $Ki kd = $Kd"
     //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp ki = $Ki kd = $Kd"
     //% inlineInputMode="inline"
-    //% weight="96"
+    //% weight="95"
     //% group="Установить"
     export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number) {
         syncKp = Kp;
@@ -275,21 +292,20 @@ namespace chassis {
     //% setBrake.shadow="toggleOnOff"
     //% weight="99"
     //% group="Move"
-    export function stop(setBrake?: boolean, settleTime: number = 10) {
+    export function stop(setBrake?: boolean, settleTime?: number) {
         //if (!motorsPair) return;
+        if (!settleTime) settleTime = brakeSettleTime;
         if (setBrake) {
             // motorsPair.setBrake(setBrake);
             leftMotor.setBrake(setBrake);
             rightMotor.setBrake(setBrake);
         }
+        // motorsPair.setBrakeSettleTime(0);
         // motorsPair.stop();
-        leftMotor.setBrakeSettleTime(0);
-        rightMotor.setBrakeSettleTime(0);
-        leftMotor.stop();
-        rightMotor.stop();
-        leftMotor.setBrakeSettleTime(10);
-        rightMotor.setBrakeSettleTime(10);
-        pause(Math.max(0, settleTime)); // Settle delay
+        leftMotor.setBrakeSettleTime(0); rightMotor.setBrakeSettleTime(0); // Set the motors separately to wait for stabilization when stopping at 0
+        leftMotor.stop(); rightMotor.stop(); // Motor stop command
+        leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Return the motors separately to waiting for stabilization when stopping at 10
+        pause(Math.max(0, settleTime)); // Settle chassis delay
     }
 
     // Получить скорости моторов при рулевом управлении
