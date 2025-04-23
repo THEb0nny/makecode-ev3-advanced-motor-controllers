@@ -309,7 +309,7 @@ namespace chassis {
     }
 
     // Получить скорости моторов при рулевом управлении
-    export function getMotorsSpeedsAtSteering(turnRatio: number, speed: number): { speedLeft: number, speedRight: number } {
+    export function getSpeedsAtSteering(turnRatio: number, speed: number): { speedLeft: number, speedRight: number } {
         speed = Math.clamp(-100, 100, speed >> 0);
         turnRatio = Math.floor(turnRatio);
         turnRatio = Math.clamp(-200, 200, turnRatio >> 0);
@@ -354,7 +354,7 @@ namespace chassis {
     //% weight="98"
     //% group="Move"
     export function steeringCommand(turnRatio: number, speed: number) {
-        const { speedLeft, speedRight } = getMotorsSpeedsAtSteering(turnRatio, speed);
+        const { speedLeft, speedRight } = getSpeedsAtSteering(turnRatio, speed);
         setSpeedsCommand(speedLeft, speedRight);
     }
 
@@ -487,7 +487,7 @@ namespace chassis {
     //% weight="98" blockGap="8"
     //% group="Синхронизированное движение"
     export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
-        const { speedLeft, speedRight } = getMotorsSpeedsAtSteering(turnRatio, speed);
+        const { speedLeft, speedRight } = getSpeedsAtSteering(turnRatio, speed);
         syncMovement(speedLeft, speedRight, value, unit, braking);
     }
 
