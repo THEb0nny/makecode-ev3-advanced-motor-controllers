@@ -74,7 +74,7 @@ function RampLineFollowExample() {
     const W_REF_RAW_CS2 = 490;
     const B_REF_RAW_CS3 = 665;
     const W_REF_RAW_CS3 = 501;
-    advmotctrls.accTwoEncConfig(15, 50, 15, 200, 300, 4000);
+    advmotctrls.linearAccTwoEncConfig(15, 50, 15, 200, 300, 4000);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-200, 200); // Ограничения ПИДа
     automation.pid1.reset(); // Сброс ПИДа
@@ -85,7 +85,7 @@ function RampLineFollowExample() {
         prevTime = currTime;
         let eml = chassis.leftMotor.angle();
         let emr = chassis.rightMotor.angle();
-        let out = advmotctrls.accTwoEnc(eml, emr);
+        let out = advmotctrls.linearAccTwoEnc(eml, emr);
         if (out.isDone) break;
         let rrcs2 = sensors.color2.light(LightIntensityMode.ReflectedRaw);
         let rrcs3 = sensors.color3.light(LightIntensityMode.ReflectedRaw);
