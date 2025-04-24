@@ -2,34 +2,6 @@
 // 1) Функции spinTurn передана отрицательная скорость speed
 // 2) Функции pivotTurn передан отрицательный угол deg
 
-// Arc synchronized movement
-/*
-function ArcMovementExample(lMotPwr: number, rMotPwr: number, length: number) {
-    //if (!motorsPair) return;
-    advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr);
-    chassis.pidChassisSync.setGains(0.02, 0, 0.5); // Установка значений регулятору
-    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
-    chassis.pidChassisSync.reset(); // Сброс ПИДа
-    let prevTime = 0;
-    while (true) {
-        let currTime = control.millis();
-        let dt = currTime - prevTime;
-        prevTime = currTime;
-        let encB = chassis.leftMotor.angle();
-        let encC = chassis.rightMotor.angle();
-        if ((encB + encC) / 2 >= length) break;
-        let error = advmotctrls.getErrorSyncMotors(encB, encC);
-        chassis.pidChassisSync.setPoint(error);
-        let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.getPwrSyncMotors(U);
-        chassis.leftMotor.run(powers.pwrLeft);
-        chassis.rightMotor.run(powers.pwrRight);
-        control.pauseUntilTime(currTime, 5);
-    }
-    chassis.stop(true);
-}
-*/
-
 /*
 function LineFollowExample(speed: number) {
     const B_REF_RAW_CS2 = 636;
@@ -66,7 +38,6 @@ function LineFollowExample(speed: number) {
     }
     chassis.stop(true);
 }
-*/
 
 // Smooth acceleration and deceleration when moving along the line
 function RampLineFollowExample() {
@@ -96,11 +67,40 @@ function RampLineFollowExample() {
         let error = rcs2 - rcs3;
         automation.pid1.setPoint(error);
         let U = automation.pid1.compute(dt, 0);
-        let pwrLeft = out.pwrOut + U;
-        let pwrRight = out.pwrOut - U;
+        let pwrLeft = out.pwrLeft + U;
+        let pwrRight = out.pwrRight - U;
         chassis.leftMotor.run(pwrLeft);
         chassis.rightMotor.run(pwrRight);
         control.pauseUntilTime(currTime, 10);
+    }
+    chassis.stop(true);
+}
+*/
+
+function RampArcMovementExample(length: number) {
+    const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
+
+    // advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr); // Обновлять в цикле
+    advmotctrls.linearAccTwoEncConfig(30, 75, 30, 200, 300, 4000);
+    chassis.pidChassisSync.setGains(0.02, 0, 0.5); // Установка значений регулятору
+    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+    chassis.pidChassisSync.reset(); // Сброс ПИДа
+    let prevTime = 0;
+    while (true) {
+        let currTime = control.millis();
+        let dt = currTime - prevTime;
+        prevTime = currTime;
+        let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
+        let out = advmotctrls.linearAccTwoEnc(eml, emr);
+        if (out.isDone) break;
+        advmotctrls.syncMotorsConfig(out.pwrLeft, out.pwrRight); // Обновлять в цикле
+        let error = advmotctrls.getErrorSyncMotors(eml, emr);
+        // let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
+        chassis.pidChassisSync.setPoint(error);
+        let U = chassis.pidChassisSync.compute(dt, 0);
+        let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
+        chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
+        control.pauseUntilTime(currTime, 1);
     }
     chassis.stop(true);
 }
@@ -115,10 +115,11 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
+    RampArcMovementExample(500);
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);
     // ArcMovementExample(25, 50, 775);
 }
 
-// Test();
+Test();

@@ -529,14 +529,42 @@ namespace chassis {
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
             let out = advmotctrls.linearAccTwoEnc(eml, emr);
             if (out.isDone) break;
-            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrOut, out.pwrOut);
+            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
-            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrOut, out.pwrOut);
+            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
             control.pauseUntilTime(currTime, 1);
         }
         stop(true); // Break at hold
+    }
+
+    export function arcMovement(minSpeedLeft: number, maxSpeedLeft: number, minSpeedRight: number, maxSpeedRight: number, totalValue: number, accelValue: number, decelValue: number) {
+        if (maxSpeedLeft == 0 && maxSpeedRight == 0 || totalValue == 0) {
+            stop(true);
+            return;
+        }
+
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle();
+
+        advmotctrls.accTwoEncConfig(minSpeedLeft, maxSpeedLeft, minSpeedLeft, minSpeedRight, maxSpeedRight, minSpeedRight, accelValue, decelValue, totalValue);
+
+        let prevTime = control.millis();
+        while (true) {
+            let currTime = control.millis();
+            let dt = currTime - prevTime;
+            prevTime = currTime;
+
+            let eml = leftMotor.angle() - emlPrev;
+            let emr = rightMotor.angle() - emrPrev;
+
+            let powers = advmotctrls.accTwoEnc(eml, emr);
+            if (powers.isDone) break;
+
+            setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
+            control.pauseUntilTime(currTime, 1);
+        }
+        stop(true);
     }
 
 }

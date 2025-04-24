@@ -33,7 +33,8 @@ namespace advmotctrls {
     }
 
     interface AccEncReturn {
-        pwrOut: number;
+        pwrLeft: number;
+        pwrRight: number;
         isDone: boolean;
     }
 
@@ -49,6 +50,8 @@ namespace advmotctrls {
     //% inlineInputMode="inline"
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
+    //% weight="99"
+    //% group="Синхронизация шасси на скорости"
     export function syncMotorsConfig(vLeft: number, vRight: number) {
         syncVLeft = vLeft;
         syncVRight = vRight;
@@ -70,14 +73,16 @@ namespace advmotctrls {
     //% block="get error sync chassis at eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
+    //% weight="98"
+    //% group="Синхронизация шасси на скорости"
     export function getErrorSyncMotors(eLeft: number, eRight: number): number {
         return (syncVRight * eLeft) - (syncVLeft * eRight);
     }
     
     /**
-     * To obtain the values of speeds (power) for the chassis motors based on the control action received from the regulator.
+     * To obtain the values of speeds (power) for the chassis motors based on the control action received from the sync regulator.
      * Returns the interface of the speed (power) of the left and right motors.
-     * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора.
+     * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора синхронизации.
      * Возвращает интерфейс скорости (мощности) левого и правого моторов.
      * @param U входное значение управляющего воздействия от регулятора
      */
@@ -85,6 +90,8 @@ namespace advmotctrls {
     //% block="get pwr sync сhassis at U = $U"
     //% block.loc.ru="получить скорости синхронизации шасси при U = $U"
     //% inlineInputMode="inline"
+    //% weight="97"
+    //% group="Синхронизация шасси на скорости"
     export function getPwrSyncMotors(U: number): MotorsPower {
         const pLeft = syncVLeft - syncVRightSign * U;
         const pRight = syncVRight + syncVLeftSign * U;
@@ -108,6 +115,8 @@ namespace advmotctrls {
     //% block="get error sync сhassis at eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
+    //% weight="89"
+    //% group="Синхронизация шасси на разных скоростях"
     export function getErrorSyncMotorsAtPwr(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
         return (vRight * eLeft) - (vLeft * eRight);
     }
@@ -123,7 +132,9 @@ namespace advmotctrls {
     //% block="get pwr sync сhassis at U = $U vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить скорости синхронизации шасси при U = $U vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
-    export function getPwrSyncMotorsAtPwr(U: number, vLeft: number, vRight: number) {
+    //% weight="88"
+    //% group="Синхронизация шасси на разных скоростях"
+    export function getPwrSyncMotorsAtPwr(U: number, vLeft: number, vRight: number): MotorsPower {
         const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * U;
         const pRight = vRight + (Math.abs(vLeft + 1) - Math.abs(vLeft)) * U;
         return {
@@ -136,6 +147,8 @@ namespace advmotctrls {
     //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
+    //% weight="79"
+    //% group="Ускорение/замедлениие мотора"
     export function accOneEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         accOneEncMinPwr = Math.abs(minPwr);
         accOneEncMaxPwr = Math.abs(maxPwr);
@@ -156,6 +169,8 @@ namespace advmotctrls {
     //% block="compute accel/deceleration motor at enc = $enc"
     //% block.loc.ru="расчитать ускорение/замедление управления мотора при enc = $enc"
     //% inlineInputMode="inline"
+    //% weight="78"
+    //% group="Ускорение/замедлениие мотора"
     export function accOneEnc(enc: number): AccEncReturn {
         let done: boolean;
         let pwr: number, pwrOut: number;
@@ -178,7 +193,8 @@ namespace advmotctrls {
         else pwrOut = pwr;
 
         return {
-            pwrOut: pwrOut,
+            pwrLeft: pwrOut,
+            pwrRight: pwrOut,
             isDone: done
         };
     }
@@ -200,6 +216,8 @@ namespace advmotctrls {
     //% minStartPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
     //% minEndPwr.shadow="motorSpeedPicker"
+    //% weight="69"
+    //% group="Синхронизация шасси с ускорением/замедлением"
     export function linearAccTwoEncConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // accTwoEncMinPwr = Math.abs(minPwr);
         accTwoEncMinStartPwr = Math.abs(minStartPwr);
@@ -222,6 +240,8 @@ namespace advmotctrls {
     //% block="compute accel/deceleration chassis at eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
+    //% weight="68"
+    //% group="Синхронизация шасси с ускорением/замедлением"
     export function linearAccTwoEnc(eLeft: number, eRight: number): AccEncReturn {
         let done: boolean;
         let pwr: number, pwrOut: number;
@@ -247,8 +267,111 @@ namespace advmotctrls {
         else pwrOut = pwr;
 
         return {
-            pwrOut: pwrOut,
+            pwrLeft: pwrOut,
+            pwrRight: pwrOut,
             isDone: done
+        };
+    }
+
+    let accTwoEncMinStartPwrLeft: number;
+    let accTwoEncMaxPwrLeft: number;
+    let accTwoEncMinEndPwrLeft: number;
+    let accTwoEncMinStartPwrRight: number;
+    let accTwoEncMaxPwrRight: number;
+    let accTwoEncMinEndPwrRight: number;
+    let accTwoEncIsNegLeft: number;
+    let accTwoEncIsNegRight: number;
+
+    export function accTwoEncConfig(minStartPwrLeft: number, maxPwrLeft: number, minEndPwrLeft: number, minStartPwrRight: number, maxPwrRight: number, minEndPwrRight: number, accelDist: number, decelDist: number, totalDist: number) {
+        accTwoEncMinStartPwrLeft = Math.abs(minStartPwrLeft);
+        accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
+        accTwoEncMinEndPwrLeft = Math.abs(minEndPwrLeft);
+        accTwoEncMinStartPwrRight = Math.abs(minStartPwrRight);
+        accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
+        accTwoEncMinEndPwrRight = Math.abs(minEndPwrRight);
+        accTwoEncAccelDist = accelDist;
+        accTwoEncDecelDist = decelDist;
+        accTwoEncTotalDist = totalDist
+        accTwoEncIsNegLeft = (minStartPwrLeft <= 0 && maxPwrLeft < 0 && minEndPwrLeft <= 0) ? 1 : 0;
+        accTwoEncIsNegRight = (minStartPwrRight <= 0 && maxPwrRight < 0 && minEndPwrRight <= 0) ? 1 : 0;
+    }
+
+    export function accTwoEnc(eLeft: number, eRight: number): AccEncReturn {
+        let doneLeft: boolean, doneRight: boolean;
+        let pwrLeft: number, pwrRight: number;
+
+        const currEncLeft = Math.abs(eLeft);
+        const currEncRight = Math.abs(eRight);
+
+        // Calculate left motor power
+        if (currEncLeft >= accTwoEncTotalDist) {
+            doneLeft = true;
+            pwrLeft = 0;
+        } else if (currEncLeft > accTwoEncTotalDist / 2) {
+            if (accTwoEncDecelDist == 0) {
+                pwrLeft = accTwoEncMaxPwrLeft;
+            } else {
+                pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinEndPwrLeft) / Math.pow(accTwoEncDecelDist, 2) *
+                    Math.pow(currEncLeft - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrLeft;
+            }
+            doneLeft = false;
+        } else {
+            if (accTwoEncAccelDist == 0) {
+                pwrLeft = accTwoEncMaxPwrLeft;
+            } else {
+                pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinStartPwrLeft) / Math.pow(accTwoEncAccelDist, 2) *
+                    Math.pow(currEncLeft - 0, 2) + accTwoEncMinStartPwrLeft;
+            }
+            doneLeft = false;
+        }
+
+        // Calculate right motor power
+        if (currEncRight >= accTwoEncTotalDist) {
+            doneRight = true;
+            pwrRight = 0;
+        } else if (currEncRight > accTwoEncTotalDist / 2) {
+            if (accTwoEncDecelDist == 0) {
+                pwrRight = accTwoEncMaxPwrRight;
+            } else {
+                pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinEndPwrRight) / Math.pow(accTwoEncDecelDist, 2) *
+                    Math.pow(currEncRight - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrRight;
+            }
+            doneRight = false;
+        } else {
+            if (accTwoEncAccelDist == 0) {
+                pwrRight = accTwoEncMaxPwrRight;
+            } else {
+                pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinStartPwrRight) / Math.pow(accTwoEncAccelDist, 2) *
+                    Math.pow(currEncRight - 0, 2) + accTwoEncMinStartPwrRight;
+            }
+            doneRight = false;
+        }
+
+        // Apply power limits
+        if (currEncLeft > accTwoEncTotalDist / 2 && pwrLeft < accTwoEncMinEndPwrLeft) {
+            pwrLeft = accTwoEncMinEndPwrLeft;
+        } else if (pwrLeft < accTwoEncMinStartPwrLeft) {
+            pwrLeft = accTwoEncMinStartPwrLeft;
+        } else if (pwrLeft > accTwoEncMaxPwrLeft) {
+            pwrLeft = accTwoEncMaxPwrLeft;
+        }
+
+        if (currEncRight > accTwoEncTotalDist / 2 && pwrRight < accTwoEncMinEndPwrRight) {
+            pwrRight = accTwoEncMinEndPwrRight;
+        } else if (pwrRight < accTwoEncMinStartPwrRight) {
+            pwrRight = accTwoEncMinStartPwrRight;
+        } else if (pwrRight > accTwoEncMaxPwrRight) {
+            pwrRight = accTwoEncMaxPwrRight;
+        }
+
+        // Apply direction
+        if (accTwoEncIsNegLeft == 1) pwrLeft = -pwrLeft;
+        if (accTwoEncIsNegRight == 1) pwrRight = -pwrRight;
+
+        return {
+            pwrLeft: pwrLeft,
+            pwrRight: pwrRight,
+            isDone: doneLeft && doneRight
         };
     }
 
