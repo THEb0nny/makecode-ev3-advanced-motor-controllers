@@ -255,7 +255,7 @@ namespace advmotctrls {
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function linearAccTwoEnc(eLeft: number, eRight: number): AccEncReturn {
         let done: boolean;
-        let pwr: number, pwrOut: number;
+        let pwr: number;
         const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
         if (currEnc >= accTwoEncTotalDist) done = true;
         else if (currEnc > accTwoEncTotalDist / 2) {
@@ -274,12 +274,11 @@ namespace advmotctrls {
         else if (pwr < accTwoEncMinStartPwr) pwr = accTwoEncMinStartPwr;
         else if (pwr > accTwoEncMaxPwr) pwr = accTwoEncMaxPwr;
 
-        if (accTwoEncIsNeg == 1) pwrOut = -pwr;
-        else pwrOut = pwr;
+        if (accTwoEncIsNeg == 1) pwr = -pwr;
 
         return {
-            pwrLeft: pwrOut,
-            pwrRight: pwrOut,
+            pwrLeft: pwr,
+            pwrRight: pwr,
             isDone: done
         };
     }
@@ -319,20 +318,12 @@ namespace advmotctrls {
             doneLeft = true;
             pwrLeft = 0;
         } else if (currEncLeft > accTwoEncTotalDist / 2) {
-            if (accTwoEncDecelDist == 0) {
-                pwrLeft = accTwoEncMaxPwrLeft;
-            } else {
-                pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinEndPwrLeft) / Math.pow(accTwoEncDecelDist, 2) *
-                    Math.pow(currEncLeft - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrLeft;
-            }
+            if (accTwoEncDecelDist == 0) pwrLeft = accTwoEncMaxPwrLeft;
+            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinEndPwrLeft) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncLeft - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrLeft;
             doneLeft = false;
         } else {
-            if (accTwoEncAccelDist == 0) {
-                pwrLeft = accTwoEncMaxPwrLeft;
-            } else {
-                pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinStartPwrLeft) / Math.pow(accTwoEncAccelDist, 2) *
-                    Math.pow(currEncLeft - 0, 2) + accTwoEncMinStartPwrLeft;
-            }
+            if (accTwoEncAccelDist == 0) pwrLeft = accTwoEncMaxPwrLeft;
+            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinStartPwrLeft) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncLeft - 0, 2) + accTwoEncMinStartPwrLeft;
             doneLeft = false;
         }
 
@@ -341,20 +332,12 @@ namespace advmotctrls {
             doneRight = true;
             pwrRight = 0;
         } else if (currEncRight > accTwoEncTotalDist / 2) {
-            if (accTwoEncDecelDist == 0) {
-                pwrRight = accTwoEncMaxPwrRight;
-            } else {
-                pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinEndPwrRight) / Math.pow(accTwoEncDecelDist, 2) *
-                    Math.pow(currEncRight - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrRight;
-            }
+            if (accTwoEncDecelDist == 0) pwrRight = accTwoEncMaxPwrRight;
+            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinEndPwrRight) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncRight - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrRight;
             doneRight = false;
         } else {
-            if (accTwoEncAccelDist == 0) {
-                pwrRight = accTwoEncMaxPwrRight;
-            } else {
-                pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinStartPwrRight) / Math.pow(accTwoEncAccelDist, 2) *
-                    Math.pow(currEncRight - 0, 2) + accTwoEncMinStartPwrRight;
-            }
+            if (accTwoEncAccelDist == 0) pwrRight = accTwoEncMaxPwrRight;
+            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinStartPwrRight) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncRight - 0, 2) + accTwoEncMinStartPwrRight;
             doneRight = false;
         }
 
