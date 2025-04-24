@@ -143,7 +143,18 @@ namespace advmotctrls {
         };
     }
 
+    /**
+     * Acceleration and deceleration configuration of one motor.
+     * Конфигурация ускорения и замедления одного мотора.
+     * @param minPwr входное значение скорости (мозности) на старте, eg: 20
+     * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
+     * @param accelDist значение дистанции ускорения, eg: 150
+     * @param decelDist значение дистанции замедления, eg: 150
+     * @param totalDist значение всей дистанции, eg: 500
+     */
     //% blockId="AccOneEncConfig"
+    //% block="config motor acceleration minPwr = $minPwr maxPwr = $maxPwr accelDist = $accelDist decelDist = $decelDist totalDist = $totalDist"
+    //% block.loc.ru="конфигурация ускорения мотора minPwr = $minPwr maxPwr = $maxPwr accelDist = $accelDist decelDist = $decelDist totalDist = $totalDist"
     //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
@@ -202,9 +213,9 @@ namespace advmotctrls {
     /**
      * The configuration of acceleration and deceleration of the chassis of two motors.
      * Конфигурация ускорения и замедления шассии двух моторов.
-     * @param minStartPwr входное значение скорости на старте, eg: 15
+     * @param minStartPwr входное значение скорости на старте, eg: 20
      * @param maxPwr входное значение максимальной скорости, eg: 50
-     * @param minEndPwr входное значение скорости при замедлении, eg: 15
+     * @param minEndPwr входное значение скорости при замедлении, eg: 20
      * @param accelDist значение дистанции ускорения, eg: 150
      * @param decelDist значение дистанции замедления, eg: 150
      * @param totalDist значение всей дистанции, eg: 500
