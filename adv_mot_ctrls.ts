@@ -283,22 +283,33 @@ namespace advmotctrls {
         };
     }
 
-    let accTwoEncMinStartPwrLeft: number;
+    // let accTwoEncMinStartPwrLeft: number;
+    // let accTwoEncMaxPwrLeft: number;
+    // let accTwoEncMinEndPwrLeft: number;
+    // let accTwoEncMinStartPwrRight: number;
+    // let accTwoEncMaxPwrRight: number;
+    // let accTwoEncMinEndPwrRight: number;
+    // let accTwoEncIsNegLeft: number;
+    // let accTwoEncIsNegRight: number;
+
     let accTwoEncMaxPwrLeft: number;
-    let accTwoEncMinEndPwrLeft: number;
-    let accTwoEncMinStartPwrRight: number;
     let accTwoEncMaxPwrRight: number;
-    let accTwoEncMinEndPwrRight: number;
     let accTwoEncIsNegLeft: number;
     let accTwoEncIsNegRight: number;
 
     export function accTwoEncConfig(minStartPwrLeft: number, maxPwrLeft: number, minEndPwrLeft: number, minStartPwrRight: number, maxPwrRight: number, minEndPwrRight: number, accelDist: number, decelDist: number, totalDist: number) {
-        accTwoEncMinStartPwrLeft = Math.abs(minStartPwrLeft);
+        // accTwoEncMinStartPwrLeft = Math.abs(minStartPwrLeft);
+        // accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
+        // accTwoEncMinEndPwrLeft = Math.abs(minEndPwrLeft);
+        // accTwoEncMinStartPwrRight = Math.abs(minStartPwrRight);
+        // accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
+        // accTwoEncMinEndPwrRight = Math.abs(minEndPwrRight);
+
+        accTwoEncMinStartPwr = Math.abs(minStartPwrLeft);
         accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
-        accTwoEncMinEndPwrLeft = Math.abs(minEndPwrLeft);
-        accTwoEncMinStartPwrRight = Math.abs(minStartPwrRight);
         accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
-        accTwoEncMinEndPwrRight = Math.abs(minEndPwrRight);
+        accTwoEncMinEndPwr = Math.abs(minEndPwrRight);
+
         accTwoEncAccelDist = accelDist;
         accTwoEncDecelDist = decelDist;
         accTwoEncTotalDist = totalDist
@@ -319,11 +330,11 @@ namespace advmotctrls {
             pwrLeft = 0;
         } else if (currEncLeft > accTwoEncTotalDist / 2) {
             if (accTwoEncDecelDist == 0) pwrLeft = accTwoEncMaxPwrLeft;
-            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinEndPwrLeft) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncLeft - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrLeft;
+            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncLeft - accTwoEncTotalDist, 2) + accTwoEncMinEndPwr;
             doneLeft = false;
         } else {
             if (accTwoEncAccelDist == 0) pwrLeft = accTwoEncMaxPwrLeft;
-            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinStartPwrLeft) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncLeft - 0, 2) + accTwoEncMinStartPwrLeft;
+            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncLeft - 0, 2) + accTwoEncMinStartPwr;
             doneLeft = false;
         }
 
@@ -333,30 +344,22 @@ namespace advmotctrls {
             pwrRight = 0;
         } else if (currEncRight > accTwoEncTotalDist / 2) {
             if (accTwoEncDecelDist == 0) pwrRight = accTwoEncMaxPwrRight;
-            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinEndPwrRight) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncRight - accTwoEncTotalDist, 2) + accTwoEncMinEndPwrRight;
+            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncRight - accTwoEncTotalDist, 2) + accTwoEncMinEndPwr;
             doneRight = false;
         } else {
             if (accTwoEncAccelDist == 0) pwrRight = accTwoEncMaxPwrRight;
-            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinStartPwrRight) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncRight - 0, 2) + accTwoEncMinStartPwrRight;
+            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncRight - 0, 2) + accTwoEncMinStartPwr;
             doneRight = false;
         }
 
         // Apply power limits
-        if (currEncLeft > accTwoEncTotalDist / 2 && pwrLeft < accTwoEncMinEndPwrLeft) {
-            pwrLeft = accTwoEncMinEndPwrLeft;
-        } else if (pwrLeft < accTwoEncMinStartPwrLeft) {
-            pwrLeft = accTwoEncMinStartPwrLeft;
-        } else if (pwrLeft > accTwoEncMaxPwrLeft) {
-            pwrLeft = accTwoEncMaxPwrLeft;
-        }
+        if (currEncLeft > accTwoEncTotalDist / 2 && pwrLeft < accTwoEncMinEndPwr) pwrLeft = accTwoEncMinEndPwr;
+        else if (pwrLeft < accTwoEncMinStartPwr) pwrLeft = accTwoEncMinStartPwr;
+        else if (pwrLeft > accTwoEncMaxPwrLeft) pwrLeft = accTwoEncMaxPwrLeft;
 
-        if (currEncRight > accTwoEncTotalDist / 2 && pwrRight < accTwoEncMinEndPwrRight) {
-            pwrRight = accTwoEncMinEndPwrRight;
-        } else if (pwrRight < accTwoEncMinStartPwrRight) {
-            pwrRight = accTwoEncMinStartPwrRight;
-        } else if (pwrRight > accTwoEncMaxPwrRight) {
-            pwrRight = accTwoEncMaxPwrRight;
-        }
+        if (currEncRight > accTwoEncTotalDist / 2 && pwrRight < accTwoEncMinEndPwr) pwrRight = accTwoEncMinEndPwr;
+        else if (pwrRight < accTwoEncMinStartPwr) pwrRight = accTwoEncMinStartPwr;
+        else if (pwrRight > accTwoEncMaxPwrRight) pwrRight = accTwoEncMaxPwrRight;
 
         // Apply direction
         if (accTwoEncIsNegLeft == 1) pwrLeft = -pwrLeft;
