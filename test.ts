@@ -81,7 +81,7 @@ function RampArcMovementExample(length: number) {
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
     // advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr); // Обновлять в цикле
-    advmotctrls.linearAccTwoEncConfig(30, 75, 30, 200, 300, 4000);
+    advmotctrls.accTwoEncConfig(20, 50, 75, 20, 300, 300, length);
     chassis.pidChassisSync.setGains(0.02, 0, 0.5); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
@@ -91,15 +91,17 @@ function RampArcMovementExample(length: number) {
         let dt = currTime - prevTime;
         prevTime = currTime;
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
-        let out = advmotctrls.linearAccTwoEnc(eml, emr);
+        let out = advmotctrls.accTwoEnc(eml, emr);
         if (out.isDone) break;
-        advmotctrls.syncMotorsConfig(out.pwrLeft, out.pwrRight); // Обновлять в цикле
-        let error = advmotctrls.getErrorSyncMotors(eml, emr);
+        // advmotctrls.syncMotorsConfig(out.pwrLeft, out.pwrRight); // Обновлять в цикле
+        // let error = advmotctrls.getErrorSyncMotors(eml, emr);
         // let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
-        chassis.pidChassisSync.setPoint(error);
-        let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
-        chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
+        // chassis.pidChassisSync.setPoint(error);
+        // let U = chassis.pidChassisSync.compute(dt, 0);
+        // let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
+        // let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
+        chassis.setSpeedsCommand(out.pwrLeft, out.pwrRight); // Set power/speed motors
+        // console.log(`${out.pwrLeft} ${out.pwrRight} ${powers.pwrLeft} ${powers.pwrRight}`);
         control.pauseUntilTime(currTime, 1);
     }
     chassis.stop(true);
@@ -115,7 +117,7 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    RampArcMovementExample(500);
+    RampArcMovementExample(1000);
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);

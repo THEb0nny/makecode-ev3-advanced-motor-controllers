@@ -539,32 +539,32 @@ namespace chassis {
         stop(true); // Break at hold
     }
 
-    export function arcMovement(minSpeedLeft: number, maxSpeedLeft: number, minSpeedRight: number, maxSpeedRight: number, totalValue: number, accelValue: number, decelValue: number) {
-        if (maxSpeedLeft == 0 && maxSpeedRight == 0 || totalValue == 0) {
-            stop(true);
-            return;
-        }
+    // export function arcMovement(minSpeedLeft: number, maxSpeedLeft: number, minSpeedRight: number, maxSpeedRight: number, totalValue: number, accelValue: number, decelValue: number) {
+    //     if (maxSpeedLeft == 0 && maxSpeedRight == 0 || totalValue == 0) {
+    //         stop(true);
+    //         return;
+    //     }
 
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle();
+    //     const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle();
 
-        advmotctrls.accTwoEncConfig(minSpeedLeft, maxSpeedLeft, minSpeedLeft, minSpeedRight, maxSpeedRight, minSpeedRight, accelValue, decelValue, totalValue);
+    //     advmotctrls.accTwoEncConfig(minSpeedLeft, maxSpeedLeft, minSpeedLeft, minSpeedRight, maxSpeedRight, minSpeedRight, accelValue, decelValue, totalValue);
 
-        let prevTime = control.millis();
-        while (true) {
-            let currTime = control.millis();
-            let dt = currTime - prevTime;
-            prevTime = currTime;
+    //     let prevTime = control.millis();
+    //     while (true) {
+    //         let currTime = control.millis();
+    //         let dt = currTime - prevTime;
+    //         prevTime = currTime;
 
-            let eml = leftMotor.angle() - emlPrev;
-            let emr = rightMotor.angle() - emrPrev;
+    //         let eml = leftMotor.angle() - emlPrev;
+    //         let emr = rightMotor.angle() - emrPrev;
 
-            let powers = advmotctrls.accTwoEnc(eml, emr);
-            if (powers.isDone) break;
+    //         let powers = advmotctrls.accTwoEnc(eml, emr);
+    //         if (powers.isDone) break;
 
-            setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
-            control.pauseUntilTime(currTime, 1);
-        }
-        stop(true);
-    }
+    //         setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
+    //         control.pauseUntilTime(currTime, 1);
+    //     }
+    //     stop(true);
+    // }
 
 }

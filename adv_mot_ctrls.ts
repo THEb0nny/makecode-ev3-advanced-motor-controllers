@@ -297,7 +297,7 @@ namespace advmotctrls {
     let accTwoEncIsNegLeft: number;
     let accTwoEncIsNegRight: number;
 
-    export function accTwoEncConfig(minStartPwrLeft: number, maxPwrLeft: number, minEndPwrLeft: number, minStartPwrRight: number, maxPwrRight: number, minEndPwrRight: number, accelDist: number, decelDist: number, totalDist: number) {
+    export function accTwoEncConfig(minStartPwr: number, maxPwrLeft: number, maxPwrRight: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // accTwoEncMinStartPwrLeft = Math.abs(minStartPwrLeft);
         // accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
         // accTwoEncMinEndPwrLeft = Math.abs(minEndPwrLeft);
@@ -305,16 +305,16 @@ namespace advmotctrls {
         // accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
         // accTwoEncMinEndPwrRight = Math.abs(minEndPwrRight);
 
-        accTwoEncMinStartPwr = Math.abs(minStartPwrLeft);
+        accTwoEncMinStartPwr = Math.abs(minStartPwr);
         accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
         accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
-        accTwoEncMinEndPwr = Math.abs(minEndPwrRight);
+        accTwoEncMinEndPwr = Math.abs(minEndPwr);
 
         accTwoEncAccelDist = accelDist;
         accTwoEncDecelDist = decelDist;
         accTwoEncTotalDist = totalDist
-        accTwoEncIsNegLeft = (minStartPwrLeft <= 0 && maxPwrLeft < 0 && minEndPwrLeft <= 0) ? 1 : 0;
-        accTwoEncIsNegRight = (minStartPwrRight <= 0 && maxPwrRight < 0 && minEndPwrRight <= 0) ? 1 : 0;
+        accTwoEncIsNegLeft = (minStartPwr <= 0 && maxPwrLeft < 0 && minEndPwr <= 0) ? 1 : 0;
+        accTwoEncIsNegRight = (minStartPwr <= 0 && maxPwrRight < 0 && minEndPwr <= 0) ? 1 : 0;
     }
 
     export function accTwoEnc(eLeft: number, eRight: number): AccEncReturn {
