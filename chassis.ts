@@ -137,6 +137,7 @@ namespace chassis {
     //% group="Установить"
     export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
         if (newLeftMotors == newRightMotors) {
+            console.log("Error: the same motor is specified for the left and right motors!");
             control.panic(0); // Error in installation of chassis motors
             return; // Identical motors were installed
         }
@@ -516,7 +517,7 @@ namespace chassis {
         }
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
-        advmotctrls.linearAccTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue);
+        advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
@@ -527,7 +528,7 @@ namespace chassis {
             let dt = currTime - prevTime;
             prevTime = currTime;
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
-            let out = advmotctrls.linearAccTwoEnc(eml, emr);
+            let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
             pidChassisSync.setPoint(error);

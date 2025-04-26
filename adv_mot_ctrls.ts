@@ -220,7 +220,7 @@ namespace advmotctrls {
      * @param decelDist значение дистанции замедления, eg: 150
      * @param totalDist значение всей дистанции, eg: 500
      */
-    //% blockId="LinearAccTwoEncConfig"
+    //% blockId="AccTwoEncConfig"
     //% block="config accel/deceleration chassis at minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
@@ -229,7 +229,7 @@ namespace advmotctrls {
     //% minEndPwr.shadow="motorSpeedPicker"
     //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function linearAccTwoEncConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+    export function accTwoEncConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // accTwoEncMinPwr = Math.abs(minPwr);
         accTwoEncMinStartPwr = Math.abs(minStartPwr);
         accTwoEncMaxPwr = Math.abs(maxPwr);
@@ -247,13 +247,13 @@ namespace advmotctrls {
      * @param eLeft входное значение энкодера левого мотора
      * @param eRight входное значение энкодера правого мотора
      */
-    //% blockId="LinearAccTwoEnc"
+    //% blockId="AccTwoEnc"
     //% block="compute accel/deceleration chassis at eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
     //% weight="68"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function linearAccTwoEnc(eLeft: number, eRight: number): AccEncReturn {
+    export function accTwoEnc(eLeft: number, eRight: number): AccEncReturn {
         let done: boolean;
         let pwr: number;
         const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
@@ -304,27 +304,46 @@ namespace advmotctrls {
     let accTwoEncDecelDistRight: number;
     let accTwoEncTotalDistRight: number;
 
-    export function accTwoEncConfig(minStartPwr: number, maxPwrLeft: number, maxPwrRight: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
-        // accTwoEncMinStartPwrLeft = Math.abs(minStartPwrLeft);
-        // accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
-        // accTwoEncMinEndPwrLeft = Math.abs(minEndPwrLeft);
-        // accTwoEncMinStartPwrRight = Math.abs(minStartPwrRight);
-        // accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
-        // accTwoEncMinEndPwrRight = Math.abs(minEndPwrRight);
-
+    export function accTwoEncExtConfig(minStartPwr: number, maxPwrLeft: number, maxPwrRight: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         accTwoEncMinStartPwr = Math.abs(minStartPwr);
         accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
         accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
         accTwoEncMinEndPwr = Math.abs(minEndPwr);
 
-        accTwoEncAccelDist = accelDist;
-        accTwoEncDecelDist = decelDist;
-        accTwoEncTotalDist = totalDist
+        const Vleft = Math.abs(maxPwrLeft);
+        const Vright = Math.abs(maxPwrRight);
+
+        // 2. Рассчитываем радиус траектории центра
+        let R = 0;
+        if (Vright !== Vleft) {
+            R = (chassis.getBaseLength() * (Vleft + Vright)) / (2 * (Vright - Vleft));
+        } else {
+            R = Infinity; // Прямолинейное движение
+        }
+        console.log(`R: ${R}`);
+
+        // 3. Рассчитываем коэффициенты для моторов
+        const kLeft = R !== 0 ? (R + chassis.getBaseLength() / 2) / R : 1;
+        const kRight = R !== 0 ? (R - chassis.getBaseLength() / 2) / R : 1;
+        console.log(`kLeft: ${kLeft}, kRight: ${kRight}`);
+
+        // 4. Пересчитываем расстояния для каждого мотора
+        accTwoEncAccelDistLeft = accelDist * kLeft;
+        accTwoEncDecelDistLeft = decelDist * kLeft;
+        accTwoEncTotalDistLeft = totalDist * kLeft;
+        console.log(`accTwoEncAccelDistLeft: ${accTwoEncAccelDistLeft}, accTwoEncDecelDistLeft: ${accTwoEncDecelDistLeft}, accTwoEncTotalDistLeft: ${accTwoEncTotalDistLeft}`);
+
+        accTwoEncAccelDistRight = accelDist * kRight;
+        accTwoEncDecelDistRight = decelDist * kRight;
+        accTwoEncTotalDistRight = totalDist * kRight;
+        console.log(`accTwoEncAccelDistRight: ${accTwoEncAccelDistRight}, accTwoEncDecelDistRight: ${accTwoEncDecelDistRight}, accTwoEncTotalDistRight: ${accTwoEncTotalDistRight}`);
+
         accTwoEncIsNegLeft = (minStartPwr <= 0 && maxPwrLeft < 0 && minEndPwr <= 0) ? 1 : 0;
         accTwoEncIsNegRight = (minStartPwr <= 0 && maxPwrRight < 0 && minEndPwr <= 0) ? 1 : 0;
+        console.log(`accTwoEncIsNegLeft: ${accTwoEncIsNegLeft}, accTwoEncIsNegRight: ${accTwoEncIsNegRight}`);
     }
 
-    export function accTwoEnc(eLeft: number, eRight: number): AccEncReturn {
+    export function accTwoEncExt(eLeft: number, eRight: number): AccEncReturn {
         let doneLeft: boolean, doneRight: boolean;
         let pwrLeft: number, pwrRight: number;
 
@@ -332,45 +351,47 @@ namespace advmotctrls {
         const currEncRight = Math.abs(eRight);
 
         // Calculate left motor power
-        if (currEncLeft >= accTwoEncTotalDist) {
+        if (currEncLeft >= accTwoEncTotalDistLeft) {
             doneLeft = true;
             pwrLeft = 0;
-        } else if (currEncLeft > accTwoEncTotalDist / 2) {
-            if (accTwoEncDecelDist == 0) pwrLeft = accTwoEncMaxPwrLeft;
-            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncLeft - accTwoEncTotalDist, 2) + accTwoEncMinEndPwr;
+        } else if (currEncLeft > accTwoEncTotalDistLeft / 2) {
+            if (accTwoEncDecelDistLeft == 0) pwrLeft = accTwoEncMaxPwrLeft;
+            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDistLeft, 2) * Math.pow(currEncLeft - accTwoEncTotalDistLeft, 2) + accTwoEncMinEndPwr;
             doneLeft = false;
         } else {
-            if (accTwoEncAccelDist == 0) pwrLeft = accTwoEncMaxPwrLeft;
-            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncLeft - 0, 2) + accTwoEncMinStartPwr;
+            if (accTwoEncAccelDistLeft == 0) pwrLeft = accTwoEncMaxPwrLeft;
+            else pwrLeft = (accTwoEncMaxPwrLeft - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDistLeft, 2) * Math.pow(currEncLeft - 0, 2) + accTwoEncMinStartPwr;
             doneLeft = false;
         }
 
         // Calculate right motor power
-        if (currEncRight >= accTwoEncTotalDist) {
+        if (currEncRight >= accTwoEncTotalDistRight) {
             doneRight = true;
             pwrRight = 0;
-        } else if (currEncRight > accTwoEncTotalDist / 2) {
-            if (accTwoEncDecelDist == 0) pwrRight = accTwoEncMaxPwrRight;
-            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEncRight - accTwoEncTotalDist, 2) + accTwoEncMinEndPwr;
+        } else if (currEncRight > accTwoEncTotalDistRight / 2) {
+            if (accTwoEncDecelDistRight == 0) pwrRight = accTwoEncMaxPwrRight;
+            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDistRight, 2) * Math.pow(currEncRight - accTwoEncTotalDistRight, 2) + accTwoEncMinEndPwr;
             doneRight = false;
         } else {
-            if (accTwoEncAccelDist == 0) pwrRight = accTwoEncMaxPwrRight;
-            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEncRight - 0, 2) + accTwoEncMinStartPwr;
+            if (accTwoEncAccelDistRight == 0) pwrRight = accTwoEncMaxPwrRight;
+            else pwrRight = (accTwoEncMaxPwrRight - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDistRight, 2) * Math.pow(currEncRight - 0, 2) + accTwoEncMinStartPwr;
             doneRight = false;
         }
 
         // Apply power limits
-        if (currEncLeft > accTwoEncTotalDist / 2 && pwrLeft < accTwoEncMinEndPwr) pwrLeft = accTwoEncMinEndPwr;
+        if (currEncLeft > accTwoEncTotalDistLeft / 2 && pwrLeft < accTwoEncMinEndPwr) pwrLeft = accTwoEncMinEndPwr;
         else if (pwrLeft < accTwoEncMinStartPwr) pwrLeft = accTwoEncMinStartPwr;
         else if (pwrLeft > accTwoEncMaxPwrLeft) pwrLeft = accTwoEncMaxPwrLeft;
 
-        if (currEncRight > accTwoEncTotalDist / 2 && pwrRight < accTwoEncMinEndPwr) pwrRight = accTwoEncMinEndPwr;
+        if (currEncRight > accTwoEncTotalDistRight / 2 && pwrRight < accTwoEncMinEndPwr) pwrRight = accTwoEncMinEndPwr;
         else if (pwrRight < accTwoEncMinStartPwr) pwrRight = accTwoEncMinStartPwr;
         else if (pwrRight > accTwoEncMaxPwrRight) pwrRight = accTwoEncMaxPwrRight;
 
         // Apply direction
         if (accTwoEncIsNegLeft == 1) pwrLeft = -pwrLeft;
         if (accTwoEncIsNegRight == 1) pwrRight = -pwrRight;
+
+        console.log(`pwrLeft: ${pwrLeft}, pwrRight: ${pwrRight}`);
 
         return {
             pwrLeft: pwrLeft,

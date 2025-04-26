@@ -81,8 +81,8 @@ function RampArcMovementExample(length: number) {
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
     // advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr); // Обновлять в цикле
-    advmotctrls.accTwoEncConfig(20, 50, 75, 20, 300, 300, length);
-    chassis.pidChassisSync.setGains(0.02, 0, 0.5); // Установка значений регулятору
+    advmotctrls.accTwoEncExtConfig(30, 50, 75, 30, 300, 400, length);
+    chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
     let prevTime = 0;
@@ -91,7 +91,7 @@ function RampArcMovementExample(length: number) {
         let dt = currTime - prevTime;
         prevTime = currTime;
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
-        let out = advmotctrls.accTwoEnc(eml, emr);
+        let out = advmotctrls.accTwoEncExt(eml, emr);
         if (out.isDone) break;
         // advmotctrls.syncMotorsConfig(out.pwrLeft, out.pwrRight); // Обновлять в цикле
         // let error = advmotctrls.getErrorSyncMotors(eml, emr);
@@ -109,7 +109,6 @@ function RampArcMovementExample(length: number) {
 
 function Test() {
     // chassis.setChassisMotors(motors.mediumBC);
-    // chassis.setChassisMotors(motors.largeBC);
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setSyncRegulatorGains(0.02, 0, 0.5);
     chassis.setWheelDiametr(62.4);
