@@ -297,6 +297,13 @@ namespace advmotctrls {
     let accTwoEncIsNegLeft: number;
     let accTwoEncIsNegRight: number;
 
+    let accTwoEncAccelDistLeft: number;
+    let accTwoEncDecelDistLeft: number;
+    let accTwoEncTotalDistLeft: number;
+    let accTwoEncAccelDistRight: number;
+    let accTwoEncDecelDistRight: number;
+    let accTwoEncTotalDistRight: number;
+
     export function accTwoEncConfig(minStartPwr: number, maxPwrLeft: number, maxPwrRight: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // accTwoEncMinStartPwrLeft = Math.abs(minStartPwrLeft);
         // accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
