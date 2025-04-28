@@ -77,14 +77,15 @@ function RampLineFollowExample() {
 }
 */
 
-function RampArcMovementExample(length: number) {
+function RampArcMovementExample() {
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
     // advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr); // Обновлять в цикле
-    advmotctrls.accTwoEncExtConfig(30, 50, 75, 30, 300, 400, length);
+    advmotctrls.accTwoEncExtConfig(20, 50, 75, 10, 300, 400, 1000);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
+    control.timer8.reset();
     let prevTime = 0;
     while (true) {
         let currTime = control.millis();
@@ -101,7 +102,10 @@ function RampArcMovementExample(length: number) {
         // let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
         // let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
         chassis.setSpeedsCommand(out.pwrLeft, out.pwrRight); // Set power/speed motors
-        // console.log(`${out.pwrLeft} ${out.pwrRight} ${powers.pwrLeft} ${powers.pwrRight}`);
+        if (control.timer8.millis() >= 15) {
+            console.log(`time: ${control.millis()}: pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
+            control.timer8.reset();
+        }
         control.pauseUntilTime(currTime, 1);
     }
     chassis.stop(true);
@@ -116,7 +120,7 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    RampArcMovementExample(1000);
+    RampArcMovementExample();
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);
