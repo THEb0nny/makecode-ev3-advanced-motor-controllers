@@ -30,7 +30,6 @@ namespace advmotctrls {
     let accTwoEncStartingPwr: number;
     let accTwoEncMaxPwrLeft: number;
     let accTwoEncMaxPwrRight: number;
-    let accTwoEncMaxPwrCenter: number;
     let accTwoEncFinishingPwr: number;
     let accTwoEncIsNegLeft: boolean;
     let accTwoEncIsNegRight: boolean;
@@ -294,14 +293,34 @@ namespace advmotctrls {
         };
     }
 
+    /**
+     * The acceleration and deceleration configuration of the chassis of two motors with different maximum speeds.
+     * Конфигурация ускорения и замедления шасси двух моторов с разными максимальными скоростями.
+     * @param startingPwr входное значение скорости на старте, eg: 20
+     * @param maxPwrLeft входное значение максимальной скорости левого мотора, eg: 50
+     * @param maxPwrRight входное значение максимальной скорости правого мотора, eg: 75
+     * @param finishingPwr входное значение скорости при замедлении, eg: 20
+     * @param accelDist значение дистанции ускорения, eg: 150
+     * @param decelDist значение дистанции замедления, eg: 150
+     * @param totalDist значение всей дистанции, eg: 500
+     */
+    //% blockId="AccTwoEncExtConfig"
+    //% block="config accel/deceleration chassis at startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% inlineInputMode="inline"
+    //% startingPwr.shadow="motorSpeedPicker"
+    //% maxPwrLeft.shadow="motorSpeedPicker"
+    //% maxPwrRight.shadow="motorSpeedPicker"
+    //% finishingPwr.shadow="motorSpeedPicker"
+    //% weight="59"
+    //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncExtConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         accTwoEncStartingPwr = Math.abs(startingPwr);
-        accTwoEncMaxPwrLeft = Math.abs(maxPwrLeft);
-        accTwoEncMaxPwrRight = Math.abs(maxPwrRight);
-        accTwoEncMaxPwrCenter = (accTwoEncMaxPwrLeft + accTwoEncMaxPwrRight) / 2;
+        accTwoEncMaxPwrLeft = Math.abs(Math.abs(Math.constrain(maxPwrLeft, -100, 100)));
+        accTwoEncMaxPwrRight = Math.abs(Math.abs(Math.constrain(maxPwrRight, -100, 100)));
+        accTwoEncMaxPwr = (accTwoEncMaxPwrLeft + accTwoEncMaxPwrRight) / 2;
         accTwoEncFinishingPwr = Math.abs(finishingPwr);
-        const vLeft = Math.abs(maxPwrLeft);
-        const vRight = Math.abs(maxPwrRight);
+        const vLeft = Math.abs(maxPwrLeft), vRight = Math.abs(maxPwrRight);
         if (vLeft !== vRight) accTwoEncRadius = (chassis.getBaseLength() * (vLeft + vRight)) / (2 * (vLeft - vRight));
         else accTwoEncRadius = Infinity; // Прямолинейное движение
 
@@ -311,25 +330,40 @@ namespace advmotctrls {
         accTwoEncAccelDist = Math.abs(accelDist);
         accTwoEncDecelDist = Math.abs(decelDist);
         accTwoEncTotalDist = Math.abs(totalDist);
-
         accTwoEncIsNegLeft = (startingPwr <= 0 && maxPwrLeft < 0 && finishingPwr <= 0);
         accTwoEncIsNegRight = (startingPwr <= 0 && maxPwrRight < 0 && finishingPwr <= 0);
     }
 
+    /**
+     * Acceleration/deceleration calculation for two motors with different maximum speeds.
+     * Расчёт ускорения/замедления для двух моторов с разными максимальными скоростями.
+     * @param eLeft входное значение энкодера левого мотора
+     * @param eRight входное значение энкодера правого мотора
+     */
+    //% blockId="AccTwoEncExt"
+    //% block="compute accel/deceleration chassis at with different max speeds eLeft = $eLeft eRight = $eRight"
+    //% block.loc.ru="расчитать ускорение/замедление управления шасси с разными макс скоростями при eLeft = $eLeft eRight = $eRight"
+    //% inlineInputMode="inline"
+    //% weight="58"
+    //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncExt(eLeft: number, eRight: number): AccEncReturn {
         let done: boolean;
         let pwr: number;
         const currEnc = (Math.abs(eLeft) / accTwoEncKLeft + Math.abs(eRight) / accTwoEncKRight) / 2; // Приводим к пройденной дистанции центра
         if (currEnc >= accTwoEncTotalDist) done = true;
         else if (currEnc > accTwoEncTotalDist / 2) {
-            if (accTwoEncDecelDist == 0) pwr = accTwoEncMaxPwrCenter;
-            else pwr = (accTwoEncMaxPwrCenter - accTwoEncFinishingPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEnc - accTwoEncTotalDist, 2) + accTwoEncFinishingPwr;
+            if (accTwoEncDecelDist == 0) pwr = accTwoEncMaxPwr;
+            else pwr = (accTwoEncMaxPwr - accTwoEncFinishingPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEnc - accTwoEncTotalDist, 2) + accTwoEncFinishingPwr;
             done = false;
         } else {
-            if (accTwoEncAccelDist == 0) pwr = accTwoEncMaxPwrCenter;
-            else pwr = (accTwoEncMaxPwrCenter - accTwoEncStartingPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accTwoEncStartingPwr;
+            if (accTwoEncAccelDist == 0) pwr = accTwoEncMaxPwr;
+            else pwr = (accTwoEncMaxPwr - accTwoEncStartingPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accTwoEncStartingPwr;
             done = false;
         }
+
+        if (currEnc > accTwoEncTotalDist / 2 && pwr < accTwoEncMinEndPwr) pwr = accTwoEncMinEndPwr;
+        else if (pwr < accTwoEncMinStartPwr) pwr = accTwoEncMinStartPwr;
+        else if (pwr > accTwoEncMaxPwr) pwr = accTwoEncMaxPwr;
 
         // Получаем мощности для моторов через коэффициенты
         let pwrLeft = pwr * accTwoEncKLeft;
