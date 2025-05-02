@@ -361,9 +361,9 @@ namespace advmotctrls {
             done = false;
         }
 
-        if (currEnc > accTwoEncTotalDist / 2 && pwr < accTwoEncMinEndPwr) pwr = accTwoEncMinEndPwr;
-        else if (pwr < accTwoEncMinStartPwr) pwr = accTwoEncMinStartPwr;
-        else if (pwr > accTwoEncMaxPwr) pwr = accTwoEncMaxPwr;
+        // if (currEnc > accTwoEncTotalDist / 2 && pwr < accTwoEncMinEndPwr) pwr = accTwoEncMinEndPwr;
+        // else if (pwr < accTwoEncMinStartPwr) pwr = accTwoEncMinStartPwr;
+        // else if (pwr > accTwoEncMaxPwr) pwr = accTwoEncMaxPwr;
 
         // Получаем мощности для моторов через коэффициенты
         let pwrLeft = pwr * accTwoEncKLeft;
