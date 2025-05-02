@@ -81,7 +81,7 @@ function RampArcMovementExample() {
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
     // advmotctrls.syncMotorsConfig(lMotPwr, rMotPwr); // Обновлять в цикле
-    advmotctrls.accTwoEncExtConfig(20, 50, 75, 10, 300, 400, 1000);
+    advmotctrls.accTwoEncExtConfig(20, 20, 50, 50, 10, 10, 400, 400, 1000);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
