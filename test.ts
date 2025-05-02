@@ -103,7 +103,7 @@ function RampArcMovementExample() {
         // let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
         chassis.setSpeedsCommand(out.pwrLeft, out.pwrRight); // Set power/speed motors
         if (control.timer8.millis() >= 15) {
-            console.log(`time: ${control.millis()}: pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
+            console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
             control.timer8.reset();
         }
         control.pauseUntilTime(currTime, 1);

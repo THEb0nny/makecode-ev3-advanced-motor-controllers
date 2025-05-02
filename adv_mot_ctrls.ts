@@ -316,8 +316,8 @@ namespace advmotctrls {
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncExtConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         accTwoEncStartingPwr = Math.abs(startingPwr);
-        accTwoEncMaxPwrLeft = Math.abs(Math.abs(Math.constrain(maxPwrLeft, -100, 100)));
-        accTwoEncMaxPwrRight = Math.abs(Math.abs(Math.constrain(maxPwrRight, -100, 100)));
+        accTwoEncMaxPwrLeft = Math.abs(Math.constrain(maxPwrLeft, -100, 100));
+        accTwoEncMaxPwrRight = Math.abs(Math.constrain(maxPwrRight, -100, 100));
         accTwoEncMaxPwr = (accTwoEncMaxPwrLeft + accTwoEncMaxPwrRight) / 2;
         accTwoEncFinishingPwr = Math.abs(finishingPwr);
         const vLeft = Math.abs(maxPwrLeft), vRight = Math.abs(maxPwrRight);
@@ -373,8 +373,8 @@ namespace advmotctrls {
         pwrLeft = Math.min(pwrLeft, accTwoEncMaxPwrLeft);
         pwrRight = Math.min(pwrRight, accTwoEncMaxPwrRight);
 
-        if (pwrLeft < accTwoEncFinishingPwr) pwrLeft = accTwoEncFinishingPwr;
-        if (pwrRight < accTwoEncFinishingPwr) pwrRight = accTwoEncFinishingPwr;
+        // if (pwrLeft < accTwoEncFinishingPwr) pwrLeft = accTwoEncFinishingPwr;
+        // if (pwrRight < accTwoEncFinishingPwr) pwrRight = accTwoEncFinishingPwr;
 
         // Применяем направление
         if (accTwoEncIsNegLeft) pwrLeft = -pwrLeft;
