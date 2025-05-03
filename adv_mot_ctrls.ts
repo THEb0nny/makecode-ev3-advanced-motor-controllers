@@ -179,7 +179,6 @@ namespace advmotctrls {
         accMotorAccelDist = accelDist;
         accMotorDecelDist = decelDist;
         accMotorTotalDist = totalDist;
-
         // if (minPwr <= 0 && maxPwr < 0) accMotorIsNeg = true;
         // else accMotorIsNeg = false;
         accMotorIsNeg = minPwr <= 0 && maxPwr < 0;
@@ -354,8 +353,8 @@ namespace advmotctrls {
     }
 
     /**
-     * Acceleration/deceleration calculation for two motors with different maximum speeds.
-     * Расчёт ускорения/замедления для двух моторов с разными максимальными скоростями.
+     * Acceleration/deceleration calculation for two motors with different maximum speeds (powers).
+     * Расчёт ускорения/замедления для двух моторов с разными максимальными скоростями (мощностями).
      * @param eLeft входное значение энкодера левого мотора
      * @param eRight входное значение энкодера правого мотора
      */
