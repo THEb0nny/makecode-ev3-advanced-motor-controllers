@@ -27,17 +27,20 @@ namespace advmotctrls {
     let accMotorsTotalDist: number;
     let accMotorsIsNeg: boolean;
 
+    let accEncTotalDists = { left: 0, right: 0 };
+    let accEncAccelDists = { left: 0, right: 0 };
+    let accEncDecelDists = { left: 0, right: 0 };
+    let accEncStartingPwrs = { left: 0, right: 0 };
+    let accEncMaxPwrs = { left: 0, right: 0 };
+    let accEncFinishingPwrs = { left: 0, right: 0 };
+    let accEncIsNeg = { left: false, right: false };
+
     interface MotorsPower {
         pwrLeft: number;
         pwrRight: number;
     }
 
     interface AccelMotor {
-        pwr: number,
-        isDone: boolean
-    }
-
-    interface LinearAccelMotors {
         pwr: number,
         isDone: boolean
     }
@@ -177,8 +180,9 @@ namespace advmotctrls {
         accMotorDecelDist = decelDist;
         accMotorTotalDist = totalDist;
 
-        if (minPwr <= 0 && maxPwr < 0) accMotorIsNeg = true;
-        else accMotorIsNeg = false;
+        // if (minPwr <= 0 && maxPwr < 0) accMotorIsNeg = true;
+        // else accMotorIsNeg = false;
+        accMotorIsNeg = minPwr <= 0 && maxPwr < 0;
     }
     
     /**
@@ -246,8 +250,9 @@ namespace advmotctrls {
         accMotorsAccelDist = Math.abs(accelDist);
         accMotorsDecelDist = Math.abs(decelDist);
         accMotorsTotalDist = Math.abs(totalDist);
-        if (minStartPwr <= 0 && maxPwr < 0 && minEndPwr <= 0) accMotorsIsNeg = true; // if (minPwr <= 0 && maxPwr < 0) accMotorsIsNeg = 1;
-        else accMotorsIsNeg = false;
+        // if (minPwr <= 0 && maxPwr < 0) accMotorsIsNeg = 1;
+        // else accMotorsIsNeg = false;
+        accMotorsIsNeg = minStartPwr <= 0 && maxPwr < 0 && minEndPwr <= 0;
     }
 
     /**
@@ -262,7 +267,7 @@ namespace advmotctrls {
     //% inlineInputMode="inline"
     //% weight="68"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEnc(eLeft: number, eRight: number): LinearAccelMotors {
+    export function accTwoEnc(eLeft: number, eRight: number): AccelMotor {
         let done: boolean;
         let pwrOut: number;
         const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
@@ -292,15 +297,6 @@ namespace advmotctrls {
             isDone: done
         };
     }
-
-    // Глобальные переменные для конфигурации
-    let accEncTotalDists = { left: 0, right: 0 };
-    let accEncAccelDists = { left: 0, right: 0 };
-    let accEncDecelDists = { left: 0, right: 0 };
-    let accEncStartingPwrs = { left: 0, right: 0 };
-    let accEncMaxPwrs = { left: 0, right: 0 };
-    let accEncFinishingPwrs = { left: 0, right: 0 };
-    let accEncIsNeg = { left: false, right: false };
 
     /**
      * The acceleration and deceleration configuration of the chassis of two motors with different maximum speeds.
@@ -370,23 +366,29 @@ namespace advmotctrls {
     //% weight="58"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncExt(eLeft: number, eRight: number): AccelMotors {
-        // Расчёт мощности левого мотора
-        const pwrLeft = computePower(Math.abs(eLeft), accEncTotalDists.left, accEncAccelDists.left, accEncDecelDists.left, accEncStartingPwrs.left, accEncMaxPwrs.left, accEncFinishingPwrs.left, accEncIsNeg.left);
-        // Расчёт мощности правого мотора
-        const pwrRight = computePower(Math.abs(eRight), accEncTotalDists.right, accEncAccelDists.right, accEncDecelDists.right, accEncStartingPwrs.right, accEncMaxPwrs.right, accEncFinishingPwrs.right, accEncIsNeg.right);
-
-        const done = Math.abs(eLeft) >= accEncTotalDists.left && Math.abs(eRight) >= accEncTotalDists.right;
+        const profileLeft = computeMotorProfile(
+            Math.abs(eLeft),
+            accEncTotalDists.left, accEncAccelDists.left, accEncDecelDists.left,
+            accEncStartingPwrs.left, accEncMaxPwrs.left, accEncFinishingPwrs.left,
+            accEncIsNeg.left
+        ); // Расчёт мощности левого мотора
+        const profileRight = computeMotorProfile(
+            Math.abs(eRight),
+            accEncTotalDists.right, accEncAccelDists.right, accEncDecelDists.right,
+            accEncStartingPwrs.right, accEncMaxPwrs.right, accEncFinishingPwrs.right,
+            accEncIsNeg.right
+        ); // Расчёт мощности правого мотора
 
         return {
-            pwrLeft: pwrLeft,
-            pwrRight: pwrRight,
-            isDone: done
+            pwrLeft: profileLeft.pwr,
+            pwrRight: profileRight.pwr,
+            isDone: profileLeft.isDone && profileRight.isDone
         };
     }
 
-    function computePower(currEnc: number, totalDist: number, accelDist: number, decelDist: number, startPwr: number, maxPwr: number, endPwr: number, isNeg: boolean) {
+    function computeMotorProfile(currEnc: number, totalDist: number, accelDist: number, decelDist: number, startPwr: number, maxPwr: number, endPwr: number, isNeg: boolean): AccelMotor {
+        let done: boolean;
         let pwr: number;
-        let done = false;
 
         if (currEnc >= totalDist) {
             pwr = 0;
@@ -402,9 +404,12 @@ namespace advmotctrls {
         }
 
         pwr = Math.min(Math.abs(pwr), Math.abs(maxPwr));
-        if (Math.abs(pwr) < Math.abs(endPwr)) pwr = endPwr;
+        // if (Math.abs(pwr) < Math.abs(endPwr)) pwr = endPwr;
 
-        return isNeg ? -pwr : pwr;
+        return {
+            pwr: isNeg ? -pwr : pwr,
+            isDone: done
+        };
     }
 
 }

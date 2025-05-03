@@ -93,7 +93,7 @@ function RampArcMovementExample() {
         prevTime = currTime;
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
         let out = advmotctrls.accTwoEncExt(eml, emr);
-        if (out.isDone) break;
+        // if (out.isDone) break;
         // advmotctrls.syncMotorsConfig(out.pwrLeft, out.pwrRight); // Обновлять в цикле
         // let error = advmotctrls.getErrorSyncMotors(eml, emr);
         // let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
@@ -106,6 +106,7 @@ function RampArcMovementExample() {
             console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
             control.timer8.reset();
         }
+        if (out.isDone) break;
         control.pauseUntilTime(currTime, 1);
     }
     chassis.stop(true);
