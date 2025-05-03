@@ -194,24 +194,24 @@ namespace advmotctrls {
     //% group="Ускорение/замедлениие мотора"
     export function accOneEnc(enc: number): AccelMotor {
         let done: boolean;
-        let pwr: number, pwrOut: number;
+        let pwrOut: number;
         const currEnc = Math.abs(enc);
         if (currEnc >= accOneEncTotalDist) done = true;
         else if (currEnc > accOneEncTotalDist / 2) {
-            if (accOneEncDecelDist == 0) pwr = accOneEncMaxPwr;
-            else pwr = (accOneEncMaxPwr - accOneEncMinPwr) / Math.pow(accOneEncDecelDist, 2) * Math.pow(currEnc - accOneEncTotalDist, 2) + accOneEncMinPwr;
+            if (accOneEncDecelDist == 0) pwrOut = accOneEncMaxPwr;
+            else pwrOut = (accOneEncMaxPwr - accOneEncMinPwr) / Math.pow(accOneEncDecelDist, 2) * Math.pow(currEnc - accOneEncTotalDist, 2) + accOneEncMinPwr;
             done = false;
         } else {
-            if (accOneEncAccelDist == 0) pwr = accOneEncMaxPwr;
-            else pwr = (accOneEncMaxPwr - accOneEncMinPwr) / Math.pow(accOneEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accOneEncMinPwr;
+            if (accOneEncAccelDist == 0) pwrOut = accOneEncMaxPwr;
+            else pwrOut = (accOneEncMaxPwr - accOneEncMinPwr) / Math.pow(accOneEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accOneEncMinPwr;
             done = false;
         }
 
-        if (pwr < accOneEncMinPwr) pwr = accOneEncMinPwr;
-        else if (pwr > accOneEncMaxPwr) pwr = accOneEncMaxPwr;
+        if (pwrOut < accOneEncMinPwr) pwrOut = accOneEncMinPwr;
+        else if (pwrOut > accOneEncMaxPwr) pwrOut = accOneEncMaxPwr;
 
-        if (accOneEncIsNeg == 1) pwrOut = 0 - pwr;
-        else pwrOut = pwr;
+        if (accOneEncIsNeg == 1) pwrOut = -pwrOut;
+        else pwrOut = pwrOut;
 
         return {
             pwr: pwrOut,
@@ -264,31 +264,31 @@ namespace advmotctrls {
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEnc(eLeft: number, eRight: number): LinearAccelMotors {
         let done: boolean;
-        let pwr: number;
+        let pwrOut: number;
         const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
         if (currEnc >= accTwoEncTotalDist) {
-            pwr = 0;
+            pwrOut = 0;
             done = true;
         } else if (currEnc > accTwoEncTotalDist / 2) {
-            if (accTwoEncDecelDist == 0) pwr = accTwoEncMaxPwr;
-            else pwr = (accTwoEncMaxPwr - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEnc - accTwoEncTotalDist, 2) + accTwoEncMinEndPwr; // pwr = (accTwoEncMaxPwr - accTwoEncMinPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEnc - accTwoEncTotalDist, 2) + accTwoEncMinPwr;
+            if (accTwoEncDecelDist == 0) pwrOut = accTwoEncMaxPwr;
+            else pwrOut = (accTwoEncMaxPwr - accTwoEncMinEndPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEnc - accTwoEncTotalDist, 2) + accTwoEncMinEndPwr; // pwr = (accTwoEncMaxPwr - accTwoEncMinPwr) / Math.pow(accTwoEncDecelDist, 2) * Math.pow(currEnc - accTwoEncTotalDist, 2) + accTwoEncMinPwr;
             done = false;
         } else {
-            if (accTwoEncAccelDist == 0) pwr = accTwoEncMaxPwr;
-            else pwr = (accTwoEncMaxPwr - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accTwoEncMinStartPwr; // pwr = (accTwoEncMaxPwr - accTwoEncMinPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accTwoEncMinPwr;
+            if (accTwoEncAccelDist == 0) pwrOut = accTwoEncMaxPwr;
+            else pwrOut = (accTwoEncMaxPwr - accTwoEncMinStartPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accTwoEncMinStartPwr; // pwr = (accTwoEncMaxPwr - accTwoEncMinPwr) / Math.pow(accTwoEncAccelDist, 2) * Math.pow(currEnc - 0, 2) + accTwoEncMinPwr;
             done = false;
         }
 
         // if (pwr < accTwoEncMinPwr) pwr = accTwoEncMinPwr;
         // else if (pwr > accTwoEncMaxPwr) pwr = accTwoEncMaxPwr;
-        if (currEnc > accTwoEncTotalDist / 2 && pwr < accTwoEncMinEndPwr) pwr = accTwoEncMinEndPwr;
-        else if (pwr < accTwoEncMinStartPwr) pwr = accTwoEncMinStartPwr;
-        else if (pwr > accTwoEncMaxPwr) pwr = accTwoEncMaxPwr;
+        if (currEnc > accTwoEncTotalDist / 2 && pwrOut < accTwoEncMinEndPwr) pwrOut = accTwoEncMinEndPwr;
+        else if (pwrOut < accTwoEncMinStartPwr) pwrOut = accTwoEncMinStartPwr;
+        else if (pwrOut > accTwoEncMaxPwr) pwrOut = accTwoEncMaxPwr;
 
-        if (accTwoEncIsNeg) pwr = -pwr;
+        if (accTwoEncIsNeg) pwrOut = -pwrOut;
 
         return {
-            pwr: pwr,
+            pwr: pwrOut,
             isDone: done
         };
     }
