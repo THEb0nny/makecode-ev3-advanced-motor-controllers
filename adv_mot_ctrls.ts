@@ -16,7 +16,7 @@ namespace advmotctrls {
     let accOneEncAccelDist: number;
     let accOneEncDecelDist: number;
     let accOneEncTotalDist: number;
-    let accOneEncIsNeg: number;
+    let accOneEncIsNeg: boolean;
 
     // let accTwoEncMinPwr: number;
     let accTwoEncMinStartPwr: number;
@@ -177,8 +177,8 @@ namespace advmotctrls {
         accOneEncDecelDist = decelDist;
         accOneEncTotalDist = totalDist;
 
-        if (minPwr <= 0 && maxPwr < 0) accOneEncIsNeg = 1;
-        else accOneEncIsNeg = 0;
+        if (minPwr <= 0 && maxPwr < 0) accOneEncIsNeg = true;
+        else accOneEncIsNeg = false;
     }
     
     /**
@@ -210,7 +210,7 @@ namespace advmotctrls {
         if (pwrOut < accOneEncMinPwr) pwrOut = accOneEncMinPwr;
         else if (pwrOut > accOneEncMaxPwr) pwrOut = accOneEncMaxPwr;
 
-        if (accOneEncIsNeg == 1) pwrOut = -pwrOut;
+        if (accOneEncIsNeg == true) pwrOut = -pwrOut;
         else pwrOut = pwrOut;
 
         return {
