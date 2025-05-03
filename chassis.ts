@@ -530,10 +530,10 @@ namespace chassis {
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
-            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrOut, out.pwrOut);
+            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
-            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrOut, out.pwrOut);
+            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
             control.pauseUntilTime(currTime, 1);
         }

@@ -33,12 +33,12 @@ namespace advmotctrls {
     }
 
     interface AccelMotor {
-        pwrOut: number,
+        pwr: number,
         isDone: boolean
     }
 
     interface LinearAccelMotors {
-        pwrOut: number,
+        pwr: number,
         isDone: boolean
     }
 
@@ -214,7 +214,7 @@ namespace advmotctrls {
         else pwrOut = pwr;
 
         return {
-            pwrOut: pwrOut,
+            pwr: pwrOut,
             isDone: done
         };
     }
@@ -288,7 +288,7 @@ namespace advmotctrls {
         if (accTwoEncIsNeg) pwr = -pwr;
 
         return {
-            pwrOut: pwr,
+            pwr: pwr,
             isDone: done
         };
     }
