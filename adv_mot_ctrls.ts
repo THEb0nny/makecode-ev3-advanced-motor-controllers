@@ -18,7 +18,7 @@ namespace advmotctrls {
     let accMotorTotalDist: number;
     let accMotorIsNeg: boolean;
 
-    // let accTwoEncMinPwr: number;
+    // let accMotorsMinPwr: number;
     let accMotorsStartPwr: number;
     let accMotorsMaxPwr: number;
     let accMotorsEndPwr: number;
@@ -239,7 +239,7 @@ namespace advmotctrls {
     //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
-        // accTwoEncMinPwr = Math.abs(minPwr);
+        // accMotorsMinPwr = Math.abs(minPwr);
         accMotorsStartPwr = Math.abs(minStartPwr);
         accMotorsMaxPwr = Math.abs(maxPwr);
         accMotorsEndPwr = Math.abs(minEndPwr);
@@ -271,15 +271,15 @@ namespace advmotctrls {
             done = true;
         } else if (currEnc > accMotorsTotalDist / 2) {
             if (accMotorsDecelDist == 0) pwrOut = accMotorsMaxPwr;
-            else pwrOut = (accMotorsMaxPwr - accMotorsEndPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsEndPwr; // pwr = (accMotorsMaxPwr - accTwoEncMinPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accTwoEncMinPwr;
+            else pwrOut = (accMotorsMaxPwr - accMotorsEndPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsEndPwr; // pwr = (accMotorsMaxPwr - accMotorsMinPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsMinPwr;
             done = false;
         } else {
             if (accMotorsAccelDist == 0) pwrOut = accMotorsMaxPwr;
-            else pwrOut = (accMotorsMaxPwr - accMotorsStartPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc - 0, 2) + accMotorsStartPwr; // pwr = (accMotorsMaxPwr - accTwoEncMinPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc - 0, 2) + accTwoEncMinPwr;
+            else pwrOut = (accMotorsMaxPwr - accMotorsStartPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc - 0, 2) + accMotorsStartPwr; // pwr = (accMotorsMaxPwr - accMotorsMinPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc - 0, 2) + accMotorsMinPwr;
             done = false;
         }
 
-        // if (pwr < accTwoEncMinPwr) pwr = accTwoEncMinPwr;
+        // if (pwr < accMotorsMinPwr) pwr = accMotorsMinPwr;
         // else if (pwr > accMotorsMaxPwr) pwr = accMotorsMaxPwr;
         if (currEnc > accMotorsTotalDist / 2 && pwrOut < accMotorsEndPwr) pwrOut = accMotorsEndPwr;
         else if (pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
