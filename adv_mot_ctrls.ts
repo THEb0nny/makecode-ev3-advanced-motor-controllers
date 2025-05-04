@@ -320,12 +320,12 @@ namespace advmotctrls {
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncExtConfig(startingPwrLeft: number, startingPwrRight: number, maxPwrLeft: number, maxPwrRight: number, finishingPwrLeft: number, finishingPwrRight: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
         // Радиус поворота центра
-        const vLeft = Math.abs(maxPwrLeft), vRight = Math.abs(maxPwrRight);
+        const vLeft = maxPwrLeft, vRight = maxPwrRight;
         const radius = vLeft !== vRight ? (chassis.getBaseLength() * (vLeft + vRight)) / (2 * (vRight - vLeft)) : Infinity;
 
         // Коэффициенты расстояния для колёс
-        const kLeft = radius !== Infinity ? (radius - chassis.getBaseLength() / 2) / radius : 1;
-        const kRight = radius !== Infinity ? (radius + chassis.getBaseLength() / 2) / radius : 1;
+        const kLeft = (radius !== Math.abs(Infinity) && radius != 0) ? (radius - chassis.getBaseLength() / 2) / radius : 1;
+        const kRight = (radius !== Math.abs(Infinity) && radius != 0) ? (radius + chassis.getBaseLength() / 2) / radius : 1;
 
         // Дистанции
         accMotorsAccelDistsExt.left = accelDistCenter * kLeft;
@@ -335,7 +335,7 @@ namespace advmotctrls {
         accMotorsTotalDistsExt.left = totalDistCenter * kLeft;
         accMotorsTotalDistsExt.right = totalDistCenter * kRight;
 
-        console.log(`kLeft: ${kLeft}, kRight: ${kRight}`);
+        console.log(`radius: ${radius}, kLeft: ${kLeft}, kRight: ${kRight}`);
         console.log(`accMotorsAccelDistsExt.l: ${accMotorsAccelDistsExt.left}, accMotorsAccelDistsExt.r: ${accMotorsAccelDistsExt.right}`);
         console.log(`accMotorsDecelDistsExt.l: ${accMotorsDecelDistsExt.left}, accMotorsDecelDistsExt.r: ${accMotorsDecelDistsExt.right}`);
         console.log(`accMotorsTotalDistsExt.l: ${accMotorsTotalDistsExt.left}, accMotorsTotalDistsExt.r: ${accMotorsTotalDistsExt.right}`);
@@ -350,6 +350,8 @@ namespace advmotctrls {
 
         accMotorsIsNegExt.left = startingPwrLeft < 0 && maxPwrLeft < 0 && finishingPwrLeft < 0;
         accMotorsIsNegExt.right = startingPwrRight < 0 && maxPwrRight < 0 && finishingPwrRight < 0;
+
+        console.log(`accMotorsIsNegExt.l: ${accMotorsIsNegExt.left}, accMotorsIsNegExt.r: ${accMotorsIsNegExt.right}`);
     }
 
     /**
@@ -392,13 +394,13 @@ namespace advmotctrls {
         if (currEnc >= totalDist) {
             pwr = 0;
             done = true;
-        } else if (currEnc > totalDist / 2) {
+        } else if (currEnc > totalDist / 2) { // Замедление
             if (decelDist == 0) pwr = maxPwr;
             else pwr = (maxPwr - endPwr) / Math.pow(decelDist, 2) * Math.pow(currEnc - totalDist, 2) + endPwr;
             done = false;
         } else {
             if (accelDist == 0) pwr = maxPwr;
-            else pwr = (maxPwr - startPwr) / Math.pow(accelDist, 2) * Math.pow(currEnc, 2) + startPwr;
+            else pwr = (maxPwr - startPwr) / Math.pow(accelDist, 2) * Math.pow(currEnc, 2) + startPwr; // Ускорение
             done = false;
         }
 
