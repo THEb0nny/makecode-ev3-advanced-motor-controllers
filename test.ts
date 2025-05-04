@@ -38,43 +38,6 @@ function LineFollowExample(speed: number) {
     }
     chassis.stop(true);
 }
-
-// Smooth acceleration and deceleration when moving along the line
-function RampLineFollowExample() {
-    const B_REF_RAW_CS2 = 636;
-    const W_REF_RAW_CS2 = 490;
-    const B_REF_RAW_CS3 = 665;
-    const W_REF_RAW_CS3 = 501;
-    advmotctrls.linearAccTwoEncConfig(15, 50, 15, 200, 300, 4000);
-    automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
-    automation.pid1.setControlSaturation(-200, 200); // Ограничения ПИДа
-    automation.pid1.reset(); // Сброс ПИДа
-    let prevTime = 0;
-    while (true) {
-        let currTime = control.millis();
-        let dt = currTime - prevTime;
-        prevTime = currTime;
-        let eml = chassis.leftMotor.angle();
-        let emr = chassis.rightMotor.angle();
-        let out = advmotctrls.linearAccTwoEnc(eml, emr);
-        if (out.isDone) break;
-        let rrcs2 = sensors.color2.light(LightIntensityMode.ReflectedRaw);
-        let rrcs3 = sensors.color3.light(LightIntensityMode.ReflectedRaw);
-        let rcs2 = Math.map(rrcs2, B_REF_RAW_CS2, W_REF_RAW_CS2, 0, 100);
-        rcs2 = Math.constrain(rcs2, 0, 100);
-        let rcs3 = Math.map(rrcs3, B_REF_RAW_CS3, B_REF_RAW_CS3, 0, 100);
-        rcs3 = Math.constrain(rcs3, 0, 100);
-        let error = rcs2 - rcs3;
-        automation.pid1.setPoint(error);
-        let U = automation.pid1.compute(dt, 0);
-        let pwrLeft = out.pwrLeft + U;
-        let pwrRight = out.pwrRight - U;
-        chassis.leftMotor.run(pwrLeft);
-        chassis.rightMotor.run(pwrRight);
-        control.pauseUntilTime(currTime, 10);
-    }
-    chassis.stop(true);
-}
 */
 
 function RampArcMovementExample() {
