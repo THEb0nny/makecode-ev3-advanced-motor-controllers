@@ -79,8 +79,8 @@ function RampLineFollowExample() {
 
 function RampArcMovementExample() {
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
-    const encCalc = Math.round(360 * chassis.getBaseLength() / chassis.getWheelDiametr());
-    advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 300, 300, encCalc);
+    const encCalc = Math.round(90 * chassis.getBaseLength() / chassis.getWheelDiametr());
+    advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 100, 100, encCalc);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка значений регулятору
     chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
     chassis.pidChassisSync.reset(); // Сброс ПИДа
@@ -116,7 +116,7 @@ function Test() {
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setSyncRegulatorGains(0.03, 0, 0.5);
     chassis.setWheelDiametr(62.4);
-    chassis.setBaseLength(172);
+    chassis.setBaseLength(170);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
