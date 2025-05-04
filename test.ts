@@ -41,31 +41,35 @@ function LineFollowExample(speed: number) {
 */
 
 function RampArcMovementExample() {
-    const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
-    const encCalc = Math.round(90 * chassis.getBaseLength() / chassis.getWheelDiametr());
-    advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 100, 100, encCalc);
-    chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка значений регулятору
-    chassis.pidChassisSync.setControlSaturation(-100, 100); // Ограничения ПИДа
+    const file = "data.csv";
+    storage.temporary.remove(file);
+    storage.temporary.limit(file, 0);
+    storage.setCSVSeparator(storage.Separators.Comma);
+    storage.temporary.appendCSVHeaders(file, ["timeMsec", "pwrLeft", "pwrRight", "eml", "emr", "error", "U", "pow.pwrLeft", "pow.pwrRight"]);
+    const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
+    const encCalc = Math.round(180 * chassis.getBaseLength() / chassis.getWheelDiametr());
+    advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 200, 200, encCalc);
+    chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
+    chassis.pidChassisSync.setControlSaturation(-100, 100);
     chassis.pidChassisSync.reset(); // Сброс ПИДа
     control.timer8.reset();
+    const startTime = control.millis();
     let prevTime = 0;
     while (true) {
         let currTime = control.millis();
         let dt = currTime - prevTime;
         prevTime = currTime;
-        let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
+        let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
         let out = advmotctrls.accTwoEncExt(eml, emr);
         // if (out.isDone) break;
-        // advmotctrls.syncMotorsConfig(out.pwrLeft, out.pwrRight); // Обновлять в цикле
-        // let error = advmotctrls.getErrorSyncMotors(eml, emr);
-        // let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
-        // chassis.pidChassisSync.setPoint(error);
-        // let U = chassis.pidChassisSync.compute(dt, 0);
-        // let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
-        // let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
-        chassis.setSpeedsCommand(out.pwrLeft, out.pwrRight); // Set power/speed motors
+        let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
+        chassis.pidChassisSync.setPoint(error);
+        let U = chassis.pidChassisSync.compute(dt, 0);
+        let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
+        chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
         if (control.timer8.millis() >= 15) {
-            console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
+            // console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
+            storage.temporary.appendCSV(file, [control.millis() - startTime, out.pwrLeft, out.pwrRight, eml, emr, error, U, powers.pwrLeft, powers.pwrRight]);
             control.timer8.reset();
         }
         if (out.isDone) break;
@@ -77,7 +81,7 @@ function RampArcMovementExample() {
 function Test() {
     // chassis.setChassisMotors(motors.mediumBC);
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
-    chassis.setSyncRegulatorGains(0.03, 0, 0.5);
+    chassis.setSyncRegulatorGains(0.01, 0, 3);
     chassis.setWheelDiametr(62.4);
     chassis.setBaseLength(170);
     brick.printString("RUN example", 7, 10);
