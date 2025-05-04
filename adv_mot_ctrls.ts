@@ -27,13 +27,13 @@ namespace advmotctrls {
     let accMotorsTotalDist: number;
     let accMotorsIsNeg: boolean;
 
-    let accEncTotalDists = { left: 0, right: 0 };
-    let accEncAccelDists = { left: 0, right: 0 };
-    let accEncDecelDists = { left: 0, right: 0 };
-    let accEncStartingPwrs = { left: 0, right: 0 };
-    let accEncMaxPwrs = { left: 0, right: 0 };
-    let accEncFinishingPwrs = { left: 0, right: 0 };
-    let accEncIsNeg = { left: false, right: false };
+    let accMotorsTotalDistsExt = { left: 0, right: 0 };
+    let accMotorsAccelDistsExt = { left: 0, right: 0 };
+    let accMotorsDecelDistsExt = { left: 0, right: 0 };
+    let accMotorsStartingPwrsExt = { left: 0, right: 0 };
+    let accMotorsMaxPwrsExt = { left: 0, right: 0 };
+    let accMotorsFinishingPwrsExt = { left: 0, right: 0 };
+    let accMotorsIsNegExt = { left: false, right: false };
 
     interface MotorsPower {
         pwrLeft: number;
@@ -328,28 +328,28 @@ namespace advmotctrls {
         const kRight = radius !== Infinity ? (radius + chassis.getBaseLength() / 2) / radius : 1;
 
         // Дистанции
-        accEncAccelDists.left = accelDistCenter * kLeft;
-        accEncAccelDists.right = accelDistCenter * kRight;
-        accEncDecelDists.left = decelDistCenter * kLeft;
-        accEncDecelDists.right = decelDistCenter * kRight;
-        accEncTotalDists.left = totalDistCenter * kLeft;
-        accEncTotalDists.right = totalDistCenter * kRight;
+        accMotorsAccelDistsExt.left = accelDistCenter * kLeft;
+        accMotorsAccelDistsExt.right = accelDistCenter * kRight;
+        accMotorsDecelDistsExt.left = decelDistCenter * kLeft;
+        accMotorsDecelDistsExt.right = decelDistCenter * kRight;
+        accMotorsTotalDistsExt.left = totalDistCenter * kLeft;
+        accMotorsTotalDistsExt.right = totalDistCenter * kRight;
 
         console.log(`kLeft: ${kLeft}, kRight: ${kRight}`);
-        console.log(`accEncAccelDists.l: ${accEncAccelDists.left}, accEncAccelDists.r: ${accEncAccelDists.right}`);
-        console.log(`accEncDecelDists.l: ${accEncDecelDists.left}, accEncDecelDists.r: ${accEncDecelDists.right}`);
-        console.log(`accEncTotalDists.l: ${accEncTotalDists.left}, accEncTotalDists.r: ${accEncTotalDists.right}`);
+        console.log(`accMotorsAccelDistsExt.l: ${accMotorsAccelDistsExt.left}, accMotorsAccelDistsExt.r: ${accMotorsAccelDistsExt.right}`);
+        console.log(`accMotorsDecelDistsExt.l: ${accMotorsDecelDistsExt.left}, accMotorsDecelDistsExt.r: ${accMotorsDecelDistsExt.right}`);
+        console.log(`accMotorsTotalDistsExt.l: ${accMotorsTotalDistsExt.left}, accMotorsTotalDistsExt.r: ${accMotorsTotalDistsExt.right}`);
 
         // Мощности
-        accEncStartingPwrs.left = Math.constrain(startingPwrLeft, -100, 100);
-        accEncStartingPwrs.right = Math.constrain(startingPwrRight, -100, 100);
-        accEncMaxPwrs.left = Math.constrain(maxPwrLeft, -100, 100);
-        accEncMaxPwrs.right = Math.constrain(maxPwrRight, -100, 100);
-        accEncFinishingPwrs.left = Math.constrain(finishingPwrLeft, -100, 100);
-        accEncFinishingPwrs.right = Math.constrain(finishingPwrRight, -100, 100);
+        accMotorsStartingPwrsExt.left = Math.constrain(startingPwrLeft, -100, 100);
+        accMotorsStartingPwrsExt.right = Math.constrain(startingPwrRight, -100, 100);
+        accMotorsMaxPwrsExt.left = Math.constrain(maxPwrLeft, -100, 100);
+        accMotorsMaxPwrsExt.right = Math.constrain(maxPwrRight, -100, 100);
+        accMotorsFinishingPwrsExt.left = Math.constrain(finishingPwrLeft, -100, 100);
+        accMotorsFinishingPwrsExt.right = Math.constrain(finishingPwrRight, -100, 100);
 
-        accEncIsNeg.left = startingPwrLeft < 0 && maxPwrLeft < 0 && finishingPwrLeft < 0;
-        accEncIsNeg.right = startingPwrRight < 0 && maxPwrRight < 0 && finishingPwrRight < 0;
+        accMotorsIsNegExt.left = startingPwrLeft < 0 && maxPwrLeft < 0 && finishingPwrLeft < 0;
+        accMotorsIsNegExt.right = startingPwrRight < 0 && maxPwrRight < 0 && finishingPwrRight < 0;
     }
 
     /**
@@ -367,15 +367,15 @@ namespace advmotctrls {
     export function accTwoEncExt(eLeft: number, eRight: number): AccelMotors {
         const profileLeft = computeMotorProfile(
             Math.abs(eLeft),
-            accEncTotalDists.left, accEncAccelDists.left, accEncDecelDists.left,
-            accEncStartingPwrs.left, accEncMaxPwrs.left, accEncFinishingPwrs.left,
-            accEncIsNeg.left
+            accMotorsTotalDistsExt.left, accMotorsAccelDistsExt.left, accMotorsDecelDistsExt.left,
+            accMotorsStartingPwrsExt.left, accMotorsMaxPwrsExt.left, accMotorsFinishingPwrsExt.left,
+            accMotorsIsNegExt.left
         ); // Расчёт мощности левого мотора
         const profileRight = computeMotorProfile(
             Math.abs(eRight),
-            accEncTotalDists.right, accEncAccelDists.right, accEncDecelDists.right,
-            accEncStartingPwrs.right, accEncMaxPwrs.right, accEncFinishingPwrs.right,
-            accEncIsNeg.right
+            accMotorsTotalDistsExt.right, accMotorsAccelDistsExt.right, accMotorsDecelDistsExt.right,
+            accMotorsStartingPwrsExt.right, accMotorsMaxPwrsExt.right, accMotorsFinishingPwrsExt.right,
+            accMotorsIsNegExt.right
         ); // Расчёт мощности правого мотора
 
         return {
