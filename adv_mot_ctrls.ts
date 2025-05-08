@@ -331,7 +331,7 @@ namespace advmotctrls {
         const kLeft = (radius !== Math.abs(Infinity) && radius != 0) ? (radius - chassis.getBaseLength() / 2) / radius : 1;
         const kRight = (radius !== Math.abs(Infinity) && radius != 0) ? (radius + chassis.getBaseLength() / 2) / radius : 1;
 
-        // Дистанции
+        // Дистанции каждых фаз для левого и правого мотора
         accMotorsAccelDistsExt.left = accelDistCenter * kLeft;
         accMotorsAccelDistsExt.right = accelDistCenter * kRight;
         accMotorsDecelDistsExt.left = decelDistCenter * kLeft;
