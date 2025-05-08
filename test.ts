@@ -81,9 +81,9 @@ function RampArcMovementExample() {
 function Test() {
     // chassis.setChassisMotors(motors.mediumBC);
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
-    chassis.setSyncRegulatorGains(0.01, 0, 3);
+    chassis.setSyncRegulatorGains(0.0075, 0, 0);
     chassis.setWheelDiametr(62.4);
-    chassis.setBaseLength(170);
+    chassis.setBaseLength(178);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();

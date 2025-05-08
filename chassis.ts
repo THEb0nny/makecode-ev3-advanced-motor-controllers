@@ -18,6 +18,7 @@ namespace chassis {
     let syncKp: number = 0.03; // Proportional synchronization gain
     let syncKi: number = 0; // Integral synchronization gain
     let syncKd: number = 0.5; // Differential synchronization gain
+    let syncN: number = 0; // Differential synchronization gain filter
 
     let brakeSettleTime = 10; // Chassis brake settle time (msec)
 
@@ -189,17 +190,20 @@ namespace chassis {
      * @param Kp sync kp input value, eg: 0.03
      * @param Ki sync ki input value, eg: 0
      * @param Kd sync kd input value, eg: 0.5
+     * @param N sync kd filter, eg: 0
     */
     //% blockId="ChassisSetSyncRegulatorGains"
-    //% block="set chassis sync pid gains kp = $Kp ki = $Ki kd = $Kd"
-    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp ki = $Ki kd = $Kd"
+    //% block="set chassis sync pid gains kp = $Kp ki = $Ki kd = $Kd||N = $N"
+    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp ki = $Ki kd = $Kd||N = $N"
     //% inlineInputMode="inline"
+    //% expandableArgumentMode="toggle"
     //% weight="95"
     //% group="Установить"
-    export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number) {
+    export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number, N?: number) {
         syncKp = Kp;
         syncKi = Ki;
         syncKd = Kd;
+        if (N) syncN = N;
     }
 
     export function getSyncRegulatorKp(): number {
@@ -213,6 +217,11 @@ namespace chassis {
     export function getSyncRegulatorKd(): number {
         return syncKd;
     }
+
+    export function getSyncRegulatorKdFilter(): number {
+        return syncN;
+    }
+
 
     /**
      * Sets the wheel diametr.
