@@ -300,22 +300,26 @@ namespace advmotctrls {
     /**
      * The acceleration and deceleration configuration of the chassis of two motors with different maximum speeds.
      * Конфигурация ускорения и замедления шасси двух моторов с разными максимальными скоростями.
-     * @param startingPwr входное значение скорости на старте, eg: 20
-     * @param maxPwrLeft входное значение максимальной скорости левого мотора, eg: 50
-     * @param maxPwrRight входное значение максимальной скорости правого мотора, eg: 75
-     * @param finishingPwr входное значение скорости при замедлении, eg: 20
-     * @param accelDist значение дистанции ускорения, eg: 150
-     * @param decelDist значение дистанции замедления, eg: 150
-     * @param totalDist значение всей дистанции, eg: 500
+     * @param startingPwrLeft входное значение скорости (мощности) левого мотора на старте, eg: 20
+     * @param startingPwrRight входное значение скорости (мощности) правого мотора на старте, eg: 20
+     * @param maxPwrLeft входное значение максимальной скорости (мощности) левого мотора, eg: 50
+     * @param maxPwrRight входное значение максимальной скорости (мощности) правого мотора, eg: 75
+     * @param finishingPwrLeft входное значение скорости (мощности) левого мотора при замедлении, eg: 20
+     * @param finishingPwrRight входное значение скорости (мощности) правого мотора при замедлении, eg: 20
+     * @param accelDistCenter значение дистанции ускорения, eg: 150
+     * @param decelDistCenter значение дистанции замедления, eg: 150
+     * @param totalDistCenter значение всей дистанции, eg: 500
      */
     //% blockId="AccTwoEncExtConfig"
     //% block="config accel/deceleration chassis at startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
-    //% startingPwr.shadow="motorSpeedPicker"
+    //% startingPwrLeft.shadow="motorSpeedPicker"
+    //% startingPwrRight.shadow="motorSpeedPicker"
     //% maxPwrLeft.shadow="motorSpeedPicker"
     //% maxPwrRight.shadow="motorSpeedPicker"
-    //% finishingPwr.shadow="motorSpeedPicker"
+    //% finishingPwrLeft.shadow="motorSpeedPicker"
+    //% finishingPwrRight.shadow="motorSpeedPicker"
     //% weight="59"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncExtConfig(startingPwrLeft: number, startingPwrRight: number, maxPwrLeft: number, maxPwrRight: number, finishingPwrLeft: number, finishingPwrRight: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
