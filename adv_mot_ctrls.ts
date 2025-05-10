@@ -121,8 +121,8 @@ namespace advmotctrls {
      * Возвращает число ошибки для регулятора.
      * @param eLeft входное значение энкодера левого мотора, eg: 0
      * @param eRight входное значение энкодера правого мотора, eg: 0
-     * @param vLeft входное значение скорости левого мотора, eg: 50
-     * @param vRight входное значение скорости правого мотора, eg: 50
+     * @param vLeft входное значение скорости (мощности) левого мотора, eg: 50
+     * @param vRight входное значение скорости (мощности) правого мотора, eg: 50
      */
     //% blockId="GetErrorSyncMotorsAtPwr"
     //% block="get error sync сhassis at eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
@@ -138,8 +138,8 @@ namespace advmotctrls {
      * Get speeds (powers) for motors by U action of the regulator and the required speeds (powers).
      * Получить speeds (powers) для моторов по U воздействию регулятора и с необходимыми скоростями (мощностями).
      * @param U входное значение с регулятора, eg: 0
-     * @param vLeft входное значение скорости левого мотора, eg: 50
-     * @param vRight входное значение скорости правого мотора, eg: 50
+     * @param vLeft входное значение скорости (мощности) левого мотора, eg: 50
+     * @param vRight входное значение скорости (мощности) правого мотора, eg: 50
      */
     //% blockId="GetPwrSyncMotorsAtPwr"
     //% block="get pwr sync сhassis at U = $U vLeft = $vLeft vRight = $vRight"
