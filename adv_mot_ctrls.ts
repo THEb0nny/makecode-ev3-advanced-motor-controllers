@@ -79,8 +79,8 @@ namespace advmotctrls {
      * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров.
      * Скорость (мощность) постоянная.
      * Возвращает число ошибки для регулятора.
-     * @param eLeft входное значение энкодера левого мотора
-     * @param eRight входное значение энкодера правого мотора
+     * @param eLeft входное значение энкодера левого мотора, eg: 0
+     * @param eRight входное значение энкодера правого мотора, eg: 0
      */
     //% blockId="GetErrorSyncMotors"
     //% block="get error sync chassis at eLeft = $eLeft eRight = $eRight"
@@ -97,7 +97,7 @@ namespace advmotctrls {
      * Returns the interface of the speed (power) of the left and right motors.
      * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора синхронизации.
      * Возвращает интерфейс скорости (мощности) левого и правого моторов.
-     * @param U входное значение управляющего воздействия от регулятора
+     * @param U входное значение управляющего воздействия от регулятора, eg: 0
      */
     //% blockId="GetPwrSyncMotors"
     //% block="get pwr sync сhassis at U = $U"
@@ -119,8 +119,8 @@ namespace advmotctrls {
      * Returns the error number for the controller.
      * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров и с учётом необходимых скоростей (мощностей) для моторов.
      * Возвращает число ошибки для регулятора.
-     * @param eLeft входное значение энкодера левого мотора
-     * @param eRight входное значение энкодера правого мотора
+     * @param eLeft входное значение энкодера левого мотора, eg: 0
+     * @param eRight входное значение энкодера правого мотора, eg: 0
      * @param vLeft входное значение скорости левого мотора, eg: 50
      * @param vRight входное значение скорости правого мотора, eg: 50
      */
@@ -137,7 +137,7 @@ namespace advmotctrls {
     /**
      * Get speeds (powers) for motors by U action of the regulator and the required speeds (powers).
      * Получить speeds (powers) для моторов по U воздействию регулятора и с необходимыми скоростями (мощностями).
-     * @param U входное значение с регулятора
+     * @param U входное значение с регулятора, eg: 0
      * @param vLeft входное значение скорости левого мотора, eg: 50
      * @param vRight входное значение скорости правого мотора, eg: 50
      */
@@ -159,7 +159,7 @@ namespace advmotctrls {
     /**
      * Acceleration and deceleration configuration of one motor.
      * Конфигурация ускорения и замедления одного мотора.
-     * @param minPwr входное значение скорости (мозности) на старте, eg: 20
+     * @param minPwr входное значение скорости (мощности) на старте, eg: 20
      * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
      * @param accelDist значение дистанции ускорения, eg: 150
      * @param decelDist значение дистанции замедления, eg: 150
@@ -187,7 +187,7 @@ namespace advmotctrls {
     /**
      * Calculation of acceleration/deceleration for one motor.
      * Расчёт ускорения/замедления для одного мотора.
-     * @param enc входное значение энкодера мотора
+     * @param enc входное значение энкодера мотора, eg: 0
      */
     //% blockId="AccOneEnc"
     //% block="compute accel/deceleration motor at enc = $enc"
@@ -225,9 +225,9 @@ namespace advmotctrls {
     /**
      * The configuration of acceleration and deceleration of the chassis of two motors.
      * Конфигурация ускорения и замедления шассии двух моторов.
-     * @param minStartPwr входное значение скорости на старте, eg: 20
-     * @param maxPwr входное значение максимальной скорости, eg: 50
-     * @param minEndPwr входное значение скорости при замедлении, eg: 20
+     * @param minStartPwr входное значение скорости (мощности) на старте, eg: 20
+     * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
+     * @param minEndPwr входное значение скорости (мощности) при замедлении, eg: 20
      * @param accelDist значение дистанции ускорения, eg: 150
      * @param decelDist значение дистанции замедления, eg: 150
      * @param totalDist значение всей дистанции, eg: 500
@@ -257,8 +257,8 @@ namespace advmotctrls {
     /**
      * Calculation of acceleration/deceleration for two motors.
      * Расчёт ускорения/замедления для двух моторов.
-     * @param eLeft входное значение энкодера левого мотора
-     * @param eRight входное значение энкодера правого мотора
+     * @param eLeft входное значение энкодера левого мотора, eg: 0
+     * @param eRight входное значение энкодера правого мотора, eg: 0
      */
     //% blockId="AccTwoEnc"
     //% block="compute accel/deceleration chassis at eLeft = $eLeft eRight = $eRight"
@@ -324,8 +324,8 @@ namespace advmotctrls {
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncExtConfig(startingPwrLeft: number, startingPwrRight: number, maxPwrLeft: number, maxPwrRight: number, finishingPwrLeft: number, finishingPwrRight: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
         // Радиус поворота центра
-        const vLeft = maxPwrLeft, vRight = maxPwrRight;
-        const radius = vLeft !== vRight ? (chassis.getBaseLength() * (vLeft + vRight)) / (2 * (vRight - vLeft)) : Infinity;
+        const vLeft = Math.round(maxPwrLeft), vRight = Math.round(maxPwrRight);
+        const radius = vLeft != vRight ? (chassis.getBaseLength() * (vLeft + vRight)) / (2 * (vRight - vLeft)) : Infinity;
 
         // Коэффициенты расстояния для колёс
         const kLeft = (radius !== Math.abs(Infinity) && radius != 0) ? (radius - chassis.getBaseLength() / 2) / radius : 1;
@@ -339,11 +339,6 @@ namespace advmotctrls {
         accMotorsTotalDistsExt.left = totalDistCenter * kLeft;
         accMotorsTotalDistsExt.right = totalDistCenter * kRight;
 
-        console.log(`radius: ${radius}, kLeft: ${kLeft}, kRight: ${kRight}`);
-        console.log(`accMotorsAccelDistsExt.l: ${accMotorsAccelDistsExt.left}, accMotorsAccelDistsExt.r: ${accMotorsAccelDistsExt.right}`);
-        console.log(`accMotorsDecelDistsExt.l: ${accMotorsDecelDistsExt.left}, accMotorsDecelDistsExt.r: ${accMotorsDecelDistsExt.right}`);
-        console.log(`accMotorsTotalDistsExt.l: ${accMotorsTotalDistsExt.left}, accMotorsTotalDistsExt.r: ${accMotorsTotalDistsExt.right}`);
-
         // Мощности
         accMotorsStartingPwrsExt.left = Math.constrain(startingPwrLeft, -100, 100);
         accMotorsStartingPwrsExt.right = Math.constrain(startingPwrRight, -100, 100);
@@ -355,14 +350,18 @@ namespace advmotctrls {
         accMotorsIsNegExt.left = startingPwrLeft < 0 && maxPwrLeft < 0 && finishingPwrLeft < 0;
         accMotorsIsNegExt.right = startingPwrRight < 0 && maxPwrRight < 0 && finishingPwrRight < 0;
 
+        console.log(`radius: ${radius}, kLeft: ${kLeft}, kRight: ${kRight}`);
+        console.log(`accMotorsAccelDistsExt.l: ${accMotorsAccelDistsExt.left}, accMotorsAccelDistsExt.r: ${accMotorsAccelDistsExt.right}`);
+        console.log(`accMotorsDecelDistsExt.l: ${accMotorsDecelDistsExt.left}, accMotorsDecelDistsExt.r: ${accMotorsDecelDistsExt.right}`);
+        console.log(`accMotorsTotalDistsExt.l: ${accMotorsTotalDistsExt.left}, accMotorsTotalDistsExt.r: ${accMotorsTotalDistsExt.right}`);
         console.log(`accMotorsIsNegExt.l: ${accMotorsIsNegExt.left}, accMotorsIsNegExt.r: ${accMotorsIsNegExt.right}`);
     }
 
     /**
      * Acceleration/deceleration calculation for two motors with different maximum speeds (powers).
      * Расчёт ускорения/замедления для двух моторов с разными максимальными скоростями (мощностями).
-     * @param eLeft входное значение энкодера левого мотора
-     * @param eRight входное значение энкодера правого мотора
+     * @param eLeft входное значение энкодера левого мотора, eg: 0
+     * @param eRight входное значение энкодера правого мотора, eg: 0
      */
     //% blockId="AccTwoEncExt"
     //% block="compute accel/deceleration chassis at with different max speeds eLeft = $eLeft eRight = $eRight"
@@ -391,6 +390,7 @@ namespace advmotctrls {
         };
     }
 
+    // Расчёт профиля скорости (мощности) мотора 
     function computeMotorProfile(currEnc: number, totalDist: number, accelDist: number, decelDist: number, startPwr: number, maxPwr: number, endPwr: number, isNeg: boolean): AccelMotor {
         let done: boolean;
         let pwr: number;
@@ -398,7 +398,7 @@ namespace advmotctrls {
         if (currEnc >= totalDist) {
             pwr = 0;
             done = true;
-        } else if (currEnc > totalDist / 2) { // Замедление
+        } else if (currEnc > totalDist - decelDist) { // Замедление
             if (decelDist == 0) pwr = maxPwr;
             else pwr = (maxPwr - endPwr) / Math.pow(decelDist, 2) * Math.pow(currEnc - totalDist, 2) + endPwr;
             done = false;
@@ -408,8 +408,11 @@ namespace advmotctrls {
             done = false;
         }
 
-        pwr = Math.min(Math.abs(pwr), Math.abs(maxPwr));
+        // pwr = Math.min(Math.abs(pwr), Math.abs(maxPwr));
         // if (Math.abs(pwr) < Math.abs(endPwr)) pwr = endPwr;
+        
+        pwr = Math.max(Math.abs(startPwr), Math.min(Math.abs(pwr), Math.abs(maxPwr))); // Ограничиваем сверху и снизу
+        if (currEnc > totalDist - decelDist) pwr = Math.max(Math.abs(endPwr), Math.abs(pwr)); // Чтобы в конце не упасть ниже конечной мощности
 
         return {
             pwr: isNeg ? -pwr : pwr,

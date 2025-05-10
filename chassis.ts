@@ -139,8 +139,7 @@ namespace chassis {
     export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
         if (newLeftMotors == newRightMotors) {
             console.log("Error: the same motor is specified for the left and right motors!");
-            control.panic(0); // Error in installation of chassis motors
-            return; // Identical motors were installed
+            control.assert(false, 99);
         }
         leftMotor = newLeftMotors; // Set left motor instance
         rightMotor = newRightMotors; // Set right motor instance
@@ -549,7 +548,7 @@ namespace chassis {
         stop(true); // Break at hold
     }
 
-    // export function arcMovement(minSpeedLeft: number, maxSpeedLeft: number, minSpeedRight: number, maxSpeedRight: number, totalValue: number, accelValue: number, decelValue: number) {
+    // export function syncRampArcMovement(minSpeedLeft: number, maxSpeedLeft: number, minSpeedRight: number, maxSpeedRight: number, totalValue: number, accelValue: number, decelValue: number) {
     //     if (maxSpeedLeft == 0 && maxSpeedRight == 0 || totalValue == 0) {
     //         stop(true);
     //         return;

@@ -47,11 +47,11 @@ function RampArcMovementExample() {
     storage.setCSVSeparator(storage.Separators.Comma);
     storage.temporary.appendCSVHeaders(file, ["timeMsec", "pwrLeft", "pwrRight", "eml", "emr", "error", "U", "pow.pwrLeft", "pow.pwrRight"]);
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
-    const encCalc = Math.round(180 * chassis.getBaseLength() / chassis.getWheelDiametr());
-    advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 200, 200, encCalc);
+    const calcMotRot = Math.round(180 * chassis.getBaseLength() / chassis.getWheelDiametr());
+    advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 200, 200, calcMotRot);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
     chassis.pidChassisSync.setControlSaturation(-100, 100);
-    chassis.pidChassisSync.reset(); // Сброс ПИДа
+    chassis.pidChassisSync.reset();
     control.timer8.reset();
     const startTime = control.millis();
     let prevTime = 0;
@@ -72,7 +72,7 @@ function RampArcMovementExample() {
             storage.temporary.appendCSV(file, [control.millis() - startTime, out.pwrLeft, out.pwrRight, eml, emr, error, U, powers.pwrLeft, powers.pwrRight]);
             control.timer8.reset();
         }
-        if (out.isDone) break;
+        if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
         control.pauseUntilTime(currTime, 1);
     }
     chassis.stop(true);
@@ -81,9 +81,9 @@ function RampArcMovementExample() {
 function Test() {
     // chassis.setChassisMotors(motors.mediumBC);
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
-    chassis.setSyncRegulatorGains(0.0075, 0, 0);
     chassis.setWheelDiametr(62.4);
     chassis.setBaseLength(175);
+    chassis.setSyncRegulatorGains(0.01, 0, 0);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
