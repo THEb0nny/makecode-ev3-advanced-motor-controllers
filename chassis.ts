@@ -312,7 +312,7 @@ namespace chassis {
         // motorsPair.setBrakeSettleTime(0);
         // motorsPair.stop();
         leftMotor.setBrakeSettleTime(0); rightMotor.setBrakeSettleTime(0); // Set the motors separately to wait for stabilization when stopping at 0
-        leftMotor.stop(); rightMotor.stop(); // Motor stop command
+        leftMotor.stop(); rightMotor.stop(); // Motors stop command
         leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Return the motors separately to waiting for stabilization when stopping at 10
         pause(Math.max(0, settleTime)); // Settle chassis delay
     }
@@ -351,7 +351,7 @@ namespace chassis {
     /**
      * Chassis steer motor control command.
      * Команда рулевого управления моторами шасси.
-     * @param turnRatio рулевой параметр, если больше 0 то поворачиваем вправо, а если меньше, то влево, eg: 0
+     * @param turnRatio рулевой параметр, если больше 0, то поворачиваем вправо, а если меньше, то влево, eg: 0
      * @param speed скорость движения, eg: 50
      */
     //% blockId="ChassisSteeringCommand"
