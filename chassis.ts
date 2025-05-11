@@ -192,8 +192,8 @@ namespace chassis {
      * @param N sync kd filter, eg: 0
     */
     //% blockId="ChassisSetSyncRegulatorGains"
-    //% block="set chassis sync pid gains kp = $Kp ki = $Ki kd = $Kd||N = $N"
-    //% block.loc.ru="установить коэффиценты синхронизации шасси kp = $Kp ki = $Ki kd = $Kd||N = $N"
+    //% block="set chassis sync pid gains Kp = $Kp Ki = $Ki Kd = $Kd||N = $N"
+    //% block.loc.ru="установить коэффиценты синхронизации шасси Kp = $Kp Ki = $Ki Kd = $Kd||N = $N"
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% weight="95"
