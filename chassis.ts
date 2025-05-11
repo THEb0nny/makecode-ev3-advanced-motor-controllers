@@ -221,7 +221,6 @@ namespace chassis {
         return syncN;
     }
 
-
     /**
      * Sets the wheel diametr.
      * Задает диаметр колеса.
