@@ -41,11 +41,11 @@ function LineFollowExample(speed: number) {
 */
 
 function RampArcMovementExample() {
-    const file = "data.csv";
-    storage.temporary.remove(file);
-    storage.temporary.limit(file, 0);
-    storage.setCSVSeparator(storage.Separators.Comma);
-    storage.temporary.appendCSVHeaders(file, ["timeMsec", "pwrLeft", "pwrRight", "eml", "emr", "error", "U", "pow.pwrLeft", "pow.pwrRight"]);
+    // const file = "data.csv";
+    // storage.temporary.remove(file);
+    // storage.temporary.limit(file, 0);
+    // storage.setCSVSeparator(storage.Separators.Comma);
+    // storage.temporary.appendCSVHeaders(file, ["timeMsec", "pwrLeft", "pwrRight", "eml", "emr", "error", "U", "pow.pwrLeft", "pow.pwrRight"]);
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
     const calcMotRot = Math.round(180 * chassis.getBaseLength() / chassis.getWheelDiametr());
     advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 200, 200, calcMotRot);
@@ -69,7 +69,7 @@ function RampArcMovementExample() {
         chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
         if (control.timer8.millis() >= 15) {
             // console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
-            storage.temporary.appendCSV(file, [control.millis() - startTime, out.pwrLeft, out.pwrRight, eml, emr, error, U, powers.pwrLeft, powers.pwrRight]);
+            // storage.temporary.appendCSV(file, [control.millis() - startTime, out.pwrLeft, out.pwrRight, eml, emr, error, U, powers.pwrLeft, powers.pwrRight]);
             control.timer8.reset();
         }
         if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
