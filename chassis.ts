@@ -499,6 +499,29 @@ namespace chassis {
         syncMovement(speedLeft, speedRight, value, unit, braking);
     }
 
+    // Функция выполнения синхронизированного движения с фазами
+    export function executeRampMovement(emlPrev: number, emrPrev: number) {
+        pidChassisSync.setGains(syncKp, syncKi, syncKd);
+        pidChassisSync.setControlSaturation(-100, 100);
+        pidChassisSync.reset();
+
+        let prevTime = 0;
+        while (true) {
+            let currTime = control.millis();
+            let dt = currTime - prevTime;
+            prevTime = currTime;
+            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
+            let out = advmotctrls.accTwoEnc(eml, emr);
+            if (out.isDone) break;
+            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
+            pidChassisSync.setPoint(error);
+            let U = pidChassisSync.compute(dt, 0);
+            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
+            setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
+            control.pauseUntilTime(currTime, 1);
+        }
+    }
+
     /**
      * Synchronization with smooth acceleration and deceleration during straight-line motion. The distance values are set in encoder ticks.
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении. Значения расстояний устанавливается в тиках энкодера.
@@ -524,27 +547,26 @@ namespace chassis {
         }
 
         advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue);
-        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
-        pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
-        pidChassisSync.reset(); // Reset pid controller
 
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
+        
+        executeRampMovement(emlPrev, emrPrev); // Выполнение синхронизированного движения с фазами
 
-        let prevTime = 0; // Last time time variable for loop
-        while (true) {
-            let currTime = control.millis();
-            let dt = currTime - prevTime;
-            prevTime = currTime;
-            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
-            let out = advmotctrls.accTwoEnc(eml, emr);
-            if (out.isDone) break;
-            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
-            pidChassisSync.setPoint(error);
-            let U = pidChassisSync.compute(dt, 0);
-            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
-            setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
-            control.pauseUntilTime(currTime, 1);
-        }
+        // let prevTime = 0; // Last time time variable for loop
+        // while (true) {
+        //     let currTime = control.millis();
+        //     let dt = currTime - prevTime;
+        //     prevTime = currTime;
+        //     let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
+        //     let out = advmotctrls.accTwoEnc(eml, emr);
+        //     if (out.isDone) break;
+        //     let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
+        //     pidChassisSync.setPoint(error);
+        //     let U = pidChassisSync.compute(dt, 0);
+        //     let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
+        //     setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
+        //     control.pauseUntilTime(currTime, 1);
+        // }
         stop(true); // Break at hold
     }
 
