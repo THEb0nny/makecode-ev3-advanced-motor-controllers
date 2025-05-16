@@ -500,7 +500,7 @@ namespace chassis {
     }
 
     // Функция выполнения синхронизированного движения с фазами
-    export function executeRampMovement(emlPrev: number, emrPrev: number) {
+    export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number, emlPrev: number, emrPrev: number) {
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.reset();
@@ -546,11 +546,9 @@ namespace chassis {
             return;
         }
 
-        advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue);
-
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
         
-        executeRampMovement(emlPrev, emrPrev); // Выполнение синхронизированного движения с фазами
+        executeRampMovement(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue, emlPrev, emrPrev); // Выполнение синхронизированного движения с фазами
 
         // let prevTime = 0; // Last time time variable for loop
         // while (true) {
