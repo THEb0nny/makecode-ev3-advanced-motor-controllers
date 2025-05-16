@@ -522,12 +522,13 @@ namespace chassis {
             stop(true);
             return;
         }
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
         advmotctrls.accTwoEncConfig(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue);
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
         pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
         pidChassisSync.reset(); // Reset pid controller
+
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
         let prevTime = 0; // Last time time variable for loop
         while (true) {
