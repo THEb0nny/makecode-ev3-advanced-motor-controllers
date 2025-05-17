@@ -500,11 +500,13 @@ namespace chassis {
     }
 
     // Функция выполнения синхронизированного движения с фазами
-    export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number, emlPrev: number, emrPrev: number) {
+    export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         advmotctrls.accTwoEncConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, decelDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.reset();
+
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
 
         let prevTime = 0;
         while (true) {
@@ -547,25 +549,7 @@ namespace chassis {
             return;
         }
 
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
-        
-        executeRampMovement(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue, emlPrev, emrPrev); // Выполнение синхронизированного движения с фазами
-
-        // let prevTime = 0; // Last time time variable for loop
-        // while (true) {
-        //     let currTime = control.millis();
-        //     let dt = currTime - prevTime;
-        //     prevTime = currTime;
-        //     let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
-        //     let out = advmotctrls.accTwoEnc(eml, emr);
-        //     if (out.isDone) break;
-        //     let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
-        //     pidChassisSync.setPoint(error);
-        //     let U = pidChassisSync.compute(dt, 0);
-        //     let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
-        //     setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
-        //     control.pauseUntilTime(currTime, 1);
-        // }
+        executeRampMovement(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue); // Выполнение синхронизированного движения с фазами
         stop(true); // Break at hold
     }
 
