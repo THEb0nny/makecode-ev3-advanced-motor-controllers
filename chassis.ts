@@ -501,6 +501,7 @@ namespace chassis {
 
     // Функция выполнения синхронизированного движения с фазами
     export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number, emlPrev: number, emrPrev: number) {
+        advmotctrls.accTwoEncConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, decelDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.reset();
