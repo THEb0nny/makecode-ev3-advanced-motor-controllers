@@ -300,7 +300,7 @@ namespace chassis {
     //% setBrake.shadow="toggleOnOff"
     //% weight="99"
     //% group="Move"
-    export function stop(setBrake?: boolean, settleTime?: number) {
+    export function stop(setBrake: boolean = true, settleTime?: number) {
         //if (!motorsPair) return;
         if (!settleTime) settleTime = brakeSettleTime;
         if (setBrake) {
