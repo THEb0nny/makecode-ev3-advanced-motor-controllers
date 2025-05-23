@@ -273,7 +273,7 @@ namespace advmotctrls {
         if (currEnc >= accMotorsTotalDist) {
             pwrOut = 0;
             done = true;
-        } else if (currEnc > accMotorsTotalDist / 2) { // currEnc > accMotorsTotalDist / 2
+        } else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) { // currEnc > accMotorsTotalDist / 2
             if (accMotorsDecelDist == 0) pwrOut = accMotorsMaxPwr;
             else pwrOut = (accMotorsMaxPwr - accMotorsEndPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsEndPwr; // pwr = (accMotorsMaxPwr - accMotorsMinPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsMinPwr;
             done = false;
@@ -285,15 +285,7 @@ namespace advmotctrls {
 
         // if (pwr < accMotorsMinPwr) pwr = accMotorsMinPwr;
         // else if (pwr > accMotorsMaxPwr) pwr = accMotorsMaxPwr;
-
-        // if (currEnc > accMotorsTotalDist / 2 && pwrOut < accMotorsEndPwr) pwrOut = accMotorsEndPwr;
-        // else if (pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
-        // else if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;
-
-        // if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr; // Ограничение сверху (во всех фазах)
-        // else if (currEnc < accMotorsAccelDist && pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr; // Ограничение снизу в фазе ускорения
-
-        // Ограничение мощности
+        
         if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;  // Ограничение сверху (во всех фазах)
         else if (currEnc < accMotorsAccelDist && pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;  // Ограничение снизу в фазе ускорения
         else if (currEnc > accMotorsTotalDist - accMotorsDecelDist && pwrOut < accMotorsEndPwr) pwrOut = accMotorsEndPwr;  // Ограничение снизу в фазе замедления
