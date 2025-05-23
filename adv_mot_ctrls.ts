@@ -290,9 +290,18 @@ namespace advmotctrls {
         // else if (pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
         // else if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;
 
-        if (currEnc < accMotorsAccelDist && pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
-        else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) pwrOut = accMotorsEndPwr;
-        else if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;
+        // if (currEnc < accMotorsAccelDist && pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
+        // else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) pwrOut = accMotorsEndPwr;
+        // else if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;
+
+        // Ограничение мощности
+        if (pwrOut > accMotorsMaxPwr) { // Ограничение сверху (во всех фазах)
+            pwrOut = accMotorsMaxPwr;
+        } else if (currEnc < accMotorsAccelDist && pwrOut < accMotorsStartPwr) { // Ограничение снизу в фазе ускорения
+            pwrOut = accMotorsStartPwr; 
+        } else if (currEnc > accMotorsTotalDist - accMotorsDecelDist && pwrOut < accMotorsEndPwr) { // Ограничение снизу в фазе замедления
+            pwrOut = accMotorsEndPwr;
+        }
 
         if (accMotorsIsNeg) pwrOut = -pwrOut;
 
