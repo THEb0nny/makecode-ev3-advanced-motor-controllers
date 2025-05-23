@@ -478,8 +478,8 @@ namespace chassis {
     }
 
     /**
-     * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
-     * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
+     * Synchronization of motors in chassis with setting speeds (powers) for each motor. No acceleration or deceleration support.
+     * Синхронизация двигателей в шасси с настройкой скоростей (мощностей) для каждого двигателя. Нет поддержки ускорения или замедления.
      * @param vLeft left motor speed input value, eg: 50
      * @param vRight right motor speed input value, eg: 50
      * @param value move duration or rotation, eg: 500
@@ -536,8 +536,8 @@ namespace chassis {
      * @param decelValue decelerate length encoder value, eg: 100
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at start speed $startSpeed\\% max $maxSpeed\\% finish $finishSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на стартовой скорости $startSpeed\\% макс $maxSpeed\\% финише $finishSpeed\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
+    //% block="sync chassis ramp movement at start $startSpeed\\% max $maxSpeed\\% finish $finishSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на старте $startSpeed\\% макс $maxSpeed\\% финише $finishSpeed\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
     //% inlineInputMode="inline"
     //% startSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
