@@ -285,8 +285,13 @@ namespace advmotctrls {
 
         // if (pwr < accMotorsMinPwr) pwr = accMotorsMinPwr;
         // else if (pwr > accMotorsMaxPwr) pwr = accMotorsMaxPwr;
-        if (currEnc > accMotorsTotalDist - accMotorsDecelDist && pwrOut < accMotorsEndPwr) pwrOut = accMotorsEndPwr;
-        else if (pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
+
+        // if (currEnc > accMotorsTotalDist / 2 && pwrOut < accMotorsEndPwr) pwrOut = accMotorsEndPwr;
+        // else if (pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
+        // else if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;
+
+        if (currEnc < accMotorsAccelDist && pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;
+        else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) pwrOut = accMotorsEndPwr;
         else if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;
 
         if (accMotorsIsNeg) pwrOut = -pwrOut;
