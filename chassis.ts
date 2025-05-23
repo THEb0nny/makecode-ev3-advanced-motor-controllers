@@ -528,28 +528,30 @@ namespace chassis {
     /**
      * Synchronization with smooth acceleration and deceleration during straight-line motion. The distance values are set in encoder ticks.
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении. Значения расстояний устанавливается в тиках энкодера.
-     * @param minSpeed start motor speed, eg: 10
+     * @param startSpeed start motor speed, eg: 15
      * @param maxSpeed max motor speed, eg: 50
+     * @param finishSpeed finish motor speed, eg: 10
      * @param totalValue total length encoder value at, eg: 300
      * @param accelValue accelerate length encoder value, eg: 50
      * @param decelValue decelerate length encoder value, eg: 100
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at speed min $minSpeed\\% max $maxSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на скорости мин $minSpeed\\% макс $maxSpeed\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
+    //% block="sync chassis ramp movement at start speed $startSpeed\\% max $maxSpeed\\% finish $finishSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на стартовой скорости $startSpeed\\% макс $maxSpeed\\% финише $finishSpeed\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
     //% inlineInputMode="inline"
-    //% minSpeed.shadow="motorSpeedPicker"
+    //% startSpeed.shadow="motorSpeedPicker"
     //% maxSpeed.shadow="motorSpeedPicker"
+    //% finishSpeed.shadow="motorSpeedPicker"
     //% weight="99"
     //% group="Синхронизированное движение с ускорениями"
-    export function syncRampMovement(minSpeed: number, maxSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
+    export function syncRampMovement(startSpeed: number, maxSpeed: number, finishSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
         //if (!motorsPair) return;
         if (maxSpeed == 0 || totalValue == 0) {
             stop(true);
             return;
         }
 
-        executeRampMovement(minSpeed, maxSpeed, minSpeed, accelValue, decelValue, totalValue); // Выполнение синхронизированного движения с фазами
+        executeRampMovement(startSpeed, maxSpeed, finishSpeed, accelValue, decelValue, totalValue); // Выполнение синхронизированного движения с фазами
         stop(true); // Break at hold
     }
 
