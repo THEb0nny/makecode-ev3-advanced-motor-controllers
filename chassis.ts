@@ -7,30 +7,31 @@
 //% color="#02909D" weight="88" icon="\uf1b9"
 namespace chassis {
 
-    export let motorsPair: motors.SynchedMotorPair; // The motors pair
-    export let leftMotor: motors.Motor; // The left motor in chassis
-    export let rightMotor: motors.Motor; // The right motor in chassis
+    export let motorsPair: motors.SynchedMotorPair; // Моторная пара
+    export let leftMotor: motors.Motor; // Левый двигатель в шасси
+    export let rightMotor: motors.Motor; // Правый двигатель в шасси
 
-    let motorMaxRPM: number = 0; // Motor maximum rpm
-    let wheelDiametr: number = 0; // The radius of the wheel (cm)
-    let baseLength: number = 0; // The distance between the wheels (cm)
+    let motorMaxRPM: number = 0; // Максимальная частота (rpm) вращения двигателя
+    let wheelDiametr: number = 0; // Радиус колеса (см)
+    let baseLength: number = 0; // Расстояние между колесами (см)
 
-    let syncKp: number = 0.03; // Proportional synchronization gain
-    let syncKi: number = 0; // Integral synchronization gain
-    let syncKd: number = 0.5; // Differential synchronization gain
-    let syncN: number = 0; // Differential synchronization gain filter
+    let syncKp: number = 0.03; // Пропорциональный коэффициент синхронизации
+    let syncKi: number = 0; // Интегральный коэффициент синхронизации
+    let syncKd: number = 0.5; // Дифференциальный коэффициент синхронизации
+    let syncKf: number = 0; // Фильтр дифференциального регулятора синхронизации
 
-    let brakeSettleTime = 10; // Chassis brake settle time (msec)
+    let brakeSettleTime = 10; // Время срабатывания тормоза шасси (мс)
 
-    export const pidChassisSync = new automation.PIDController(); // PID for sync motors chassis loop
+    export const pidChassisSync = new automation.PIDController(); // PID для синхронизации двигателей шасси
 
-    // Set the retention property for two chassis motors at once
+    // Функция установки свойства удержания сразу для двух двигателей шасси
     export function setBrake(hold: boolean) {
+        // motorsPair.setBrake(hold);
         leftMotor.setBrake(hold);
         rightMotor.setBrake(hold);
     }
 
-    // Only a double motor output at a time
+    // Только для двух двигателей одновременно в моторной паре
     function splitDoubleOutput(out: Output): Output[] {
         if (out == Output.BC) return [Output.B, Output.C];
         else if (out == Output.AB) return [Output.A, Output.B];
@@ -39,7 +40,7 @@ namespace chassis {
         return [];
     }
     
-    // Get motor Output from output string
+    // Получить выход (Output) двигателей из входной строки
     function strNameToOutput(outStr: string): Output {
         if (outStr == "B+C") return Output.BC;
         else if (outStr == "A+B") return Output.AB;
@@ -139,10 +140,12 @@ namespace chassis {
             console.log("Error: the same motor is specified for the left and right motors!");
             control.assert(false, 99);
         }
-        leftMotor = newLeftMotors; // Set left motor instance
-        rightMotor = newRightMotors; // Set right motor instance
-        leftMotor.setInverted(setLeftMotReverse); // Set left motor revers property
-        rightMotor.setInverted(setRightMotReverse); // Set right motor revers property
+        leftMotor = newLeftMotors; // Установите левый экземпляр двигателя
+        rightMotor = newRightMotors; // Установите правильный экземпляр двигателя
+        leftMotor.setInverted(setLeftMotReverse); // Установите свойство реверса левого двигателя
+        rightMotor.setInverted(setRightMotReverse); // Установите правильное свойство реверса двигателя
+        leftMotor.setRegulated(false); // Отключить регулирование скорости прошивки левого мотора
+        rightMotor.setRegulated(false); // Отключить регулирование скорости прошивки правого мотора
         const motorLeftType = leftMotor.toString().split(" ")[0][0];
         const motorRightType = leftMotor.toString().split(" ")[0][0];
         if (motorLeftType === "M" && motorRightType === "M") motorMaxRPM = 250;
@@ -184,20 +187,20 @@ namespace chassis {
      * @param Kp значение синхронизации Kp, eg: 0.03
      * @param Ki значение синхронизации Ki, eg: 0
      * @param Kd значение синхронизации Kd, eg: 0.5
-     * @param N значение фильтра Kd синхронизации, eg: 0
+     * @param Kf значение фильтра дифференциального регулятора синхронизации, eg: 0
     */
     //% blockId="ChassisSetSyncRegulatorGains"
-    //% block="set chassis sync pid gains Kp = $Kp Ki = $Ki Kd = $Kd||N = $N"
-    //% block.loc.ru="установить коэффиценты синхронизации шасси Kp = $Kp Ki = $Ki Kd = $Kd||N = $N"
+    //% block="set chassis sync pid gains Kp = $Kp Ki = $Ki Kd = $Kd||Kf = $Kf"
+    //% block.loc.ru="установить коэффиценты синхронизации шасси Kp = $Kp Ki = $Ki Kd = $Kd||Kf = $Kf"
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% weight="95"
     //% group="Установить"
-    export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number, N?: number) {
+    export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number, Kf?: number) {
         syncKp = Kp;
         syncKi = Ki;
         syncKd = Kd;
-        if (N) syncN = N;
+        if (Kf) syncKf = Kf;
     }
 
     export function getSyncRegulatorKp(): number {
@@ -212,8 +215,8 @@ namespace chassis {
         return syncKd;
     }
 
-    export function getSyncRegulatorKdFilter(): number {
-        return syncN;
+    export function getSyncRegulatorKf(): number {
+        return syncKf;
     }
 
     /**
@@ -280,11 +283,12 @@ namespace chassis {
 
     /**
      * Отключите двигатели шасси.
-     * @param setBrake удерживайте двигатели при торможении, eg: true
+     * @param setBrake удерживайте двигатели при торможении, если не установить, то состояние торможение не меняется с прошлого раза, eg: true
+     * @param settleTime время для стабилизации шасси после остановки, eg: 100
      */
     //% blockId="ChassisStop"
-    //% block="chassis stop||hold $setBrake"
-    //% block.loc.ru="остановить шасси||удержание $setBrake"
+    //% block="chassis stop||hold $setBrake|settle time $settleTime"
+    //% block.loc.ru="остановить шасси||удержание $setBrake|время стабилизации $settleTime"
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
     //% setBrake.shadow="toggleOnOff"
@@ -306,7 +310,7 @@ namespace chassis {
         pause(Math.max(0, settleTime)); // Settle chassis delay
     }
 
-    // Получить скорости моторов при рулевом управлении
+    // Получить скорости моторов от рулевого параметра и скорости
     export function getSpeedsAtSteering(turnRatio: number, speed: number): { speedLeft: number, speedRight: number } {
         speed = Math.clamp(-100, 100, speed >> 0);
         turnRatio = Math.floor(turnRatio);
@@ -340,7 +344,7 @@ namespace chassis {
     /**
      * Команда рулевого управления моторами шасси.
      * @param turnRatio рулевой параметр, если больше 0, то поворачиваем вправо, а если меньше, то влево, eg: 0
-     * @param speed скорость движения, eg: 50
+     * @param speed скорость (мощность) движения, eg: 50
      */
     //% blockId="ChassisSteeringCommand"
     //% block="steering command in direction $turnRatio at $speed\\%"
@@ -355,14 +359,14 @@ namespace chassis {
         setSpeedsCommand(speedLeft, speedRight);
     }
 
-    // Команда установки моторам скоростей
+    // Команда установки моторам скоростей (мощностей)
     export function setSpeedsCommand(speedLeft: number, speedRight: number) {
         leftMotor.run(speedLeft); rightMotor.run(speedRight);
     }
 
     /**
      * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с), используя модель одноколесного велосипеда.
-     * @param speed скорость центральной точки между двигателями, eg: 10
+     * @param speed скорость (мощность) центральной точки между двигателями, eg: 10
      * @param rotationSpeed вращение робота вокруг центральной точки, eg: 30
      * @param distance расстояние до места проезда, eg: 150
      * @param unit размерность единицы перемещения, eg: MeasurementUnit.Millimeters
