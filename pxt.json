@@ -6,7 +6,7 @@
     "dependencies": {
         "ev3": "*",
         "automation": "github:microsoft/pxt-automation#v0.0.3",
-        "control-tools": "github:theb0nny/makecode-ev3-control-tools#v1.0.4"
+        "control-tools": "github:theb0nny/makecode-ev3-control-tools#v1.0.5"
     },
     "files": [
         "README.md",
