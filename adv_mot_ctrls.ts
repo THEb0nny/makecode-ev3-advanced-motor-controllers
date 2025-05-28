@@ -52,7 +52,6 @@ namespace advmotctrls {
     }
 
     /**
-     * Configuration of synchronization of chassis motors at the required speed (power).
      * Конфигурация синхронизации моторов шассии на нужной скорости (мощности).
      * @param vLeft входное значение скорости левого мотора, eg: 50
      * @param vRight входное значение скорости правого мотора, eg: 50
@@ -73,9 +72,6 @@ namespace advmotctrls {
     }
 
     /**
-     * Calculate the synchronization error of the chassis motors using the values from the encoders.
-     * Speed ​​(power) is constant.
-     * Returns the error number for the controller.
      * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров.
      * Скорость (мощность) постоянная.
      * Возвращает число ошибки для регулятора.
@@ -93,8 +89,6 @@ namespace advmotctrls {
     }
     
     /**
-     * To obtain the values of speeds (power) for the chassis motors based on the control action received from the sync regulator.
-     * Returns the interface of the speed (power) of the left and right motors.
      * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора синхронизации.
      * Возвращает интерфейс скорости (мощности) левого и правого моторов.
      * @param U входное значение управляющего воздействия от регулятора, eg: 0
@@ -115,8 +109,6 @@ namespace advmotctrls {
     }
     
     /**
-     * Calculate the synchronization error of the chassis motors using the values from the encoders.
-     * Returns the error number for the controller.
      * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров и с учётом необходимых скоростей (мощностей) для моторов.
      * Возвращает число ошибки для регулятора.
      * @param eLeft входное значение энкодера левого мотора, eg: 0
@@ -135,7 +127,6 @@ namespace advmotctrls {
     }
 
     /**
-     * Get speeds (powers) for motors by U action of the regulator and the required speeds (powers).
      * Получить speeds (powers) для моторов по U воздействию регулятора и с необходимыми скоростями (мощностями).
      * @param U входное значение с регулятора, eg: 0
      * @param vLeft входное значение скорости (мощности) левого мотора, eg: 50
@@ -157,7 +148,6 @@ namespace advmotctrls {
     }
 
     /**
-     * Acceleration and deceleration configuration of one motor.
      * Конфигурация ускорения и замедления одного мотора.
      * @param minPwr входное значение скорости (мощности) на старте, eg: 20
      * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
@@ -185,7 +175,6 @@ namespace advmotctrls {
     }
     
     /**
-     * Calculation of acceleration/deceleration for one motor.
      * Расчёт ускорения/замедления для одного мотора.
      * @param enc входное значение энкодера мотора, eg: 0
      */
@@ -223,7 +212,6 @@ namespace advmotctrls {
     }
 
     /**
-     * The configuration of acceleration and deceleration of the chassis of two motors.
      * Конфигурация ускорения и замедления шассии двух моторов.
      * @param minStartPwr входное значение скорости (мощности) на старте, eg: 20
      * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
@@ -255,7 +243,6 @@ namespace advmotctrls {
     }
 
     /**
-     * Calculation of acceleration/deceleration for two motors.
      * Расчёт ускорения/замедления для двух моторов.
      * @param eLeft входное значение энкодера левого мотора, eg: 0
      * @param eRight входное значение энкодера правого мотора, eg: 0
@@ -299,7 +286,6 @@ namespace advmotctrls {
     }
 
     /**
-     * The acceleration and deceleration configuration of the chassis of two motors with different maximum speeds.
      * Конфигурация ускорения и замедления шасси двух моторов с разными максимальными скоростями.
      * @param startingPwrLeft входное значение скорости (мощности) левого мотора на старте, eg: 20
      * @param startingPwrRight входное значение скорости (мощности) правого мотора на старте, eg: 20
@@ -359,7 +345,6 @@ namespace advmotctrls {
     }
 
     /**
-     * Acceleration/deceleration calculation for two motors with different maximum speeds (powers).
      * Расчёт ускорения/замедления для двух моторов с разными максимальными скоростями (мощностями).
      * @param eLeft входное значение энкодера левого мотора, eg: 0
      * @param eRight входное значение энкодера правого мотора, eg: 0

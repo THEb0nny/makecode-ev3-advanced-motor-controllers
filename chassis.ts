@@ -49,11 +49,10 @@ namespace chassis {
     }
 
     /**
-     * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
      * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
-     * @param newMotorsPair motors pair, eg: motors.largeBC
-     * @param setLeftMotReverse left motor reverse property, eg: false
-     * @param setRightMotReverse right motor reverse property, eg: false
+     * @param newMotorsPair пара двигателей, eg: motors.largeBC
+     * @param setLeftMotReverse свойство реверса левого двигателя, eg: false
+     * @param setRightMotReverse свойство реверса правого двигателя, eg: false
      */
     //% blockId="ChassisSetChassis"
     //% block="set motors to chassis $newMotorsPair||at reverse $setLeftMotReverse $setRightMotReverse"
@@ -116,12 +115,11 @@ namespace chassis {
     }
 
     /**
-     * Sets the motors used by the chassis. If necessary, you can immediately set the reverse properties.
      * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
-     * @param newLeftMotors left motors in chassis, eg: motors.largeB
-     * @param newRightMotors right motors in chassis, eg: motors.largeC
-     * @param setLeftMotReverse left motor reverse property, eg: false
-     * @param setRightMotReverse right motor reverse property, eg: false
+     * @param newLeftMotors левый двигатель в шасси, eg: motors.largeB
+     * @param newRightMotors правый двигатель в шасси, eg: motors.largeC
+     * @param setLeftMotReverse свойство реверса левого двигателя, eg: false
+     * @param setRightMotReverse свойство реверса правого двигателя, eg: false
      */
     //% blockId="ChassisSetChassisMotors"
     //% block="set motors to chassis $newLeftMotors $newRightMotors|at reverse $setLeftMotReverse $setRightMotReverse"
@@ -152,9 +150,8 @@ namespace chassis {
     }
 
     /**
-     * Set the speed regulated for the chassis motors.
      * Установить регулирование скоростей для моторов шасси.
-     * @param speed regulation, eg: false
+     * @param regulated регулирование скорости, eg: false
      */
     //% blockId="ChassisSetSpeedRegulated"
     //% block="set speed regulated motors to chassis $regulated"
@@ -169,7 +166,6 @@ namespace chassis {
     }
 
     /**
-     * Set chasiss brake settle time.
      * Установить время стабилизации тормоза шасси.
      * @param settleTime время стабилизации шасси в мсек, eg: 100
      */
@@ -184,12 +180,11 @@ namespace chassis {
     }
 
     /**
-     * Set the chassis synchronization control values.
      * Установите управляющие значения синхронизации шасси.
-     * @param Kp sync kp input value, eg: 0.03
-     * @param Ki sync ki input value, eg: 0
-     * @param Kd sync kd input value, eg: 0.5
-     * @param N sync kd filter, eg: 0
+     * @param Kp значение синхронизации Kp, eg: 0.03
+     * @param Ki значение синхронизации Ki, eg: 0
+     * @param Kd значение синхронизации Kd, eg: 0.5
+     * @param N значение фильтра Kd синхронизации, eg: 0
     */
     //% blockId="ChassisSetSyncRegulatorGains"
     //% block="set chassis sync pid gains Kp = $Kp Ki = $Ki Kd = $Kd||N = $N"
@@ -222,10 +217,9 @@ namespace chassis {
     }
 
     /**
-     * Sets the wheel diametr.
      * Задает диаметр колеса.
-     * @param diametr the diametr of a wheel, eg: 56
-     * @param unit dimension of the unit of diametr, eg: MeasurementUnit.Millimeters
+     * @param diametr диаметр колеса, eg: 56
+     * @param unit размер единицы измерения диаметра, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetWheelВiametr"
     //% block="set wheel diametr = $diametr $unit"
@@ -239,9 +233,8 @@ namespace chassis {
     }
 
     /**
-     * Gets the wheel diametr.
      * Возвращает диаметр колеса.
-     * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
+     * @param unit размерность единицы измерения длины, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisGetWheelDiametr"
     //% block="get wheel diametr $unit"
@@ -255,10 +248,9 @@ namespace chassis {
     }
 
     /**
-     * Sets the base length.
      * Устанавливает длину базы (колеи).
-     * @param length the base length, eg: 130
-     * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
+     * @param length расстояние между центрами колёс в мм, eg: 130
+     * @param unit размерность единицы измерения расстояния, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetBaseLength"
     //% block="set base length = $length $unit"
@@ -272,9 +264,8 @@ namespace chassis {
     }
 
     /**
-     * Gets the base length.
      * Получить длину базы (колеи).
-     * @param unit dimension of the unit of length, eg: MeasurementUnit.Millimeters
+     * @param unit размерность единицы измерения длины, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisGetBaseLength"
     //% block="get base length $unit"
@@ -288,9 +279,8 @@ namespace chassis {
     }
 
     /**
-     * Stop the chassis motors.
-     * Заглушите двигатели шасси.
-     * @param setBrake hold the motors when braking, eg: true
+     * Отключите двигатели шасси.
+     * @param setBrake удерживайте двигатели при торможении, eg: true
      */
     //% blockId="ChassisStop"
     //% block="chassis stop||hold $setBrake"
@@ -348,7 +338,6 @@ namespace chassis {
     }
 
     /**
-     * Chassis steer motor control command.
      * Команда рулевого управления моторами шасси.
      * @param turnRatio рулевой параметр, если больше 0, то поворачиваем вправо, а если меньше, то влево, eg: 0
      * @param speed скорость движения, eg: 50
@@ -372,12 +361,11 @@ namespace chassis {
     }
 
     /**
-     * Makes a differential drive robot move with a given speed (cm/s) and rotation rate (deg/s) using a unicycle model.
      * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с), используя модель одноколесного велосипеда.
-     * @param speed speed of the center point between motors, eg: 10
-     * @param rotationSpeed rotation of the robot around the center point, eg: 30
-     * @param distance driving distance, eg: 150
-     * @param unit dimension of the unit of movement, eg: MeasurementUnit.Millimeters
+     * @param speed скорость центральной точки между двигателями, eg: 10
+     * @param rotationSpeed вращение робота вокруг центральной точки, eg: 30
+     * @param distance расстояние до места проезда, eg: 150
+     * @param unit размерность единицы перемещения, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisDrive"
     //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance $unit"
@@ -417,13 +405,12 @@ namespace chassis {
     }
     
     /**
-     * Synchronization of motors in chassis with setting speeds for each motor. No acceleration or deceleration support.
      * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
-     * @param vLeft left motor speed input value, eg: 50
-     * @param vRight right motor speed input value, eg: 50
-     * @param value move duration or rotation, eg: 500
-     * @param unit unit of the value, eg: MoveUnit.Degrees
-     * @param braking braking type, eg: Braking.Hold
+     * @param vLeft входное значение частоты вращения левого двигателя, eg: 50
+     * @param vRight входное значение частоты вращения правого двигателя, eg: 50
+     * @param value размерность вращения, eg: 500
+     * @param unit значение единицы измерения, eg: MoveUnit.Degrees
+     * @param braking тип торможения, eg: Braking.Hold
      */
     //% blockId="ChassisSyncMovement"
     //% block="sync chassis movement at $vLeft\\% $vRight\\% for value = $value $unit braking $braking"
@@ -478,13 +465,12 @@ namespace chassis {
     }
 
     /**
-     * Synchronization of motors in chassis with setting speeds (powers) for each motor. No acceleration or deceleration support.
      * Синхронизация двигателей в шасси с настройкой скоростей (мощностей) для каждого двигателя. Нет поддержки ускорения или замедления.
-     * @param vLeft left motor speed input value, eg: 50
-     * @param vRight right motor speed input value, eg: 50
-     * @param value move duration or rotation, eg: 500
-     * @param unit unit of the value, eg: MoveUnit.Degrees
-     * @param braking braking type, eg: Braking.Hold
+     * @param turnRatio рулевой параметр, если больше 0, то поворачиваем вправо, а если меньше, то влево, eg: 0
+     * @param speed входное значение скорости (мощности), eg: 50
+     * @param value размерность вращения, eg: 500
+     * @param unit значение единицы измерения, eg: MoveUnit.Degrees
+     * @param braking тип торможения, eg: Braking.Hold
      */
     //% blockId="ChassisSyncSteeringMovement"
     //% block="sync chassis movement in direction $turnRatio at $speed\\% for value = $value $unit braking $braking"
@@ -526,14 +512,13 @@ namespace chassis {
     }
 
     /**
-     * Synchronization with smooth acceleration and deceleration during straight-line motion. The distance values are set in encoder ticks.
      * Синхронизация с плавным ускорением и замедлением при прямолинейном движении. Значения расстояний устанавливается в тиках энкодера.
-     * @param startSpeed start motor speed, eg: 15
-     * @param maxSpeed max motor speed, eg: 50
-     * @param finishSpeed finish motor speed, eg: 10
-     * @param totalValue total length encoder value at, eg: 300
-     * @param accelValue accelerate length encoder value, eg: 50
-     * @param decelValue decelerate length encoder value, eg: 100
+     * @param startSpeed начальная скорость (мощность) двигателя, eg: 20
+     * @param maxSpeed максимальная скорость (мощность) двигателя, eg: 50
+     * @param finishSpeed конечная скорость (мощность) двигателя, eg: 10
+     * @param totalValue значение общей длины для энкодера, eg: 300
+     * @param accelValue значение длины ускорения для энкодера, eg: 50
+     * @param decelValue значение длины замедления для энкодера, eg: 100
      */
     //% blockId="ChassisSyncRampMovement"
     //% block="sync chassis ramp movement at start $startSpeed\\% max $maxSpeed\\% finish $finishSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
