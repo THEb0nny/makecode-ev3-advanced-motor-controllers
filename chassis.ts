@@ -170,12 +170,12 @@ namespace chassis {
     }
 
     /**
-     * Установить время стабилизации тормоза шасси.
+     * Установить время стабилизации тормоза шасси в мсек.
      * @param settleTime время стабилизации шасси в мсек, eg: 100
      */
     //% blockId="ChassisSetBrakeSettleTime"
-    //% block="set settle time after break $settleTime"
-    //% block.loc.ru="установить время стабилизации после остановки $settleTime"
+    //% block="set settle time after break $settleTime ms"
+    //% block.loc.ru="установить время стабилизации после остановки $settleTime мсек"
     //% inlineInputMode="inline"
     //% weight="96"
     //% group="Установить"
