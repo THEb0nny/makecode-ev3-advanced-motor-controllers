@@ -22,9 +22,9 @@ const enum Braking {
     //% block="break at hold"
     //% block.loc.ru="тормоз с удержанием"
     Hold,
-    //% block="no break"
+    //% block="float"
     //% block.loc.ru="тормоз без удержания"
-    NoBreak,
+    Float,
     //% block="nothing"
     //% block.loc.ru="не тормозить"
     NoStop

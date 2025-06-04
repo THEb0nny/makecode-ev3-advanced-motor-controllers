@@ -465,7 +465,7 @@ namespace chassis {
             control.pauseUntilTime(currTime, 1); // Wait until the control cycle reaches the set amount of time passed
         }
         if (braking == Braking.Hold) stop(true); // Break at hold
-        else if (braking == Braking.NoBreak) stop(false); // No hold break
+        else if (braking == Braking.Float) stop(false); // No hold break
         else setSpeedsCommand(vLeft, vRight); // Forward
     }
 
