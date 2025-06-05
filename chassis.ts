@@ -25,10 +25,10 @@ namespace chassis {
     export const pidChassisSync = new automation.PIDController(); // PID для синхронизации двигателей шасси
 
     // Функция установки свойства удержания сразу для двух двигателей шасси
-    export function setBrake(hold: boolean) {
-        // motorsPair.setBrake(hold);
-        leftMotor.setBrake(hold);
-        rightMotor.setBrake(hold);
+    export function setBrake(hold: Braking) {
+        // motorsPair.setBrake(hold == Braking.Hold);
+        leftMotor.setBrake(hold == Braking.Hold);
+        rightMotor.setBrake(hold == Braking.Hold);
     }
 
     // Только для двух двигателей одновременно в моторной паре
@@ -284,7 +284,7 @@ namespace chassis {
 
     /**
      * Отключите двигатели шасси.
-     * @param setBrake удерживайте двигатели при торможении, если не установить, то состояние торможение не меняется с прошлого раза, eg: true
+     * @param setBrake удерживайте двигатели при торможении, если не установить, то состояние торможение не меняется с прошлого раза, eg: Braking.Hold
      * @param settleTime время для стабилизации шасси после остановки, eg: 100
      */
     //% blockId="ChassisStop"
@@ -292,16 +292,13 @@ namespace chassis {
     //% block.loc.ru="остановить шасси||удержание $setBrake|время стабилизации $settleTime"
     //% inlineInputMode="inline"
     //% expandableArgumentMode="toggle"
-    //% setBrake.shadow="toggleOnOff"
     //% weight="99"
     //% group="Move"
-    export function stop(setBrake?: boolean, settleTime?: number) {
+    export function stop(setBrake?: Braking, settleTime?: number) {
         //if (!motorsPair) return;
         if (!settleTime) settleTime = brakeSettleTime;
         if (setBrake) {
-            // motorsPair.setBrake(setBrake);
-            leftMotor.setBrake(setBrake);
-            rightMotor.setBrake(setBrake);
+            chassis.setBrake(setBrake);
         }
         // motorsPair.setBrakeSettleTime(0);
         // motorsPair.stop();
@@ -383,7 +380,7 @@ namespace chassis {
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
         if (!speed || wheelDiametr == 0 || baseLength == 0) {
-            stop(true);
+            stop(Braking.Hold);
             return;
         }
 
@@ -415,7 +412,7 @@ namespace chassis {
      * @param vRight входное значение частоты вращения правого двигателя, eg: 50
      * @param value размерность вращения, eg: 500
      * @param unit значение единицы измерения, eg: MoveUnit.Degrees
-     * @param braking тип торможения, eg: Braking.Hold
+     * @param braking тип торможения, eg: MotionBraking.Hold
      */
     //% blockId="ChassisSyncMovement"
     //% block="sync chassis movement at $vLeft\\% $vRight\\% for value = $value $unit braking $braking"
@@ -425,12 +422,12 @@ namespace chassis {
     //% vRight.shadow="motorSpeedPicker"
     //% weight="98" blockGap="8"
     //% group="Синхронизированное движение"
-    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
+    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: MotionBraking = MotionBraking.Hold) {
         // if (!motorsPair) return;
         if (vLeft == 0 && vRight == 0 ||
             ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) ||
             ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
-            stop(true);
+            stop(Braking.Hold);
             return;
         }
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
@@ -464,9 +461,9 @@ namespace chassis {
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
             control.pauseUntilTime(currTime, 1); // Wait until the control cycle reaches the set amount of time passed
         }
-        if (braking == Braking.Hold) stop(true); // Break at hold
-        else if (braking == Braking.Float) stop(false); // No hold break
-        else setSpeedsCommand(vLeft, vRight); // Forward
+        if (braking == MotionBraking.Hold) stop(Braking.Hold); // Break at hold
+        else if (braking == MotionBraking.Float) stop(Braking.Float); // No hold break
+        else if (braking == MotionBraking.NoStop) setSpeedsCommand(vLeft, vRight); // Forward
     }
 
     /**
@@ -475,7 +472,7 @@ namespace chassis {
      * @param speed входное значение скорости (мощности), eg: 50
      * @param value размерность вращения, eg: 500
      * @param unit значение единицы измерения, eg: MoveUnit.Degrees
-     * @param braking тип торможения, eg: Braking.Hold
+     * @param braking тип торможения, eg: MotionBraking.Hold
      */
     //% blockId="ChassisSyncSteeringMovement"
     //% block="sync chassis movement in direction $turnRatio at $speed\\% for value = $value $unit braking $braking"
@@ -485,7 +482,7 @@ namespace chassis {
     //% speed.shadow="motorSpeedPicker"
     //% weight="98" blockGap="8"
     //% group="Синхронизированное движение"
-    export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: Braking = Braking.Hold) {
+    export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: MotionBraking = MotionBraking.Hold) {
         const { speedLeft, speedRight } = getSpeedsAtSteering(turnRatio, speed);
         syncMovement(speedLeft, speedRight, value, unit, braking);
     }
@@ -537,12 +534,12 @@ namespace chassis {
     export function syncRampMovement(startSpeed: number, maxSpeed: number, finishSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
         //if (!motorsPair) return;
         if (maxSpeed == 0 || totalValue == 0) {
-            stop(true);
+            stop(Braking.Hold);
             return;
         }
 
         executeRampMovement(startSpeed, maxSpeed, finishSpeed, accelValue, decelValue, totalValue); // Выполнение синхронизированного движения с фазами
-        stop(true); // Break at hold
+        stop(Braking.Hold); // Break at hold
     }
 
     /*

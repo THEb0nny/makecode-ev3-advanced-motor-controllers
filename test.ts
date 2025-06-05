@@ -75,7 +75,7 @@ function RampArcMovementExample() {
         if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
         control.pauseUntilTime(currTime, 1);
     }
-    chassis.stop(true);
+    chassis.stop(Braking.Hold);
 }
 
 function Test() {

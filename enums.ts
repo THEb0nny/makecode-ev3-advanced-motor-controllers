@@ -17,8 +17,18 @@ const enum WheelPivot {
     RightWheel
 }
 
-// Перечислении о типах торможения
+// Перечислении о типах торможения моторам
 const enum Braking {
+    //% block="break at hold"
+    //% block.loc.ru="тормоз с удержанием"
+    Hold,
+    //% block="float"
+    //% block.loc.ru="тормоз без удержания"
+    Float
+}
+
+// Перечислении о вариантах торможения при движении
+const enum MotionBraking {
     //% block="break at hold"
     //% block.loc.ru="тормоз с удержанием"
     Hold,
