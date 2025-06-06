@@ -28,8 +28,8 @@ namespace chassis {
     export function setBrake(hold: Braking) {
         // motorsPair.setBrake(hold == Braking.Hold);
         console.log(`hold: ${hold == Braking.Hold}`);
-        leftMotor.setBrake(hold == Braking.Hold);
-        rightMotor.setBrake(hold == Braking.Hold);
+        leftMotor.setBrake(hold == Braking.Hold ? true : false);
+        rightMotor.setBrake(hold == Braking.Hold ? true : false);
     }
 
     // Только для двух двигателей одновременно в моторной паре
@@ -300,6 +300,8 @@ namespace chassis {
         if (!settleTime) settleTime = brakeSettleTime;
         if (setBrake) {
             chassis.setBrake(setBrake);
+        } else {
+            console.log(`!setBrake`);
         }
         // motorsPair.setBrakeSettleTime(0);
         // motorsPair.stop();
