@@ -27,7 +27,6 @@ namespace chassis {
     // Функция установки свойства удержания сразу для двух двигателей шасси
     export function setBrake(hold: Braking) {
         // motorsPair.setBrake(hold == Braking.Hold);
-        console.log(`hold: ${hold == Braking.Hold}`);
         leftMotor.setBrake(hold == Braking.Hold ? true : false);
         rightMotor.setBrake(hold == Braking.Hold ? true : false);
     }
@@ -297,11 +296,9 @@ namespace chassis {
     //% group="Move"
     export function stop(setBrake?: Braking, settleTime?: number) {
         //if (!motorsPair) return;
-        if (!settleTime) settleTime = brakeSettleTime;
-        if (setBrake) {
+        if (settleTime >= 0) settleTime = brakeSettleTime;
+        if (setBrake !== undefined) {
             chassis.setBrake(setBrake);
-        } else {
-            console.log(`!setBrake`);
         }
         // motorsPair.setBrakeSettleTime(0);
         // motorsPair.stop();
