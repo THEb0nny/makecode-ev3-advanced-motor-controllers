@@ -504,6 +504,7 @@ namespace chassis {
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
+            console.log(`out.pwr: ${out.pwr}`);
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
