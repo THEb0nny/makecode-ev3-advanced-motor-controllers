@@ -504,7 +504,6 @@ namespace chassis {
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
-            console.log(`out.pwr: ${out.pwr}`);
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
             pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, 0);
@@ -540,7 +539,7 @@ namespace chassis {
         }
 
         executeRampMovement(startSpeed, maxSpeed, finishSpeed, accelValue, decelValue, totalValue); // Выполнение синхронизированного движения с фазами
-        stop(Braking.Hold); // Break at hold
+        stop(Braking.Hold); // Остановить с удержанием
     }
 
     /*
