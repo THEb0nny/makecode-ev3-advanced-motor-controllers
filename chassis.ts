@@ -27,8 +27,8 @@ namespace chassis {
     // Функция установки свойства удержания сразу для двух двигателей шасси
     export function setBrake(hold: Braking) {
         // motorsPair.setBrake(hold == Braking.Hold);
-        leftMotor.setBrake(hold == Braking.Hold ? true : false);
-        rightMotor.setBrake(hold == Braking.Hold ? true : false);
+        leftMotor.setBrake(hold == Braking.Hold);
+        rightMotor.setBrake(hold == Braking.Hold);
     }
 
     // Только для двух двигателей одновременно в моторной паре

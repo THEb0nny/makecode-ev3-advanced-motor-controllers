@@ -260,7 +260,7 @@ namespace advmotctrls {
         if (currEnc >= accMotorsTotalDist) {
             pwrOut = 0;
             done = true;
-        } else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) { // currEnc > accMotorsTotalDist / 2
+        } else if (currEnc > accMotorsTotalDist / 2) { // currEnc > accMotorsTotalDist / 2 // currEnc > accMotorsTotalDist - accMotorsDecelDist
             if (accMotorsDecelDist == 0) pwrOut = accMotorsMaxPwr;
             else pwrOut = (accMotorsMaxPwr - accMotorsEndPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsEndPwr; // pwr = (accMotorsMaxPwr - accMotorsMinPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsMinPwr;
             done = false;
