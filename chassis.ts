@@ -296,7 +296,7 @@ namespace chassis {
     //% group="Move"
     export function stop(setBrake?: Braking, settleTime?: number) {
         //if (!motorsPair) return;
-        if (settleTime >= 0) settleTime = brakeSettleTime;
+        if (settleTime == undefined) settleTime = brakeSettleTime;
         if (setBrake !== undefined) {
             chassis.setBrake(setBrake);
         }
