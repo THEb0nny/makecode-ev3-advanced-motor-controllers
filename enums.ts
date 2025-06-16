@@ -37,5 +37,5 @@ const enum MotionBraking {
     Float,
     //% block="nothing"
     //% block.loc.ru="не тормозить"
-    NoStop
+    Coasting
 }

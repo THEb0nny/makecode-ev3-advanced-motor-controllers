@@ -463,7 +463,7 @@ namespace chassis {
         }
         if (braking == MotionBraking.Hold) stop(Braking.Hold); // Break at hold
         else if (braking == MotionBraking.Float) stop(Braking.Float); // No hold break
-        else if (braking == MotionBraking.NoStop) setSpeedsCommand(vLeft, vRight); // Forward
+        else if (braking == MotionBraking.Coasting) setSpeedsCommand(vLeft, vRight); // Forward
     }
 
     /**
