@@ -308,9 +308,9 @@ namespace chassis {
         pause(Math.max(0, settleTime)); // Settle chassis delay
     }
 
-    export function getEncoderValues(): { encLeft: number, encRight: number } {
-        const encLeft = leftMotor.angle(), encRight = rightMotor.angle();
-        return { encLeft, encRight };
+    export function getEncoderValues(): { emLeft: number, emRight: number } {
+        const emLeft = leftMotor.angle(), emRight = rightMotor.angle();
+        return { emLeft, emRight };
     }
 
     // Получить скорости моторов от рулевого параметра и скорости
@@ -436,6 +436,7 @@ namespace chassis {
             stop(Braking.Hold);
             return;
         }
+        
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
         vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left and right motor before starting
@@ -500,8 +501,8 @@ namespace chassis {
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.reset();
 
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
-        // const { emlPrev, emrPrev } = getEncoderValues();
+        // const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
+        const { emLeft: emlPrev, emRight: emrPrev } = getEncoderValues();
 
         let prevTime = 0;
         while (true) {
