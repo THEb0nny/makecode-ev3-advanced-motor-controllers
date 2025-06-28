@@ -308,6 +308,11 @@ namespace chassis {
         pause(Math.max(0, settleTime)); // Settle chassis delay
     }
 
+    export function getEncoderValues(): { encLeft: number, encRight: number } {
+        const encLeft = leftMotor.angle(), encRight = rightMotor.angle();
+        return { encLeft, encRight };
+    }
+
     // Получить скорости моторов от рулевого параметра и скорости
     export function getSpeedsAtSteering(turnRatio: number, speed: number): { speedLeft: number, speedRight: number } {
         speed = Math.clamp(-100, 100, speed >> 0);
@@ -359,7 +364,8 @@ namespace chassis {
 
     // Команда установки моторам скоростей (мощностей)
     export function setSpeedsCommand(speedLeft: number, speedRight: number) {
-        leftMotor.run(speedLeft); rightMotor.run(speedRight);
+        leftMotor.run(speedLeft);
+        rightMotor.run(speedRight);
     }
 
     /**
@@ -494,7 +500,8 @@ namespace chassis {
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.reset();
 
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left motor and right motor before starting
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
+        // const { emlPrev, emrPrev } = getEncoderValues();
 
         let prevTime = 0;
         while (true) {
