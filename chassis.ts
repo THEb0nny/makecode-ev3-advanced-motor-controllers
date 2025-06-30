@@ -221,65 +221,53 @@ namespace chassis {
     }
 
     /**
-     * Задает диаметр колеса.
+     * Задает диаметр колеса в мм.
      * @param diametr диаметр колеса, eg: 56
-     * @param unit размер единицы измерения диаметра, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetWheelВiametr"
-    //% block="set wheel diametr = $diametr $unit"
-    //% block.loc.ru="установить диаметр колёс шасси = $diametr $unit"
+    //% block="set wheel diametr = $diametr mm"
+    //% block.loc.ru="установить диаметр колёс шасси = $diametr мм"
     //% weight="95" blockGap="8"
     //% group="Колёса"
-    export function setWheelDiametr(diametr: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (unit == MeasurementUnit.Centimeters) wheelDiametr = diametr;
-        else if (unit == MeasurementUnit.Millimeters) wheelDiametr = diametr / 10;
-        else return;
+    export function setWheelDiametr(diametr: number) {
+        wheelDiametr = diametr;
     }
 
     /**
      * Возвращает диаметр колеса.
-     * @param unit размерность единицы измерения длины, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisGetWheelDiametr"
-    //% block="get wheel diametr $unit"
-    //% block.loc.ru="диаметр колёс шасси в $unit"
+    //% block="get wheel diametr in mm"
+    //% block.loc.ru="диаметр колёс шасси в мм"
     //% weight="94"
     //% group="Колёса"
     export function getWheelDiametr(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
-        if (unit == MeasurementUnit.Centimeters) return wheelDiametr;
-        else if (unit == MeasurementUnit.Millimeters) return wheelDiametr * 10;
-        return 0;
+        return wheelDiametr;
     }
 
     /**
-     * Устанавливает длину базы (колеи).
+     * Устанавливает длину базы (колеи) в мм.
      * @param length расстояние между центрами колёс в мм, eg: 130
-     * @param unit размерность единицы измерения расстояния, eg: MeasurementUnit.Millimeters
      */
     //% blockId="ChassisSetBaseLength"
     //% block="set base length = $length $unit"
-    //% block.loc.ru="установить размер колеи шасси = $length $unit"
+    //% block.loc.ru="установить размер колеи шасси = $length"
     //% weight="93" blockGap="8"
     //% group="Колея"
-    export function setBaseLength(length: number, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (unit == MeasurementUnit.Centimeters) baseLength = length;
-        else if (unit == MeasurementUnit.Millimeters) baseLength = length / 10;
-        return;
+    export function setBaseLength(length: number) {
+        baseLength = length;
     }
 
     /**
-     * Получить длину базы (колеи).
-     * @param unit размерность единицы измерения длины, eg: MeasurementUnit.Millimeters
+     * Получить длину базы (колеи) в мм.
      */
     //% blockId="ChassisGetBaseLength"
-    //% block="get base length $unit"
-    //% block.loc.ru="размер колеи шасси в $unit"
+    //% block="get base length in mm"
+    //% block.loc.ru="размер колеи шасси в мм"
     //% weight="92"
     //% group="Колея"
-    export function getBaseLength(unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (unit == MeasurementUnit.Centimeters) return baseLength;
-        else if (unit == MeasurementUnit.Millimeters) return baseLength * 10;
-        return 0;
+    export function getBaseLength() {
+        return baseLength;
     }
 
     /**
@@ -391,9 +379,9 @@ namespace chassis {
         }
 
         // Speed is expressed in %
-        const D = wheelDiametr; // cm
+        const D = wheelDiametr * 10; // cm
         const R = D / 2; // cm
-        const L = baseLength; // cm
+        const L = baseLength * 10; // cm
 
         const maxw = motorMaxRPM / 60 * 2 * Math.PI; // rad/s
         const maxv = maxw * R; // cm/s
