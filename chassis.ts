@@ -101,6 +101,8 @@ namespace chassis {
                 //console.log(`new rightMotor2: ${rightMotor}`);
             }
         }
+        leftMotor.setRegulated(false); // Отключить регулирование скорости прошивки левого мотора
+        rightMotor.setRegulated(false); // Отключить регулирование скорости прошивки правого мотора
         //console.log(`reverse ${setLeftMotReverse}, ${setRightMotReverse}`);
         if (setLeftMotReverse != undefined) {
             leftMotor.setInverted(setLeftMotReverse);
