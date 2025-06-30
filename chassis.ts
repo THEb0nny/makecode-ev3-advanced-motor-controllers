@@ -1,6 +1,6 @@
 /**
- * A differential drive robot.
- * Робот с дифференциальным приводом.
+ * A differential drive chassis robot.
+ * Шасси робота с дифференциальным приводом.
  */
 //% block="Chassis"
 //% block.loc.ru="Шасси"
