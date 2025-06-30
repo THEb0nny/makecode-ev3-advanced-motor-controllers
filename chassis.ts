@@ -68,7 +68,7 @@ namespace chassis {
     //% subcategory="Свойства"
     //% group="Установить"
     //% blockHidden="true"
-    function setChassis(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse?: boolean, setRightMotReverse?: boolean) {
+    function setChassis(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
         return;
         /*
         motorsPair = newMotorsPair;
