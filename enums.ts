@@ -1,3 +1,5 @@
+// https://www.reddit.com/r/AskPhysics/comments/1b8825c/what_does_coasting_mean_in_physics/?tl=ru
+
 const enum MeasurementUnit {
     //% block="cm"
     //% block.loc.ru="см"
