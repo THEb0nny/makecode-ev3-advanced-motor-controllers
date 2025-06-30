@@ -12,15 +12,15 @@ namespace chassis {
     export let rightMotor: motors.Motor; // Правый двигатель в шасси
 
     let motorMaxRPM: number = 0; // Максимальная частота (rpm) вращения двигателя
-    let wheelDiametr: number = 0; // Радиус колеса (см)
-    let baseLength: number = 0; // Расстояние между колесами (см)
+    let wheelDiametr: number = 0; // Радиус колеса в мм
+    let baseLength: number = 0; // Расстояние между колесами в мм
 
     let syncKp: number = 0.03; // Пропорциональный коэффициент синхронизации
     let syncKi: number = 0; // Интегральный коэффициент синхронизации
     let syncKd: number = 0.5; // Дифференциальный коэффициент синхронизации
     let syncKf: number = 0; // Фильтр дифференциального регулятора синхронизации
 
-    let brakeSettleTime = 10; // Время срабатывания тормоза шасси (мс)
+    let brakeSettleTime = 10; // Время срабатывания тормоза шасси (мсек)
 
     export const pidChassisSync = new automation.PIDController(); // PID для синхронизации двигателей шасси
 
