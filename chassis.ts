@@ -375,7 +375,7 @@ namespace chassis {
     //% blockHidden="true"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         // if (!motorsPair) return;
-        if (!speed || wheelDiametr == 0 || baseLength == 0) {
+        if (speed == 0 || wheelDiametr == 0 || baseLength == 0) {
             stop(Braking.Hold);
             return;
         }
