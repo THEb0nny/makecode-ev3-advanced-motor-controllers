@@ -20,7 +20,7 @@ namespace chassis {
     let syncKd: number = 0.5; // Дифференциальный коэффициент синхронизации
     let syncKf: number = 0; // Фильтр дифференциального регулятора синхронизации
 
-    let brakeSettleTime = 10; // Время срабатывания тормоза шасси (мсек)
+    let brakeSettleTime = 10; // Время для стабилизации после тормоза шасси (мсек)
 
     export const pidChassisSync = new automation.PIDController(); // PID для синхронизации двигателей шасси
 
@@ -292,20 +292,15 @@ namespace chassis {
         }
         // motorsPair.setBrakeSettleTime(0);
         // motorsPair.stop();
-        leftMotor.setBrakeSettleTime(0); rightMotor.setBrakeSettleTime(0); // Set the motors separately to wait for stabilization when stopping at 0
-        leftMotor.stop(); rightMotor.stop(); // Motors stop command
-        leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Return the motors separately to waiting for stabilization when stopping at 10
-        pause(Math.max(0, settleTime)); // Settle chassis delay
+        leftMotor.setBrakeSettleTime(0); rightMotor.setBrakeSettleTime(0); // Установить двигателям по отдельности задержку для стабилизации при остановке на 0, т.к. нам не нужно, чтобы один мотор отстаналвивался и ждал, а потом это же делал второй
+        leftMotor.stop(); rightMotor.stop(); // Команда остановки моторам
+        leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Установить обратно моторам по отдельности ожидание для стабилизации
+        pause(Math.max(0, settleTime)); // Пауза для стабилизации шассии
     }
 
-    export function getEncoderValues(): { emLeft: number, emRight: number } {
-        const emLeft = leftMotor.angle(), emRight = rightMotor.angle();
-        return { emLeft, emRight };
-    }
-
-    // Получить скорости моторов от рулевого параметра и скорости
+    // Получить скорости моторов при входном значении рулевого параметра и скорости
     export function getSpeedsAtSteering(turnRatio: number, speed: number): { speedLeft: number, speedRight: number } {
-        speed = Math.clamp(-100, 100, speed >> 0);
+        speed = Math.clamp(-100, 100, speed >> 0); // Ограничиваем скорость от -100 до 100 и отсекаем дробную часть
         turnRatio = Math.floor(turnRatio);
         turnRatio = Math.clamp(-200, 200, turnRatio >> 0);
         let speedLeft = 0, speedRight = 0;
@@ -427,40 +422,42 @@ namespace chassis {
             return;
         }
         
-        vLeft = Math.clamp(-100, 100, vLeft >> 0); // We limit the speed of the left motor from -100 to 100 and cut off the fractional part
-        vRight = Math.clamp(-100, 100, vRight >> 0); // We limit the speed of the right motor from -100 to 100 and cut off the fractional part
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // We read the value from the encoder from the left and right motor before starting
-        if (unit == MoveUnit.Rotations) value /= 360; // Convert degrees to revolutions if the appropriate mode is selected
-        const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // The value that the left and right motor must pass
-        const emrValue = (Math.abs(vRight) != 0 ? value : 0); // The value that the right motor must pass
+        vLeft = Math.clamp(-100, 100, vLeft >> 0); // Ограничиваем скорость левого мотора от -100 до 100 и отсекаем дробную часть
+        vRight = Math.clamp(-100, 100, vRight >> 0); // Ограничиваем скорость правого мотора от -100 до 100 и отсекаем дробную часть
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском считываем значение с энкодеров левого и правого двигателя
+        if (unit == MoveUnit.Rotations) value /= 360; // Преобразуем градусы в обороты, если выбран соответствующий режим
+        const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // Значение, которое должен выполнить левый двигатель, если скорость мотора не 0
+        const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
 
-        advmotctrls.syncMotorsConfig(vLeft, vRight); // Set motor speeds for subsequent regulation
-        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Setting the regulator coefficients
-        pidChassisSync.setControlSaturation(-100, 100); // Regulator limitation
-        pidChassisSync.reset(); // Reset pid controller
+        advmotctrls.syncMotorsConfig(vLeft, vRight); // Установите скорости двигателя для последующего регулирования
+        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
+        pidChassisSync.setControlSaturation(-100, 100); // Ограничение регулятора
+        pidChassisSync.reset(); // Сброс ПИД-регулятора
 
-        let prevTime = 0; // Last time time variable for loop
-        const startTime = control.millis() * (unit == MoveUnit.Seconds ? 0.001 : 1); // We fix the time before the start of the regulation cycle
-        const endTime = (unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds ? startTime + value : 0); // We record the end time of the regulation cycle if the appropriate mode is selected
-        while (true) { // Synchronized motion control cycle
+        let prevTime = 0; // Переменная для хранения предыдущего времени для цикла регулятора
+        if (unit == MoveUnit.Seconds) value *= 0.001; // Если значение было указано в сек, то перевести его в мсек
+        const startTime = control.millis() * (unit == MoveUnit.Seconds ? 0.001 : 1); // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
+        const endTime = (unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds ? startTime + value : 0); // Вычисляем время окончания цикла регулирования, если выбран соответствующий режим
+        while (true) { // Цикл синхронизации движения
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Get left motor and right motor encoder current value
+            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
             if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) &&
-                Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break;
-            else if (unit == MoveUnit.MilliSeconds && control.millis() >= endTime) break;
-            else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break;
-            let error = advmotctrls.getErrorSyncMotors(eml, emr); // Find out the error in motor speed control
-            pidChassisSync.setPoint(error); // Transfer control error to controller
-            let U = pidChassisSync.compute(dt, 0); // Find out and record the control action of the regulator
-            let powers = advmotctrls.getPwrSyncMotors(U); // Find out the power of motors for regulation
-            setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Set power/speed motors
-            control.pauseUntilTime(currTime, 1); // Wait until the control cycle reaches the set amount of time passed
+                Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break; // Условие завершения, если режим поворота на градусы или обороты
+            else if ((unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds) && 
+                control.millis() >= endTime) break; // Условия завершения, если режим по времени
+            // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
+            let error = advmotctrls.getErrorSyncMotors(eml, emr); // Найдите ошибку в управлении двигателей
+            pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
+            let U = pidChassisSync.compute(dt, 0); // Получить управляющее воздействие от регулятора
+            let powers = advmotctrls.getPwrSyncMotors(U); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
+            setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
+            control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
-        if (braking == MotionBraking.Hold) stop(Braking.Hold); // Break at hold
-        else if (braking == MotionBraking.Float) stop(Braking.Float); // No hold break
-        else if (braking == MotionBraking.Coasting) setSpeedsCommand(vLeft, vRight); // Forward
+        if (braking == MotionBraking.Hold) stop(Braking.Hold); // Торможение и удержание
+        else if (braking == MotionBraking.Float) stop(Braking.Float); // Торможение с освобождением (без удержания)
+        else if (braking == MotionBraking.Coasting) setSpeedsCommand(vLeft, vRight); // Двигаться дальше
     }
 
     /**
@@ -491,8 +488,8 @@ namespace chassis {
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.reset();
 
-        // const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
-        const { emLeft: emlPrev, emRight: emrPrev } = getEncoderValues();
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
+        // const { emLeft: emlPrev, emRight: emrPrev } = getEncoderValues();
 
         let prevTime = 0;
         while (true) {
@@ -532,6 +529,9 @@ namespace chassis {
     export function syncRampMovement(startSpeed: number, maxSpeed: number, finishSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
         //if (!motorsPair) return;
         if (maxSpeed == 0 || totalValue == 0) {
+            stop(Braking.Hold);
+            return;
+        } else if (startSpeed > maxSpeed || maxSpeed < finishSpeed) {
             stop(Braking.Hold);
             return;
         }
