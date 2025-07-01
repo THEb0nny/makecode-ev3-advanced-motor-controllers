@@ -285,7 +285,7 @@ namespace chassis {
     //% weight="99"
     //% group="Move"
     export function stop(setBrake?: Braking, settleTime?: number) {
-        //if (!motorsPair) return;
+        if (!leftMotor && !rightMotor) return;
         if (settleTime == undefined) settleTime = brakeSettleTime;
         if (setBrake !== undefined) {
             chassis.setBrake(setBrake);
@@ -369,7 +369,7 @@ namespace chassis {
     //% group="Move"
     //% blockHidden="true"
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        // if (!motorsPair) return;
+        if (!leftMotor && !rightMotor) return;
         if (speed == 0 || wheelDiametr == 0 || baseLength == 0) {
             stop(Braking.Hold);
             return;
@@ -414,7 +414,7 @@ namespace chassis {
     //% weight="98" blockGap="8"
     //% group="Синхронизированное движение"
     export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: MotionBraking = MotionBraking.Hold) {
-        // if (!motorsPair) return;
+        if (!leftMotor && !rightMotor) return;
         if (vLeft == 0 && vRight == 0 ||
             ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) ||
             ((unit == MoveUnit.Seconds || unit == MoveUnit.MilliSeconds) && value <= 0)) {
@@ -483,6 +483,8 @@ namespace chassis {
 
     // Функция выполнения синхронизированного движения с фазами
     export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+        // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
+
         advmotctrls.accTwoEncConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
@@ -527,7 +529,7 @@ namespace chassis {
     //% weight="99"
     //% group="Синхронизированное движение с ускорениями"
     export function syncRampMovement(startSpeed: number, maxSpeed: number, finishSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
-        //if (!motorsPair) return;
+        if (!leftMotor && !rightMotor) return;
         if (maxSpeed == 0 || totalValue == 0) {
             stop(Braking.Hold);
             return;
