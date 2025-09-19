@@ -11,6 +11,8 @@ namespace chassis {
     export let leftMotor: motors.Motor; // Левый двигатель в шасси
     export let rightMotor: motors.Motor; // Правый двигатель в шасси
 
+    export const cpr: number = 360; // Количество импульсов на оборот
+
     let motorMaxRPM: number = 0; // Максимальная частота (rpm) вращения двигателя
     let wheelDiametr: number = 0; // Радиус колеса в мм
     let baseLength: number = 0; // Расстояние между колесами в мм
