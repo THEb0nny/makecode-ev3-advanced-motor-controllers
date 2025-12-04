@@ -68,9 +68,9 @@ namespace chassis {
     //% subcategory="Свойства"
     //% group="Установить"
     //% blockHidden="true"
+    /*
     function setChassis(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
         return;
-        /*
         motorsPair = newMotorsPair;
         const motorsName = motorsPair.toString();
         const motorsType = motorsName.split(" ")[0];
@@ -114,8 +114,8 @@ namespace chassis {
         }
         if (motorsType == "large") motorMaxRPM = 170;
         else if (motorsType == "medium") motorMaxRPM = 250;
-        */
     }
+    */
 
     /**
      * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
@@ -432,6 +432,7 @@ namespace chassis {
         advmotctrls.syncMotorsConfig(vLeft, vRight); // Установите скорости двигателя для последующего регулирования
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
         pidChassisSync.setControlSaturation(-100, 100); // Ограничение регулятора
+        pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
         pidChassisSync.reset(); // Сброс ПИД-регулятора
 
         let prevTime = 0; // Переменная для хранения предыдущего времени для цикла регулятора
@@ -449,8 +450,8 @@ namespace chassis {
                 control.millis() >= endTime) break; // Условия завершения, если режим по времени
             // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
             let error = advmotctrls.getErrorSyncMotors(eml, emr); // Найдите ошибку в управлении двигателей
-            pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
-            let U = pidChassisSync.compute(dt, 0); // Получить управляющее воздействие от регулятора
+            // pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
+            let U = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
             let powers = advmotctrls.getPwrSyncMotors(U); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
             control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
@@ -488,6 +489,7 @@ namespace chassis {
         advmotctrls.accTwoEncConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
+        pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
         pidChassisSync.reset();
 
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
@@ -502,8 +504,8 @@ namespace chassis {
             let out = advmotctrls.accTwoEnc(eml, emr);
             if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
-            pidChassisSync.setPoint(error);
-            let U = pidChassisSync.compute(dt, 0);
+            // pidChassisSync.setPoint(error);
+            let U = pidChassisSync.compute(dt, -error);
             let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
             control.pauseUntilTime(currTime, 1);
