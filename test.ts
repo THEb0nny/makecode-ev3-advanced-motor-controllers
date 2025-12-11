@@ -53,7 +53,7 @@ function RampArcMovementExample() {
     chassis.pidChassisSync.setControlSaturation(-100, 100);
     chassis.pidChassisSync.reset();
     control.timer8.reset();
-    const startTime = control.millis();
+    // const startTime = control.millis();
     let prevTime = 0;
     while (true) {
         let currTime = control.millis();

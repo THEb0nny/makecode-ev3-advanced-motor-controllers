@@ -290,8 +290,6 @@ namespace chassis {
         if (setBrake !== undefined) {
             chassis.setBrake(setBrake);
         }
-        // motorsPair.setBrakeSettleTime(0);
-        // motorsPair.stop();
         leftMotor.setBrakeSettleTime(0); rightMotor.setBrakeSettleTime(0); // Установить двигателям по отдельности задержку для стабилизации при остановке на 0, т.к. нам не нужно, чтобы один мотор отстаналвивался и ждал, а потом это же делал второй
         leftMotor.stop(); rightMotor.stop(); // Команда остановки моторам
         leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Установить обратно моторам по отдельности ожидание для стабилизации
