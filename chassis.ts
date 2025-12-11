@@ -429,7 +429,7 @@ namespace chassis {
         const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // Значение, которое должен выполнить левый двигатель, если скорость мотора не 0
         const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
 
-        advmotctrls.syncMotorsConfig(vLeft, vRight); // Установите скорости двигателя для последующего регулирования
+        // advmotctrls.syncMotorsConfig(vLeft, vRight); // Установите скорости двигателя для последующего регулирования
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
         pidChassisSync.setControlSaturation(-100, 100); // Ограничение регулятора
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
@@ -449,7 +449,7 @@ namespace chassis {
             else if ((unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds) && 
                 control.millis() >= endTime) break; // Условия завершения, если режим по времени
             // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
-            let error = advmotctrls.getErrorSyncMotors(eml, emr); // Найдите ошибку в управлении двигателей
+            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             // pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
             let U = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
             let powers = advmotctrls.getPwrSyncMotors(U); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
