@@ -243,7 +243,7 @@ namespace chassis {
     //% block.loc.ru="диаметр колёс шасси в мм"
     //% weight="94"
     //% group="Колёса"
-    export function getWheelDiametr(unit: MeasurementUnit = MeasurementUnit.Millimeters): number {
+    export function getWheelDiametr(): number {
         return wheelDiametr;
     }
 
