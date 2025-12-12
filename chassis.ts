@@ -146,8 +146,7 @@ namespace chassis {
         rightMotor = newRightMotors; // Установите правильный экземпляр двигателя
         leftMotor.setInverted(setLeftMotReverse); // Установите свойство реверса левого двигателя
         rightMotor.setInverted(setRightMotReverse); // Установите правильное свойство реверса двигателя
-        leftMotor.setRegulated(false); // Отключить регулирование скорости прошивки левого мотора
-        rightMotor.setRegulated(false); // Отключить регулирование скорости прошивки правого мотора
+        setSpeedRegulated(false); // Отключить регулирование скорости прошивки моторов
         const motorLeftType = leftMotor.toString().split(" ")[0][0];
         const motorRightType = leftMotor.toString().split(" ")[0][0];
         if (motorLeftType === "M" && motorRightType === "M") motorMaxRPM = 250;
@@ -166,6 +165,7 @@ namespace chassis {
     //% inlineInputMode="inline"
     //% weight="97"
     //% group="Установить"
+    //% blockHidden="true"
     export function setSpeedRegulated(regulated: boolean) {
         leftMotor.setRegulated(regulated);
         rightMotor.setRegulated(regulated);
