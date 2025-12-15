@@ -64,6 +64,7 @@ namespace advmotctrls {
     //% vRight.shadow="motorSpeedPicker"
     //% weight="99"
     //% group="Синхронизация шасси на скорости"
+    //% blockHidden="true"
     export function syncMotorsConfig(vLeft: number, vRight: number) {
         syncVLeft = vLeft;
         syncVRight = vRight;
@@ -84,6 +85,7 @@ namespace advmotctrls {
     //% inlineInputMode="inline"
     //% weight="98"
     //% group="Синхронизация шасси на скорости"
+    //% blockHidden="true"
     export function getErrorSyncMotors(eLeft: number, eRight: number): number {
         return (syncVRight * eLeft) - (syncVLeft * eRight);
     }
@@ -91,17 +93,18 @@ namespace advmotctrls {
     /**
      * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора синхронизации.
      * Возвращает интерфейс скорости (мощности) левого и правого моторов.
-     * @param U входное значение управляющего воздействия от регулятора, eg: 0
+     * @param u входное значение управляющего воздействия от регулятора, eg: 0
      */
     //% blockId="GetPwrSyncMotors"
-    //% block="get pwr sync сhassis at U = $U"
-    //% block.loc.ru="получить скорости синхронизации шасси при U = $U"
+    //% block="get pwr sync сhassis at u = $u"
+    //% block.loc.ru="получить скорости синхронизации шасси при u = $u"
     //% inlineInputMode="inline"
     //% weight="97"
     //% group="Синхронизация шасси на скорости"
-    export function getPwrSyncMotors(U: number): MotorsPower {
-        const pLeft = syncVLeft - syncVRightSign * U;
-        const pRight = syncVRight + syncVLeftSign * U;
+    //% blockHidden="true"
+    export function getPwrSyncMotors(u: number): MotorsPower {
+        const pLeft = syncVLeft - syncVRightSign * u;
+        const pRight = syncVRight + syncVLeftSign * u;
         return {
             pwrLeft: pLeft,
             pwrRight: pRight
@@ -127,20 +130,20 @@ namespace advmotctrls {
     }
 
     /**
-     * Получить скорости (мощности) для моторов по U воздействию регулятора и с необходимыми скоростями (мощностями).
-     * @param U входное значение с регулятора, eg: 0
+     * Получить скорости (мощности) для моторов по u воздействию регулятора и с необходимыми скоростями (мощностями).
+     * @param u входное значение с регулятора, eg: 0
      * @param vLeft входное значение скорости (мощности) левого мотора, eg: 50
      * @param vRight входное значение скорости (мощности) правого мотора, eg: 50
      */
     //% blockId="GetPwrSyncMotorsAtPwr"
-    //% block="get pwr sync сhassis at U = $U vLeft = $vLeft vRight = $vRight"
-    //% block.loc.ru="получить скорости синхронизации шасси при U = $U vLeft = $vLeft vRight = $vRight"
+    //% block="get pwr sync сhassis at u = $u vLeft = $vLeft vRight = $vRight"
+    //% block.loc.ru="получить скорости синхронизации шасси при u = $u vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
     //% weight="88"
     //% group="Синхронизация шасси на разных скоростях"
-    export function getPwrSyncMotorsAtPwr(U: number, vLeft: number, vRight: number): MotorsPower {
-        const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * U;
-        const pRight = vRight + (Math.abs(vLeft + 1) - Math.abs(vLeft)) * U;
+    export function getPwrSyncMotorsAtPwr(u: number, vLeft: number, vRight: number): MotorsPower {
+        const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * u;
+        const pRight = vRight + (Math.abs(vLeft + 1) - Math.abs(vLeft)) * u;
         return {
             pwrLeft: pLeft,
             pwrRight: pRight

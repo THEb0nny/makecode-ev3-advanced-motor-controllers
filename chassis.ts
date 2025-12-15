@@ -7,7 +7,7 @@
 //% color="#02909D" weight="88" icon="\uf1b9"
 namespace chassis {
 
-    export let motorsPair: motors.SynchedMotorPair; // Моторная пара
+    // export let motorsPair: motors.SynchedMotorPair; // Моторная пара
     export let leftMotor: motors.Motor; // Левый двигатель в шасси
     export let rightMotor: motors.Motor; // Правый двигатель в шасси
 
@@ -32,6 +32,7 @@ namespace chassis {
     }
 
     // Только для двух двигателей одновременно в моторной паре
+    /*
     function splitDoubleOutput(out: Output): Output[] {
         if (out == Output.BC) return [Output.B, Output.C];
         else if (out == Output.AB) return [Output.A, Output.B];
@@ -39,8 +40,10 @@ namespace chassis {
         else if (out == Output.AD) return [Output.A, Output.D];
         return [];
     }
+    */
     
     // Получить выход (Output) двигателей из входной строки
+    /*
     function strNameToOutput(outStr: string): Output {
         if (outStr == "B+C") return Output.BC;
         else if (outStr == "A+B") return Output.AB;
@@ -48,6 +51,7 @@ namespace chassis {
         else if (outStr == "A+D") return Output.AD;
         return Output.ALL;
     }
+    */
 
     /**
      * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
@@ -366,6 +370,7 @@ namespace chassis {
     //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
     //% group="Move"
     //% blockHidden="true"
+    /*
     export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
         if (!leftMotor && !rightMotor) return;
         if (speed == 0 || wheelDiametr == 0 || baseLength == 0) {
@@ -392,8 +397,9 @@ namespace chassis {
         if (distance != 0 && unit == MeasurementUnit.Millimeters) distance / 10; // mm to cm
         const seconds = distance / speed; // cm / (cm/s) = s
 
-        motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
+        // motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
     }
+    */
     
     /**
      * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
