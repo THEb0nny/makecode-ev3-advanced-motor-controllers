@@ -456,7 +456,7 @@ namespace chassis {
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             // pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
             let U = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
-            let powers = advmotctrls.getPwrSyncMotors(U); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
+            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
             control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
