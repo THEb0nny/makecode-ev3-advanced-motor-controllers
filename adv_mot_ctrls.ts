@@ -312,39 +312,90 @@ namespace advmotctrls {
     //% finishingPwrRight.shadow="motorSpeedPicker"
     //% weight="59"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncExtConfig(startingPwrLeft: number, startingPwrRight: number, maxPwrLeft: number, maxPwrRight: number, finishingPwrLeft: number, finishingPwrRight: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
-        // Радиус поворота центра
-        const vLeft = Math.round(maxPwrLeft), vRight = Math.round(maxPwrRight);
-        const radius = vLeft != vRight ? (chassis.getBaseLength() * (vLeft + vRight)) / (2 * (vRight - vLeft)) : Infinity;
+    export function accTwoEncExtConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
+        // // Радиус поворота центра
+        // const vLeft = Math.round(maxPwrLeft), vRight = Math.round(maxPwrRight);
+        // const radius = vLeft != vRight ? (chassis.getBaseLength() * (vLeft + vRight)) / (2 * (vRight - vLeft)) : Infinity;
 
-        // Коэффициенты расстояния для колёс
-        const kLeft = (radius !== Math.abs(Infinity) && radius != 0) ? (radius - chassis.getBaseLength() / 2) / radius : 1;
-        const kRight = (radius !== Math.abs(Infinity) && radius != 0) ? (radius + chassis.getBaseLength() / 2) / radius : 1;
+        // // Коэффициенты расстояния для колёс
+        // const kLeft = (radius !== Math.abs(Infinity) && radius != 0) ? (radius - chassis.getBaseLength() / 2) / radius : 1;
+        // const kRight = (radius !== Math.abs(Infinity) && radius != 0) ? (radius + chassis.getBaseLength() / 2) / radius : 1;
 
-        // Дистанции каждых фаз для левого и правого мотора
-        accMotorsAccelDistsExt.left = accelDistCenter * kLeft;
-        accMotorsAccelDistsExt.right = accelDistCenter * kRight;
-        accMotorsDecelDistsExt.left = decelDistCenter * kLeft;
-        accMotorsDecelDistsExt.right = decelDistCenter * kRight;
-        accMotorsTotalDistsExt.left = totalDistCenter * kLeft;
-        accMotorsTotalDistsExt.right = totalDistCenter * kRight;
+        // // Дистанции каждых фаз для левого и правого мотора
+        // accMotorsAccelDistsExt.left = accelDistCenter * kLeft;
+        // accMotorsAccelDistsExt.right = accelDistCenter * kRight;
+        // accMotorsDecelDistsExt.left = decelDistCenter * kLeft;
+        // accMotorsDecelDistsExt.right = decelDistCenter * kRight;
+        // accMotorsTotalDistsExt.left = totalDistCenter * kLeft;
+        // accMotorsTotalDistsExt.right = totalDistCenter * kRight;
 
-        // Мощности
-        accMotorsStartingPwrsExt.left = Math.constrain(startingPwrLeft, -100, 100);
-        accMotorsStartingPwrsExt.right = Math.constrain(startingPwrRight, -100, 100);
-        accMotorsMaxPwrsExt.left = Math.constrain(maxPwrLeft, -100, 100);
-        accMotorsMaxPwrsExt.right = Math.constrain(maxPwrRight, -100, 100);
-        accMotorsFinishingPwrsExt.left = Math.constrain(finishingPwrLeft, -100, 100);
-        accMotorsFinishingPwrsExt.right = Math.constrain(finishingPwrRight, -100, 100);
+        // // Мощности
+        // accMotorsStartingPwrsExt.left = Math.constrain(startingPwrLeft, -100, 100);
+        // accMotorsStartingPwrsExt.right = Math.constrain(startingPwrRight, -100, 100);
+        // accMotorsMaxPwrsExt.left = Math.constrain(maxPwrLeft, -100, 100);
+        // accMotorsMaxPwrsExt.right = Math.constrain(maxPwrRight, -100, 100);
+        // accMotorsFinishingPwrsExt.left = Math.constrain(finishingPwrLeft, -100, 100);
+        // accMotorsFinishingPwrsExt.right = Math.constrain(finishingPwrRight, -100, 100);
 
-        accMotorsIsNegExt.left = startingPwrLeft < 0 && maxPwrLeft < 0 && finishingPwrLeft < 0;
-        accMotorsIsNegExt.right = startingPwrRight < 0 && maxPwrRight < 0 && finishingPwrRight < 0;
+        // accMotorsIsNegExt.left = startingPwrLeft < 0 && maxPwrLeft < 0 && finishingPwrLeft < 0;
+        // accMotorsIsNegExt.right = startingPwrRight < 0 && maxPwrRight < 0 && finishingPwrRight < 0;
 
-        console.log(`radius: ${radius}, kLeft: ${kLeft}, kRight: ${kRight}`);
-        console.log(`accMotorsAccelDistsExt.l: ${accMotorsAccelDistsExt.left}, accMotorsAccelDistsExt.r: ${accMotorsAccelDistsExt.right}`);
-        console.log(`accMotorsDecelDistsExt.l: ${accMotorsDecelDistsExt.left}, accMotorsDecelDistsExt.r: ${accMotorsDecelDistsExt.right}`);
-        console.log(`accMotorsTotalDistsExt.l: ${accMotorsTotalDistsExt.left}, accMotorsTotalDistsExt.r: ${accMotorsTotalDistsExt.right}`);
-        console.log(`accMotorsIsNegExt.l: ${accMotorsIsNegExt.left}, accMotorsIsNegExt.r: ${accMotorsIsNegExt.right}`);
+        // console.log(`radius: ${radius}, kLeft: ${kLeft}, kRight: ${kRight}`);
+        // console.log(`accMotorsAccelDistsExt.l: ${accMotorsAccelDistsExt.left}, accMotorsAccelDistsExt.r: ${accMotorsAccelDistsExt.right}`);
+        // console.log(`accMotorsDecelDistsExt.l: ${accMotorsDecelDistsExt.left}, accMotorsDecelDistsExt.r: ${accMotorsDecelDistsExt.right}`);
+        // console.log(`accMotorsTotalDistsExt.l: ${accMotorsTotalDistsExt.left}, accMotorsTotalDistsExt.r: ${accMotorsTotalDistsExt.right}`);
+        // console.log(`accMotorsIsNegExt.l: ${accMotorsIsNegExt.left}, accMotorsIsNegExt.r: ${accMotorsIsNegExt.right}`);
+
+        // Определяем, какой мотор медленнее (с меньшей максимальной мощностью)
+        const absMaxLeft = Math.abs(maxPwrLeft);
+        const absMaxRight = Math.abs(maxPwrRight);
+
+        // Коэффициент пропорциональности (отношение макс. скоростей)
+        const ratio = absMaxLeft < absMaxRight ? absMaxRight / absMaxLeft : absMaxLeft / absMaxRight;
+
+        if (absMaxLeft < absMaxRight) {
+            // Левый мотор медленнее - он получает базовые значения
+            accMotorsStartingPwrsExt.left = startingPwr;
+            accMotorsStartingPwrsExt.right = startingPwr * ratio;
+            accMotorsFinishingPwrsExt.left = finishingPwr;
+            accMotorsFinishingPwrsExt.right = finishingPwr * ratio;
+
+            accMotorsTotalDistsExt.left = totalDistCenter;
+            accMotorsTotalDistsExt.right = totalDistCenter * ratio;
+            accMotorsAccelDistsExt.left = accelDistCenter;
+            accMotorsAccelDistsExt.right = accelDistCenter * ratio;
+            accMotorsDecelDistsExt.left = decelDistCenter;
+            accMotorsDecelDistsExt.right = decelDistCenter * ratio;
+        } else {
+            // Правый мотор медленнее - он получает базовые значения
+            accMotorsStartingPwrsExt.left = startingPwr * ratio;
+            accMotorsStartingPwrsExt.right = startingPwr;
+            accMotorsFinishingPwrsExt.left = finishingPwr * ratio;
+            accMotorsFinishingPwrsExt.right = finishingPwr;
+
+            accMotorsTotalDistsExt.left = totalDistCenter * ratio;
+            accMotorsTotalDistsExt.right = totalDistCenter;
+            accMotorsAccelDistsExt.left = accelDistCenter * ratio;
+            accMotorsAccelDistsExt.right = accelDistCenter;
+            accMotorsDecelDistsExt.left = decelDistCenter * ratio;
+            accMotorsDecelDistsExt.right = decelDistCenter;
+        }
+        accMotorsMaxPwrsExt.left = maxPwrLeft;
+        accMotorsMaxPwrsExt.right = maxPwrRight;
+
+        accMotorsIsNegExt.left = startingPwr < 0 && maxPwrLeft < 0 && finishingPwr < 0;
+        accMotorsIsNegExt.right = startingPwr < 0 && maxPwrRight < 0 && finishingPwr < 0;
+
+        // // Дистанции тоже пропорциональны
+        // if (absMaxLeft < absMaxRight) {
+        //     accMotorsTotalDistsExt.left = totalDistCenter;
+        //     accMotorsTotalDistsExt.right = totalDistCenter * ratio;
+        //     // аналогично для accel/decel
+        // } else {
+        //     accMotorsTotalDistsExt.left = totalDistCenter * ratio;
+        //     accMotorsTotalDistsExt.right = totalDistCenter;
+        //     // аналогично для accel/decel
+        // }
     }
 
     /**
@@ -384,24 +435,33 @@ namespace advmotctrls {
         let done: boolean;
         let pwr: number;
 
+        const absStartPwr = Math.abs(startPwr);
+        const absMaxPwr = Math.abs(maxPwr);
+        const absEndPwr = Math.abs(endPwr);
+
         if (currEnc >= totalDist) {
             pwr = 0;
             done = true;
-        } else if (currEnc > totalDist - decelDist) { // Замедление
-            if (decelDist == 0) pwr = maxPwr;
-            else pwr = (maxPwr - endPwr) / Math.pow(decelDist, 2) * Math.pow(currEnc - totalDist, 2) + endPwr;
+        } else if (currEnc > totalDist - decelDist) { // Фаза замедления
+            if (decelDist == 0) pwr = absMaxPwr;
+            else pwr = (absMaxPwr - absEndPwr) / Math.pow(decelDist, 2) * Math.pow(currEnc - totalDist, 2) + absEndPwr;
+            pwr = Math.max(absEndPwr, Math.min(absMaxPwr, pwr)); // Ограничение для фазы замедления
             done = false;
-        } else {
-            if (accelDist == 0) pwr = maxPwr;
-            else pwr = (maxPwr - startPwr) / Math.pow(accelDist, 2) * Math.pow(currEnc, 2) + startPwr; // Ускорение
+        } else if (currEnc < accelDist) { // Фаза ускорения
+            if (accelDist == 0) pwr = absMaxPwr;
+            else pwr = (absMaxPwr - absStartPwr) / Math.pow(accelDist, 2) * Math.pow(currEnc, 2) + absStartPwr;
+            pwr = Math.max(absStartPwr, Math.min(absMaxPwr, pwr)); // Ограничение для фазы ускорения
+            done = false;
+        } else { // Фаза постоянной скорости (между ускорением и замедлением)
+            pwr = absMaxPwr;
             done = false;
         }
 
         // pwr = Math.min(Math.abs(pwr), Math.abs(maxPwr));
         // if (Math.abs(pwr) < Math.abs(endPwr)) pwr = endPwr;
         
-        pwr = Math.max(Math.abs(startPwr), Math.min(Math.abs(pwr), Math.abs(maxPwr))); // Ограничиваем сверху и снизу
-        if (currEnc > totalDist - decelDist) pwr = Math.max(Math.abs(endPwr), Math.abs(pwr)); // Чтобы в конце не упасть ниже конечной мощности
+        // pwr = Math.max(Math.abs(startPwr), Math.min(Math.abs(pwr), Math.abs(maxPwr))); // Ограничиваем сверху и снизу
+        // if (currEnc > totalDist - decelDist) pwr = Math.max(Math.abs(endPwr), Math.abs(pwr)); // Чтобы в конце не упасть ниже конечной мощности
 
         return {
             pwr: isNeg ? -pwr : pwr,

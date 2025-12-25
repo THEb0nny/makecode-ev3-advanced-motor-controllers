@@ -47,11 +47,15 @@ function RampArcMovementExample() {
     // storage.setCSVSeparator(storage.Separators.Comma);
     // storage.temporary.appendCSVHeaders(file, ["timeMsec", "pwrLeft", "pwrRight", "eml", "emr", "error", "U", "pow.pwrLeft", "pow.pwrRight"]);
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
-    const calcMotRot = Math.round(180 * chassis.getBaseLength() / chassis.getWheelDiametr());
-    advmotctrls.accTwoEncExtConfig(-20, 20, -50, 50, -10, 10, 200, 200, calcMotRot);
+    const accelCalcMotRot = (100 / (Math.PI * chassis.getWheelDiametr())) * 360;
+    const decelCalcMotRot = (200 / (Math.PI * chassis.getWheelDiametr())) * 360;
+    const calcMotRot = (500 / (Math.PI * chassis.getWheelDiametr())) * 360;
+
+    advmotctrls.accTwoEncExtConfig(30, 70, 80, 20, accelCalcMotRot, decelCalcMotRot, calcMotRot);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
     chassis.pidChassisSync.setControlSaturation(-100, 100);
     chassis.pidChassisSync.reset();
+    
     control.timer8.reset();
     // const startTime = control.millis();
     let prevTime = 0;
@@ -61,7 +65,7 @@ function RampArcMovementExample() {
         prevTime = currTime;
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
         let out = advmotctrls.accTwoEncExt(eml, emr);
-        // if (out.isDone) break;
+        if (out.isDone) break;
         let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);
@@ -72,7 +76,7 @@ function RampArcMovementExample() {
             // storage.temporary.appendCSV(file, [control.millis() - startTime, out.pwrLeft, out.pwrRight, eml, emr, error, U, powers.pwrLeft, powers.pwrRight]);
             control.timer8.reset();
         }
-        if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
+        // if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
         control.pauseUntilTime(currTime, 1);
     }
     chassis.stop(Braking.Hold);
