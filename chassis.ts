@@ -549,7 +549,7 @@ namespace chassis {
         if (maxSpeed == 0 || totalValue == 0) {
             stop(Braking.Hold);
             return;
-        } else if (startSpeed > maxSpeed || maxSpeed < finishSpeed) {
+        } else if (Math.abs(startSpeed) > Math.abs(maxSpeed) || Math.abs(finishSpeed) > Math.abs(maxSpeed)) {
             stop(Braking.Hold);
             return;
         }
