@@ -44,7 +44,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
     const decelCalcMotRot = (200 / (Math.PI * chassis.getWheelDiametr())) * 360;
     const calcMotRot = (500 / (Math.PI * chassis.getWheelDiametr())) * 360;
 
-    advmotctrls.accTwoEncExtConfig(vStarting, vLeftMax, vRightMax, vFinishing, accelCalcMotRot, decelCalcMotRot, calcMotRot);
+    advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, accelCalcMotRot, decelCalcMotRot, calcMotRot);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
     chassis.pidChassisSync.setControlSaturation(-100, 100);
     chassis.pidChassisSync.reset();
@@ -57,7 +57,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         let dt = currTime - prevTime;
         prevTime = currTime;
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
-        let out = advmotctrls.accTwoEncExtCompute(eml, emr);
+        let out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
         if (out.isDone) break;
         let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
         chassis.pidChassisSync.setPoint(error);
@@ -83,7 +83,7 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    RampArcMovementExample(30, 50, 70, 25, 100, 150, 500);
+    // RampArcMovementExample(30, 50, 70, 25, 100, 150, 500);
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);

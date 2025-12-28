@@ -251,30 +251,28 @@ namespace advmotctrls {
     //% weight="68"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncLinearMotionCompute(eLeft: number, eRight: number): AccelMotor {
-        let done: boolean;
+        let done: boolean = false;
         let pwrOut: number;
         const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
-        if (currEnc >= accMotorsTotalDist) {
+
+        if (currEnc >= accMotorsTotalDist) { // Финиш
             pwrOut = 0;
             done = true;
-        } else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) { // currEnc > accMotorsTotalDist / 2
+        } else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) { // Замедление
             if (accMotorsDecelDist == 0) pwrOut = accMotorsMaxPwr;
-            else pwrOut = (accMotorsMaxPwr - accMotorsEndPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsEndPwr; // pwr = (accMotorsMaxPwr - accMotorsMinPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsMinPwr;
-            done = false;
-        } else {
+            else pwrOut = (accMotorsMaxPwr - accMotorsEndPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsEndPwr;
+            pwrOut = Math.max(accMotorsEndPwr, pwrOut); // Защита от "проседания" ниже EndPwr (мало ли, плавающая точка)
+        } else if (currEnc < accMotorsAccelDist) { // Ускорение
             if (accMotorsAccelDist == 0) pwrOut = accMotorsMaxPwr;
-            else pwrOut = (accMotorsMaxPwr - accMotorsStartPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc - 0, 2) + accMotorsStartPwr; // pwr = (accMotorsMaxPwr - accMotorsMinPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc - 0, 2) + accMotorsMinPwr;
-            done = false;
+            else pwrOut = (accMotorsMaxPwr - accMotorsStartPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc, 2) + accMotorsStartPwr;
+            pwrOut = Math.max(accMotorsStartPwr, pwrOut); // Защита от старта ниже StartPwr
+        } else { // Постоянная скорость (Constant)
+            pwrOut = accMotorsMaxPwr;
         }
 
-        // if (pwr < accMotorsMinPwr) pwr = accMotorsMinPwr;
-        // else if (pwr > accMotorsMaxPwr) pwr = accMotorsMaxPwr;
-        
-        if (pwrOut > accMotorsMaxPwr) pwrOut = accMotorsMaxPwr;  // Ограничение сверху (во всех фазах)
-        else if (currEnc < accMotorsAccelDist && pwrOut < accMotorsStartPwr) pwrOut = accMotorsStartPwr;  // Ограничение снизу в фазе ускорения
-        else if (currEnc > accMotorsTotalDist - accMotorsDecelDist && pwrOut < accMotorsEndPwr) pwrOut = accMotorsEndPwr;  // Ограничение снизу в фазе замедления
+        pwrOut = Math.min(accMotorsMaxPwr, pwrOut); // Финальный ограничитель сверху (на всякий случай для всех фаз)
 
-        if (accMotorsIsNeg) pwrOut = -pwrOut;
+        if (accMotorsIsNeg) pwrOut = -pwrOut; // Инверсия знака
 
         return {
             pwr: pwrOut,
@@ -294,7 +292,7 @@ namespace advmotctrls {
      * @param decelDistCenter значение дистанции замедления, eg: 150
      * @param totalDistCenter значение всей дистанции, eg: 500
      */
-    //% blockId="AccTwoEncExtConfig"
+    //% blockId="AccTwoEncComplexMotionConfig"
     //% block="config accel/deceleration chassis at startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
@@ -306,7 +304,7 @@ namespace advmotctrls {
     //% finishingPwrRight.shadow="motorSpeedPicker"
     //% weight="59"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncExtConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
+    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
         // // Радиус поворота центра
         // const vLeft = Math.round(maxPwrLeft), vRight = Math.round(maxPwrRight);
         // const radius = vLeft != vRight ? (chassis.getBaseLength() * (vLeft + vRight)) / (2 * (vRight - vLeft)) : Infinity;
@@ -397,13 +395,13 @@ namespace advmotctrls {
      * @param eLeft входное значение энкодера левого мотора, eg: 0
      * @param eRight входное значение энкодера правого мотора, eg: 0
      */
-    //% blockId="AccTwoEncExtCompute"
+    //% blockId="AccTwoEncComplexMotionCompute"
     //% block="compute accel/deceleration chassis at with different max speeds eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси с разными макс скоростями при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
     //% weight="58"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncExtCompute(eLeft: number, eRight: number): AccelMotors {
+    export function accTwoEncComplexMotionCompute(eLeft: number, eRight: number): AccelMotors {
         const profileLeft = computeMotorProfile(
             Math.abs(eLeft),
             accMotorsTotalDistsExt.left, accMotorsAccelDistsExt.left, accMotorsDecelDistsExt.left,
