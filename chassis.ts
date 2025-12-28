@@ -490,6 +490,9 @@ namespace chassis {
     export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
 
+        console.log("executeRampMovement START");
+        console.log(`anglePrev: L=${leftMotor.angle()}, R=${rightMotor.angle()}`);
+
         advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
@@ -497,18 +500,25 @@ namespace chassis {
         pidChassisSync.reset();
 
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
-        // const { emLeft: emlPrev, emRight: emrPrev } = getEncoderValues();
 
+        let iter = 0; // счетчик для логов
         let prevTime = 0;
         while (true) {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
+            
             let out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
-            if (out.isDone) break;
+            if (iter < 5) { // Выведем первые 5 итераций
+                console.log(`Iter ${iter}: angleL=${leftMotor.angle()}, eml=${eml}, pwr=${out.pwr}, done=${out.isDone}`);
+                iter++;
+            }
+            if (out.isDone) {
+                console.log("DONE trigger!");
+                break;
+            }
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
-            // pidChassisSync.setPoint(error);
             let U = pidChassisSync.compute(dt, -error);
             let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
