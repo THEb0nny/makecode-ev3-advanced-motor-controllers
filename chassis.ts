@@ -312,16 +312,14 @@ namespace chassis {
                 speedRight = (100 - turnRatio) * speed / 100;
             } else if (turnRatio > 100) { // Более 100
                 speedLeft = speed;
-                //speedRight = Math.max(-speed, -(turnRatio - 100) * (speed / 100));
-                speedRight = -(turnRatio - 100) * (speed / 100);
+                speedRight = -(turnRatio - 100) * (speed / 100); // speedRight = Math.max(-speed, -(turnRatio - 100) * (speed / 100));
             }
         } else if (turnRatio < 0) { // Влево
             if (turnRatio >= -100) { // До -100 включительно
                 speedLeft = (100 + turnRatio) * speed / 100;
                 speedRight = speed;
             } else if (turnRatio < -100) { // Более -100
-                //speedLeft = Math.max(-speed, (turnRatio + 100) * (speed / 100));
-                speedLeft = (turnRatio + 100) * (speed / 100);
+                speedLeft = (turnRatio + 100) * (speed / 100); // speedLeft = Math.max(-speed, (turnRatio + 100) * (speed / 100));
                 speedRight = speed;
             }
         } else { // Если turnRatio = 0
@@ -356,7 +354,7 @@ namespace chassis {
     }
 
     /**
-     * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с), используя модель одноколесного велосипеда.
+     * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с).
      * @param speed скорость (мощность) центральной точки между двигателями, eg: 10
      * @param rotationSpeed вращение робота вокруг центральной точки, eg: 30
      * @param distance расстояние до места проезда, eg: 150

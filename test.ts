@@ -50,7 +50,6 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
     chassis.pidChassisSync.reset();
     
     control.timer8.reset();
-    const startTime = control.millis();
     let prevTime = 0;
     while (true) {
         let currTime = control.millis();
@@ -59,23 +58,22 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
         let out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
         if (out.isDone) break;
+        // if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
         let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
         chassis.pidChassisSync.setPoint(error);
         let U = chassis.pidChassisSync.compute(dt, 0);
         let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
         chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
-        if (control.timer8.millis() >= 15) {
-            console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
+        if (control.timer8.millis() >= 10) {
+            console.log(`pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
             control.timer8.reset();
         }
-        // if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
         control.pauseUntilTime(currTime, 1);
     }
     chassis.stop(Braking.Hold);
 }
 
 function Test() {
-    // chassis.setChassisMotors(motors.mediumBC);
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setWheelDiametr(62.4);
     chassis.setBaseLength(175);
@@ -83,7 +81,7 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    // RampArcMovementExample(30, 50, 70, 25, 100, 150, 500);
+    RampArcMovementExample(30, 50, 80, 20, 100, 150, 500);
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);
