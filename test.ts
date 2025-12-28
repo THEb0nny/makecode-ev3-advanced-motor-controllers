@@ -40,7 +40,7 @@ function LineFollowExample(speed: number) {
 }
 */
 
-function RampArcMovementExample() {
+function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: number, vFinishing: number, accelDist: number, decelDist: number, totalDist: number) {
     // const file = "data.csv";
     // storage.temporary.remove(file);
     // storage.temporary.limit(file, 0);
@@ -51,13 +51,13 @@ function RampArcMovementExample() {
     const decelCalcMotRot = (200 / (Math.PI * chassis.getWheelDiametr())) * 360;
     const calcMotRot = (500 / (Math.PI * chassis.getWheelDiametr())) * 360;
 
-    advmotctrls.accTwoEncExtConfig(30, 70, 80, 20, accelCalcMotRot, decelCalcMotRot, calcMotRot);
+    advmotctrls.accTwoEncExtConfig(vStarting, vLeftMax, vRightMax, vFinishing, accelCalcMotRot, decelCalcMotRot, calcMotRot);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
     chassis.pidChassisSync.setControlSaturation(-100, 100);
     chassis.pidChassisSync.reset();
     
     control.timer8.reset();
-    // const startTime = control.millis();
+    const startTime = control.millis();
     let prevTime = 0;
     while (true) {
         let currTime = control.millis();
@@ -72,7 +72,7 @@ function RampArcMovementExample() {
         let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
         chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
         if (control.timer8.millis() >= 15) {
-            // console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
+            console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
             // storage.temporary.appendCSV(file, [control.millis() - startTime, out.pwrLeft, out.pwrRight, eml, emr, error, U, powers.pwrLeft, powers.pwrRight]);
             control.timer8.reset();
         }
@@ -91,7 +91,7 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    RampArcMovementExample();
+    RampArcMovementExample(30, 50, 70, 25, 100, 150, 500);
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);
