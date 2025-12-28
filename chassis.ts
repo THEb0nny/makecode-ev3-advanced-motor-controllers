@@ -455,8 +455,8 @@ namespace chassis {
             // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             // pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
-            let U = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
-            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
+            let u = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
+            let powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
             control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
@@ -489,10 +489,6 @@ namespace chassis {
     // Функция выполнения синхронизированного движения с фазами
     export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
-
-        console.log("executeRampMovement START");
-        console.log(`anglePrev: L=${leftMotor.angle()}, R=${rightMotor.angle()}`);
-
         advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
@@ -501,26 +497,17 @@ namespace chassis {
 
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
 
-        let iter = 0; // счетчик для логов
         let prevTime = 0;
         while (true) {
             let currTime = control.millis();
             let dt = currTime - prevTime;
             prevTime = currTime;
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
-            
             let out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
-            if (iter < 5) { // Выведем первые 5 итераций
-                console.log(`Iter ${iter}: angleL=${leftMotor.angle()}, eml=${eml}, pwr=${out.pwr}, done=${out.isDone}`);
-                iter++;
-            }
-            if (out.isDone) {
-                console.log("DONE trigger!");
-                break;
-            }
+            if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
-            let U = pidChassisSync.compute(dt, -error);
-            let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwr, out.pwr);
+            let u = pidChassisSync.compute(dt, -error);
+            let powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
             control.pauseUntilTime(currTime, 1);
         }
