@@ -4,10 +4,8 @@
 
 /*
 function LineFollowExample(speed: number) {
-    const B_REF_RAW_CS2 = 636;
-    const W_REF_RAW_CS2 = 490;
-    const B_REF_RAW_CS3 = 665;
-    const W_REF_RAW_CS3 = 501;
+    const B_REF_RAW_CS2 = 636, W_REF_RAW_CS2 = 490;
+    const B_REF_RAW_CS3 = 665, W_REF_RAW_CS3 = 501;
     advmotctrls.syncMotorsConfig(speed, speed);
     automation.pid1.setGains(0.8, 0, 0.5); // Установка значений регулятору
     automation.pid1.setControlSaturation(-100, 100); // Ограничения ПИДа
@@ -41,11 +39,6 @@ function LineFollowExample(speed: number) {
 */
 
 function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: number, vFinishing: number, accelDist: number, decelDist: number, totalDist: number) {
-    // const file = "data.csv";
-    // storage.temporary.remove(file);
-    // storage.temporary.limit(file, 0);
-    // storage.setCSVSeparator(storage.Separators.Comma);
-    // storage.temporary.appendCSVHeaders(file, ["timeMsec", "pwrLeft", "pwrRight", "eml", "emr", "error", "U", "pow.pwrLeft", "pow.pwrRight"]);
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
     const accelCalcMotRot = (100 / (Math.PI * chassis.getWheelDiametr())) * 360;
     const decelCalcMotRot = (200 / (Math.PI * chassis.getWheelDiametr())) * 360;
@@ -64,7 +57,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         let dt = currTime - prevTime;
         prevTime = currTime;
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
-        let out = advmotctrls.accTwoEncExt(eml, emr);
+        let out = advmotctrls.accTwoEncExtCompute(eml, emr);
         if (out.isDone) break;
         let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
         chassis.pidChassisSync.setPoint(error);
@@ -73,7 +66,6 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
         if (control.timer8.millis() >= 15) {
             console.log(`time: ${control.millis()}, pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
-            // storage.temporary.appendCSV(file, [control.millis() - startTime, out.pwrLeft, out.pwrRight, eml, emr, error, U, powers.pwrLeft, powers.pwrRight]);
             control.timer8.reset();
         }
         // if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
@@ -95,7 +87,6 @@ function Test() {
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
     // chassis.pivotTurn(90, 30, WheelPivot.LeftWheel);
     // chassis.spinTurn(90, 20);
-    // ArcMovementExample(25, 50, 775);
 }
 
 Test();

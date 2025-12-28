@@ -18,7 +18,6 @@ namespace advmotctrls {
     let accMotorTotalDist: number;
     let accMotorIsNeg: boolean;
 
-    // let accMotorsMinPwr: number;
     let accMotorsStartPwr: number;
     let accMotorsMaxPwr: number;
     let accMotorsEndPwr: number;
@@ -172,8 +171,6 @@ namespace advmotctrls {
         accMotorAccelDist = accelDist;
         accMotorDecelDist = decelDist;
         accMotorTotalDist = totalDist;
-        // if (minPwr <= 0 && maxPwr < 0) accMotorIsNeg = true;
-        // else accMotorIsNeg = false;
         accMotorIsNeg = minPwr <= 0 && maxPwr < 0;
     }
     
@@ -181,13 +178,13 @@ namespace advmotctrls {
      * Расчёт ускорения/замедления для одного мотора.
      * @param enc входное значение энкодера мотора, eg: 0
      */
-    //% blockId="AccOneEnc"
+    //% blockId="AccOneEncCompute"
     //% block="compute accel/deceleration motor at enc = $enc"
     //% block.loc.ru="расчитать ускорение/замедление управления мотора при enc = $enc"
     //% inlineInputMode="inline"
     //% weight="78"
     //% group="Ускорение/замедлениие мотора"
-    export function accOneEnc(enc: number): AccelMotor {
+    export function accOneEncCompute(enc: number): AccelMotor {
         let done: boolean;
         let pwrOut: number;
         const currEnc = Math.abs(enc);
@@ -223,7 +220,7 @@ namespace advmotctrls {
      * @param decelDist значение дистанции замедления, eg: 150
      * @param totalDist значение всей дистанции, eg: 500
      */
-    //% blockId="AccTwoEncConfig"
+    //% blockId="AccTwoEncLinearMotionConfig"
     //% block="config accel/deceleration chassis at minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
@@ -232,16 +229,13 @@ namespace advmotctrls {
     //% minEndPwr.shadow="motorSpeedPicker"
     //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
-        // accMotorsMinPwr = Math.abs(minPwr);
+    export function accTwoEncLinearMotionConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         accMotorsStartPwr = Math.abs(minStartPwr);
         accMotorsMaxPwr = Math.abs(maxPwr);
         accMotorsEndPwr = Math.abs(minEndPwr);
         accMotorsAccelDist = Math.abs(accelDist);
         accMotorsDecelDist = Math.abs(decelDist);
         accMotorsTotalDist = Math.abs(totalDist);
-        // if (minPwr <= 0 && maxPwr < 0) accMotorsIsNeg = 1;
-        // else accMotorsIsNeg = false;
         accMotorsIsNeg = minStartPwr <= 0 && maxPwr < 0 && minEndPwr <= 0;
     }
 
@@ -250,13 +244,13 @@ namespace advmotctrls {
      * @param eLeft входное значение энкодера левого мотора, eg: 0
      * @param eRight входное значение энкодера правого мотора, eg: 0
      */
-    //% blockId="AccTwoEnc"
+    //% blockId="AccTwoEncLinearMotionCompute"
     //% block="compute accel/deceleration chassis at eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
     //% weight="68"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEnc(eLeft: number, eRight: number): AccelMotor {
+    export function accTwoEncLinearMotionCompute(eLeft: number, eRight: number): AccelMotor {
         let done: boolean;
         let pwrOut: number;
         const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
@@ -403,13 +397,13 @@ namespace advmotctrls {
      * @param eLeft входное значение энкодера левого мотора, eg: 0
      * @param eRight входное значение энкодера правого мотора, eg: 0
      */
-    //% blockId="AccTwoEncExt"
+    //% blockId="AccTwoEncExtCompute"
     //% block="compute accel/deceleration chassis at with different max speeds eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси с разными макс скоростями при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
     //% weight="58"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncExt(eLeft: number, eRight: number): AccelMotors {
+    export function accTwoEncExtCompute(eLeft: number, eRight: number): AccelMotors {
         const profileLeft = computeMotorProfile(
             Math.abs(eLeft),
             accMotorsTotalDistsExt.left, accMotorsAccelDistsExt.left, accMotorsDecelDistsExt.left,

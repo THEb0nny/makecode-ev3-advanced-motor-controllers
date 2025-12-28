@@ -490,7 +490,7 @@ namespace chassis {
     export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
         // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
 
-        advmotctrls.accTwoEncConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, totalDist);
+        advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, totalDist);
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
@@ -505,7 +505,7 @@ namespace chassis {
             let dt = currTime - prevTime;
             prevTime = currTime;
             let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
-            let out = advmotctrls.accTwoEnc(eml, emr);
+            let out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
             if (out.isDone) break;
             let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
             // pidChassisSync.setPoint(error);
