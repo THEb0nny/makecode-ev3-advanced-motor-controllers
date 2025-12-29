@@ -300,7 +300,7 @@ namespace advmotctrls {
     //% finishingPwr.shadow="motorSpeedPicker"
     //% weight="59"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {
+    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {        
         // Определяем, какой мотор медленнее (с меньшей максимальной мощностью)
         const absMaxLeft = Math.abs(maxPwrLeft);
         const absMaxRight = Math.abs(maxPwrRight);
@@ -336,8 +336,11 @@ namespace advmotctrls {
         accMotorsMaxPwrsExt.left = maxPwrLeft;
         accMotorsMaxPwrsExt.right = maxPwrRight;
 
-        accMotorsIsNegExt.left = startingPwr < 0 && maxPwrLeft < 0 && finishingPwr < 0;
-        accMotorsIsNegExt.right = startingPwr < 0 && maxPwrRight < 0 && finishingPwr < 0;
+        // accMotorsIsNegExt.left = startingPwr < 0 && maxPwrLeft < 0 && finishingPwr < 0;
+        // accMotorsIsNegExt.right = startingPwr < 0 && maxPwrRight < 0 && finishingPwr < 0;
+
+        accMotorsIsNegExt.left = maxPwrLeft < 0;
+        accMotorsIsNegExt.right = maxPwrRight < 0;
     }
 
     /**
@@ -355,13 +358,13 @@ namespace advmotctrls {
         const profileLeft = accTwoEncComputeMotorProfile(
             Math.abs(eLeft),
             accMotorsTotalDistsExt.left, accMotorsAccelDistsExt.left, accMotorsDecelDistsExt.left,
-            accMotorsStartingPwrsExt.left, accMotorsMaxPwrsExt.left, accMotorsFinishingPwrsExt.left,
+            accMotorsStartingPwrsExt.left, Math.abs(accMotorsMaxPwrsExt.left), accMotorsFinishingPwrsExt.left,
             accMotorsIsNegExt.left
         ); // Расчёт мощности левого мотора
         const profileRight = accTwoEncComputeMotorProfile(
             Math.abs(eRight),
             accMotorsTotalDistsExt.right, accMotorsAccelDistsExt.right, accMotorsDecelDistsExt.right,
-            accMotorsStartingPwrsExt.right, accMotorsMaxPwrsExt.right, accMotorsFinishingPwrsExt.right,
+            accMotorsStartingPwrsExt.right, Math.abs(accMotorsMaxPwrsExt.right), accMotorsFinishingPwrsExt.right,
             accMotorsIsNegExt.right
         ); // Расчёт мощности правого мотора
 
