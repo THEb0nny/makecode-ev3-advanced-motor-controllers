@@ -57,7 +57,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         prevTime = currTime;
         let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
         let out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
-        if (out.isDone) break;
+        if (out.isDoneLeft || out.isDoneRight) break;
         // if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
         let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
         chassis.pidChassisSync.setPoint(error);

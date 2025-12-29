@@ -47,7 +47,8 @@ namespace advmotctrls {
     interface AccelMotors {
         pwrLeft: number,
         pwrRight: number,
-        isDone: boolean
+        isDoneLeft: boolean,
+        isDoneRight: boolean
     }
 
     /**
@@ -367,7 +368,8 @@ namespace advmotctrls {
         return {
             pwrLeft: profileLeft.pwr,
             pwrRight: profileRight.pwr,
-            isDone: profileLeft.isDone && profileRight.isDone
+            isDoneLeft: profileLeft.isDone,
+            isDoneRight: profileRight.isDone
         };
     }
 
