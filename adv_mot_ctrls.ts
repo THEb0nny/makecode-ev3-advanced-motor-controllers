@@ -185,18 +185,17 @@ namespace advmotctrls {
     //% weight="78"
     //% group="Ускорение/замедлениие мотора"
     export function accOneEncCompute(enc: number): AccelMotor {
-        let done: boolean;
+        let done: boolean = false;
         let pwrOut: number;
         const currEnc = Math.abs(enc);
+
         if (currEnc >= accMotorTotalDist) done = true;
         else if (currEnc > accMotorTotalDist / 2) {
             if (accMotorDecelDist == 0) pwrOut = accMotorMaxPwr;
             else pwrOut = (accMotorMaxPwr - accMotorMinPwr) / Math.pow(accMotorDecelDist, 2) * Math.pow(currEnc - accMotorTotalDist, 2) + accMotorMinPwr;
-            done = false;
         } else {
             if (accMotorAccelDist == 0) pwrOut = accMotorMaxPwr;
             else pwrOut = (accMotorMaxPwr - accMotorMinPwr) / Math.pow(accMotorAccelDist, 2) * Math.pow(currEnc - 0, 2) + accMotorMinPwr;
-            done = false;
         }
 
         if (pwrOut < accMotorMinPwr) pwrOut = accMotorMinPwr;
