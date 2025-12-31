@@ -437,24 +437,24 @@ namespace chassis {
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
         pidChassisSync.reset(); // Сброс ПИД-регулятора
 
-        let prevTime = 0; // Переменная для хранения предыдущего времени для цикла регулятора
+        let prevTime = control.millis(); // Переменная для хранения предыдущего времени для цикла регулятора
         if (unit == MoveUnit.Seconds) value *= 0.001; // Если значение было указано в сек, то перевести его в мсек
         const startTime = control.millis() * (unit == MoveUnit.Seconds ? 0.001 : 1); // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
         const endTime = (unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds ? startTime + value : 0); // Вычисляем время окончания цикла регулирования, если выбран соответствующий режим
         while (true) { // Цикл синхронизации движения
-            let currTime = control.millis();
-            let dt = currTime - prevTime;
+            const currTime = control.millis();
+            const dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
+            const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
             if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) &&
                 Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break; // Условие завершения, если режим поворота на градусы или обороты
             else if ((unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds) && 
                 control.millis() >= endTime) break; // Условия завершения, если режим по времени
             // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
-            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
+            const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             // pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
-            let u = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
-            let powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
+            const u = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
+            const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
             control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
@@ -495,17 +495,17 @@ namespace chassis {
 
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
 
-        let prevTime = 0;
+        let prevTime = control.millis();
         while (true) {
-            let currTime = control.millis();
-            let dt = currTime - prevTime;
+            const currTime = control.millis();
+            const dt = currTime - prevTime;
             prevTime = currTime;
-            let eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
-            let out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
+            const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
+            const out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
             if (out.isDone) break;
-            let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
-            let u = pidChassisSync.compute(dt, -error);
-            let powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwr, out.pwr);
+            const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
+            const u = pidChassisSync.compute(dt, -error);
+            const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
             control.pauseUntilTime(currTime, 1);
         }
@@ -556,14 +556,14 @@ namespace chassis {
 
         let prevTime = control.millis();
         while (true) {
-            let currTime = control.millis();
-            let dt = currTime - prevTime;
+            const currTime = control.millis();
+            const dt = currTime - prevTime;
             prevTime = currTime;
 
-            let eml = leftMotor.angle() - emlPrev;
-            let emr = rightMotor.angle() - emrPrev;
+            const eml = leftMotor.angle() - emlPrev;
+            const emr = rightMotor.angle() - emrPrev;
 
-            let powers = advmotctrls.accTwoEnc(eml, emr);
+            const powers = advmotctrls.accTwoEnc(eml, emr);
             if (powers.isDone) break;
 
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);

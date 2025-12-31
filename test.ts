@@ -50,19 +50,19 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
     chassis.pidChassisSync.reset();
     
     control.timer8.reset();
-    let prevTime = 0;
+    let prevTime = control.millis();
     while (true) {
-        let currTime = control.millis();
-        let dt = currTime - prevTime;
+        const currTime = control.millis();
+        const dt = currTime - prevTime;
         prevTime = currTime;
-        let eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
-        let out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
+        const eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
+        const out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
         if (out.isDoneLeft || out.isDoneRight) break;
         // if (out.isDone || (Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot)) break;
-        let error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
+        const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
         chassis.pidChassisSync.setPoint(error);
-        let U = chassis.pidChassisSync.compute(dt, 0);
-        let powers = advmotctrls.getPwrSyncMotorsAtPwr(U, out.pwrLeft, out.pwrRight);
+        const u = chassis.pidChassisSync.compute(dt, 0);
+        const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwrLeft, out.pwrRight);
         chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
         if (control.timer8.millis() >= 10) {
             console.log(`pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
