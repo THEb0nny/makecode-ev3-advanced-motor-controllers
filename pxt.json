@@ -12,7 +12,8 @@
         "README.md",
         "adv_mot_ctrls.ts",
         "chassis.ts",
-        "enums.ts"
+        "enums.ts",
+        "motors.ts"
     ],
     "testFiles": [
         "test.ts"

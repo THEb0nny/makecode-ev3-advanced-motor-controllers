@@ -26,13 +26,13 @@ namespace advmotctrls {
     let accMotorsTotalDist: number;
     let accMotorsIsNeg: boolean;
 
-    let accMotorsTotalDistsExt = { left: 0, right: 0 };
-    let accMotorsAccelDistsExt = { left: 0, right: 0 };
-    let accMotorsDecelDistsExt = { left: 0, right: 0 };
-    let accMotorsStartingPwrsExt = { left: 0, right: 0 };
-    let accMotorsMaxPwrsExt = { left: 0, right: 0 };
-    let accMotorsFinishingPwrsExt = { left: 0, right: 0 };
-    let accMotorsIsNegExt = { left: false, right: false };
+    let accMotorsStartingPwrsComplexMotion = { left: 0, right: 0 };
+    let accMotorsMaxPwrsComplexMotion = { left: 0, right: 0 };
+    let accMotorsFinishingPwrsComplexMotion = { left: 0, right: 0 };
+    let accMotorsIsNegComplexMotion = { left: false, right: false };
+    let accMotorsTotalDistsComplexMotion = { left: 0, right: 0 };
+    let accMotorsAccelDistsComplexMotion = { left: 0, right: 0 };
+    let accMotorsDecelDistsComplexMotion = { left: 0, right: 0 };
 
     interface MotorsPower {
         pwrLeft: number;
@@ -213,30 +213,30 @@ namespace advmotctrls {
 
     /**
      * Конфигурация ускорения и замедления шассии двух моторов.
-     * @param minStartPwr входное значение скорости (мощности) на старте, eg: 20
+     * @param startPwr входное значение скорости (мощности) на старте, eg: 20
      * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
-     * @param minEndPwr входное значение скорости (мощности) при замедлении, eg: 20
+     * @param endPwr входное значение скорости (мощности) при замедлении, eg: 20
      * @param accelDist значение дистанции ускорения, eg: 150
      * @param decelDist значение дистанции замедления, eg: 150
      * @param totalDist значение всей дистанции, eg: 500
      */
     //% blockId="AccTwoEncLinearMotionConfig"
-    //% block="config accel/deceleration chassis at minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
-    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при minStartPwr = $minStartPwr maxPwr = $maxPwr minEndPwr = $minEndPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block="config accel/deceleration chassis at startPwr = $startPwr maxPwr = $maxPwr endPwr = $endPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
+    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при startPwr = $startPwr maxPwr = $maxPwr endPwr = $endPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
     //% inlineInputMode="inline"
-    //% minStartPwr.shadow="motorSpeedPicker"
+    //% startPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
-    //% minEndPwr.shadow="motorSpeedPicker"
+    //% endPwr.shadow="motorSpeedPicker"
     //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncLinearMotionConfig(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
-        accMotorsStartPwr = Math.abs(minStartPwr);
+    export function accTwoEncLinearMotionConfig(startPwr: number, maxPwr: number, endPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+        accMotorsStartPwr = Math.abs(startPwr);
         accMotorsMaxPwr = Math.abs(maxPwr);
-        accMotorsEndPwr = Math.abs(minEndPwr);
+        accMotorsEndPwr = Math.abs(endPwr);
         accMotorsAccelDist = Math.abs(accelDist);
         accMotorsDecelDist = Math.abs(decelDist);
         accMotorsTotalDist = Math.abs(totalDist);
-        accMotorsIsNeg = minStartPwr <= 0 && maxPwr < 0 && minEndPwr <= 0;
+        accMotorsIsNeg = startPwr <= 0 && maxPwr < 0 && endPwr <= 0;
     }
 
     /**
@@ -309,38 +309,35 @@ namespace advmotctrls {
         const ratio = absMaxLeft < absMaxRight ? absMaxRight / absMaxLeft : absMaxLeft / absMaxRight;
 
         if (absMaxLeft < absMaxRight) { // Левый мотор медленнее - он получает базовые значения
-            accMotorsStartingPwrsExt.left = startingPwr;
-            accMotorsStartingPwrsExt.right = startingPwr * ratio;
-            accMotorsFinishingPwrsExt.left = finishingPwr;
-            accMotorsFinishingPwrsExt.right = finishingPwr * ratio;
+            accMotorsStartingPwrsComplexMotion.left = startingPwr;
+            accMotorsStartingPwrsComplexMotion.right = startingPwr * ratio;
+            accMotorsFinishingPwrsComplexMotion.left = finishingPwr;
+            accMotorsFinishingPwrsComplexMotion.right = finishingPwr * ratio;
 
-            accMotorsTotalDistsExt.left = totalDistCenter;
-            accMotorsTotalDistsExt.right = totalDistCenter * ratio;
-            accMotorsAccelDistsExt.left = accelDistCenter;
-            accMotorsAccelDistsExt.right = accelDistCenter * ratio;
-            accMotorsDecelDistsExt.left = decelDistCenter;
-            accMotorsDecelDistsExt.right = decelDistCenter * ratio;
+            accMotorsTotalDistsComplexMotion.left = totalDistCenter;
+            accMotorsTotalDistsComplexMotion.right = totalDistCenter * ratio;
+            accMotorsAccelDistsComplexMotion.left = accelDistCenter;
+            accMotorsAccelDistsComplexMotion.right = accelDistCenter * ratio;
+            accMotorsDecelDistsComplexMotion.left = decelDistCenter;
+            accMotorsDecelDistsComplexMotion.right = decelDistCenter * ratio;
         } else { // Правый мотор медленнее - он получает базовые значения
-            accMotorsStartingPwrsExt.left = startingPwr * ratio;
-            accMotorsStartingPwrsExt.right = startingPwr;
-            accMotorsFinishingPwrsExt.left = finishingPwr * ratio;
-            accMotorsFinishingPwrsExt.right = finishingPwr;
+            accMotorsStartingPwrsComplexMotion.left = startingPwr * ratio;
+            accMotorsStartingPwrsComplexMotion.right = startingPwr;
+            accMotorsFinishingPwrsComplexMotion.left = finishingPwr * ratio;
+            accMotorsFinishingPwrsComplexMotion.right = finishingPwr;
 
-            accMotorsTotalDistsExt.left = totalDistCenter * ratio;
-            accMotorsTotalDistsExt.right = totalDistCenter;
-            accMotorsAccelDistsExt.left = accelDistCenter * ratio;
-            accMotorsAccelDistsExt.right = accelDistCenter;
-            accMotorsDecelDistsExt.left = decelDistCenter * ratio;
-            accMotorsDecelDistsExt.right = decelDistCenter;
+            accMotorsTotalDistsComplexMotion.left = totalDistCenter * ratio;
+            accMotorsTotalDistsComplexMotion.right = totalDistCenter;
+            accMotorsAccelDistsComplexMotion.left = accelDistCenter * ratio;
+            accMotorsAccelDistsComplexMotion.right = accelDistCenter;
+            accMotorsDecelDistsComplexMotion.left = decelDistCenter * ratio;
+            accMotorsDecelDistsComplexMotion.right = decelDistCenter;
         }
-        accMotorsMaxPwrsExt.left = maxPwrLeft;
-        accMotorsMaxPwrsExt.right = maxPwrRight;
+        accMotorsMaxPwrsComplexMotion.left = maxPwrLeft;
+        accMotorsMaxPwrsComplexMotion.right = maxPwrRight;
 
-        // accMotorsIsNegExt.left = startingPwr < 0 && maxPwrLeft < 0 && finishingPwr < 0;
-        // accMotorsIsNegExt.right = startingPwr < 0 && maxPwrRight < 0 && finishingPwr < 0;
-
-        accMotorsIsNegExt.left = maxPwrLeft < 0;
-        accMotorsIsNegExt.right = maxPwrRight < 0;
+        accMotorsIsNegComplexMotion.left = maxPwrLeft < 0;
+        accMotorsIsNegComplexMotion.right = maxPwrRight < 0;
     }
 
     /**
@@ -355,17 +352,17 @@ namespace advmotctrls {
     //% weight="58"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncComplexMotionCompute(eLeft: number, eRight: number): AccelMotors {
-        const profileLeft = accTwoEncComputeMotorProfile(
+        const profileLeft = accTwoEncComplexMotionComputeMotorProfile(
             Math.abs(eLeft),
-            accMotorsTotalDistsExt.left, accMotorsAccelDistsExt.left, accMotorsDecelDistsExt.left,
-            accMotorsStartingPwrsExt.left, Math.abs(accMotorsMaxPwrsExt.left), accMotorsFinishingPwrsExt.left,
-            accMotorsIsNegExt.left
+            accMotorsTotalDistsComplexMotion.left, accMotorsAccelDistsComplexMotion.left, accMotorsDecelDistsComplexMotion.left,
+            accMotorsStartingPwrsComplexMotion.left, Math.abs(accMotorsMaxPwrsComplexMotion.left), accMotorsFinishingPwrsComplexMotion.left,
+            accMotorsIsNegComplexMotion.left
         ); // Расчёт мощности левого мотора
-        const profileRight = accTwoEncComputeMotorProfile(
+        const profileRight = accTwoEncComplexMotionComputeMotorProfile(
             Math.abs(eRight),
-            accMotorsTotalDistsExt.right, accMotorsAccelDistsExt.right, accMotorsDecelDistsExt.right,
-            accMotorsStartingPwrsExt.right, Math.abs(accMotorsMaxPwrsExt.right), accMotorsFinishingPwrsExt.right,
-            accMotorsIsNegExt.right
+            accMotorsTotalDistsComplexMotion.right, accMotorsAccelDistsComplexMotion.right, accMotorsDecelDistsComplexMotion.right,
+            accMotorsStartingPwrsComplexMotion.right, Math.abs(accMotorsMaxPwrsComplexMotion.right), accMotorsFinishingPwrsComplexMotion.right,
+            accMotorsIsNegComplexMotion.right
         ); // Расчёт мощности правого мотора
 
         return {
@@ -377,7 +374,7 @@ namespace advmotctrls {
     }
 
     // Расчёт профиля скорости (мощности) мотора 
-    function accTwoEncComputeMotorProfile(currEnc: number, totalDist: number, accelDist: number, decelDist: number, startPwr: number, maxPwr: number, endPwr: number, isNeg: boolean): AccelMotor {
+    function accTwoEncComplexMotionComputeMotorProfile(currEnc: number, totalDist: number, accelDist: number, decelDist: number, startPwr: number, maxPwr: number, endPwr: number, isNeg: boolean): AccelMotor {
         let done: boolean = false;
         let pwr: number;
 
