@@ -1,3 +1,10 @@
+namespace motors {
+
+    export const cpr: number = 360; // Количество импульсов на оборот
+    export let motorMaxRPM: number = 0; // Максимальная частота (rpm) вращения двигателя
+    
+}
+
 /**
  * A differential drive chassis robot.
  * Шасси робота с дифференциальным приводом.
@@ -11,7 +18,6 @@ namespace chassis {
     export let leftMotor: motors.Motor; // Левый двигатель в шасси
     export let rightMotor: motors.Motor; // Правый двигатель в шасси
 
-    let motorMaxRPM: number = 0; // Максимальная частота (rpm) вращения двигателя
     let wheelDiametr: number = 0; // Радиус колеса в мм
     let baseLength: number = 0; // Расстояние между колесами в мм
 
@@ -153,8 +159,8 @@ namespace chassis {
         setSpeedRegulated(false); // Отключить регулирование скорости прошивки моторов
         const motorLeftType = leftMotor.toString().split(" ")[0][0];
         const motorRightType = leftMotor.toString().split(" ")[0][0];
-        if (motorLeftType === "M" && motorRightType === "M") motorMaxRPM = 250;
-        else motorMaxRPM = 170;
+        if (motorLeftType === "M" && motorRightType === "M") motors.motorMaxRPM = 250;
+        else motors.motorMaxRPM = 170;
     }
 
     /**
