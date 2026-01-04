@@ -72,64 +72,66 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
     chassis.stop(Braking.Hold);
 }
 
-function rampSpinTurnExample(deg: number, maxSpeed: number, accelDeg?: number, decelDeg?: number, timeOut?: number) {
-    if (deg == 0 || maxSpeed == 0) {
-        chassis.stop(Braking.Hold);
-        return;
-    } else if (maxSpeed < 0) {
-        console.log("Error: the rotation maxSpeed relative to the center is negative!");
-        control.assert(false, 7);
-    }
+// function rampSpinTurnExample(deg: number, vMin: number, vMax: number, accelDeg?: number, decelDeg?: number, timeOut?: number) {
+//     if (deg == 0 || vMax == 0) {
+//         chassis.stop(Braking.Hold);
+//         return;
+//     } else if (vMax < 0) {
+//         console.log("Error: the rotation vMax relative to the center is negative!");
+//         control.assert(false, 8);
+//     } else if (vMin < 0) {
+//         console.log("Error: the rotation vMin relative to the center is negative!");
+//         control.assert(false, 8);
+//     }
 
-    maxSpeed = Math.clamp(0, 100, maxSpeed >> 0); // Ограничиваем скорость от 0 до 100 и отсекаем дробную часть
-    const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем значение с энкодера с левого двигателя, правого двигателя перед запуском
-    const absDeg = Math.abs(deg);
-    accelDeg = accelDeg !== undefined ? accelDeg : absDeg * 0.20; // 20% на ускорение
-    decelDeg = decelDeg !== undefined ? decelDeg : absDeg * 0.20; // 20% на замедление
-    if (accelDeg + decelDeg > absDeg) { // Проверка: если ускорение + замедление > всего пути, обрезаем
-        const ratio = absDeg / (accelDeg + decelDeg);
-        accelDeg *= ratio;
-        decelDeg *= ratio;
-    }
-    const accelCalcMotRot = Math.round(accelDeg * chassis.getBaseLength() / chassis.getWheelDiametr()); // Расчёт угла поворота моторов для поворота
-    const decelCalcMotRot = Math.round(decelDeg * chassis.getBaseLength() / chassis.getWheelDiametr());
-    const calcMotRot = Math.round(absDeg * chassis.getBaseLength() / chassis.getWheelDiametr()); // Расчёт угла поворота моторов для поворота
-    const vStarting = 30;
-    const vFinishing = 30;
-    const vLeftMax = deg > 0 ? maxSpeed : -maxSpeed;
-    const vRightMax = deg > 0 ? -maxSpeed : maxSpeed;
+//     vMin = Math.clamp(0, 100, vMin >> 0); // Ограничиваем мин скорость от 0 до 100 и отсекаем дробную часть
+//     vMax = Math.clamp(0, 100, vMax >> 0); // Ограничиваем макс скорость от 0 до 100 и отсекаем дробную часть
+//     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем значение с энкодера с левого двигателя, правого двигателя перед запуском
+//     const absDeg = Math.abs(deg); // Угол поворота
+//     accelDeg = accelDeg !== undefined ? accelDeg : absDeg * 0.25; // 25% на ускорение
+//     decelDeg = decelDeg !== undefined ? decelDeg : absDeg * 0.25; // 25% на замедление
+//     if (accelDeg + decelDeg > absDeg) { // Проверка если ускорение + замедление > всего пути, обрезаем
+//         const ratio = absDeg / (accelDeg + decelDeg);
+//         accelDeg *= ratio;
+//         decelDeg *= ratio;
+//     }
+//     const accelCalcMotRot = Math.round(accelDeg * chassis.getBaseLength() / chassis.getWheelDiametr()); // Расчёт угла поворота моторов для поворота для ускорения
+//     const decelCalcMotRot = Math.round(decelDeg * chassis.getBaseLength() / chassis.getWheelDiametr()); // Расчёт угла поворота моторов для поворота для замедления
+//     const calcMotRot = Math.round(absDeg * chassis.getBaseLength() / chassis.getWheelDiametr()); // Расчёт угла поворота моторов для поворота общего угла
+//     const vLeftMax = deg > 0 ? vMax : -vMax;
+//     const vRightMax = deg > 0 ? -vMax : vMax;
 
-    advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, accelCalcMotRot, decelCalcMotRot, calcMotRot);
-    chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка коэффицентов ПИД регулятора
-    chassis.pidChassisSync.setControlSaturation(-100, 100); // Установка интервалов регулирования
-    chassis.pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
-    chassis.pidChassisSync.reset();
+//     advmotctrls.accTwoEncComplexMotionConfig(vMin, vLeftMax, vRightMax, vMin, accelCalcMotRot, decelCalcMotRot, calcMotRot);
+//     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка коэффицентов ПИД регулятора
+//     chassis.pidChassisSync.setControlSaturation(-100, 100); // Установка интервалов регулирования
+//     chassis.pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
+//     chassis.pidChassisSync.reset(); // Сбросить регулятор
 
-    let prevTime = control.millis(); // Переменная для хранения предыдущего времени для цикла регулирования
-    const startTime = control.millis(); // Стартовое время алгоритма
-    while (true) {
-        const currTime = control.millis();
-        const dt = currTime - prevTime;
-        prevTime = currTime;
-        if (timeOut && currTime - startTime >= timeOut) break; // Выход из алгоритма, если время вышло
-        const eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
-        const out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
-        if (out.isDoneLeft || out.isDoneRight
-            || ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot))) break;
-        const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
-        const u = chassis.pidChassisSync.compute(dt, -error);
-        const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwrLeft, out.pwrRight);
-        chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
-        control.pauseUntilTime(currTime, 1);
-    }
-    chassis.stop(Braking.Hold); // Удерживание при торможении
-}
+//     let prevTime = control.millis(); // Переменная для хранения предыдущего времени для цикла регулирования
+//     const startTime = control.millis(); // Стартовое время алгоритма
+//     while (true) {
+//         const currTime = control.millis();
+//         const dt = currTime - prevTime;
+//         prevTime = currTime;
+//         if (timeOut && currTime - startTime >= timeOut) break; // Выход из алгоритма, если время вышло
+//         const eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
+//         const out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
+//         if (out.isDoneLeft || out.isDoneRight
+//             || ((Math.abs(eml) + Math.abs(emr)) / 2 >= Math.abs(calcMotRot))) break;
+//         const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
+//         const u = chassis.pidChassisSync.compute(dt, -error);
+//         const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwrLeft, out.pwrRight);
+//         chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
+//         control.pauseUntilTime(currTime, 1);
+//     }
+//     chassis.stop(Braking.Hold); // Удерживание при торможении
+// }
 
 function Test() {
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setWheelDiametr(62.4);
     chassis.setBaseLength(175);
-    chassis.setSyncRegulatorGains(0.01, 0, 0);
+    chassis.setSyncRegulatorGains(0.01, 0, 0.5);
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
@@ -143,13 +145,13 @@ function Test() {
     // pause(1000);
     // RampArcMovementExample(30, 70, -70, 30, 200, 300, 500);
 
-    // rampSpinTurnExample(-90, 90, 30);
+    // rampSpinTurnExample(-90, 35, 90);
     // pause(1000);
-    // rampSpinTurnExample(180, 80, 45, 45);
+    // rampSpinTurnExample(180, 35, 80, 45, 45);
     // pause(1000);
-    // rampSpinTurnExample(90, 80, 30, 30);
+    // rampSpinTurnExample(90, 35, 80, 30, 30);
     // pause(1000);
-    // rampSpinTurnExample(90, 80); // Вариант 2: передаешь только градусы и скорость (дефолт 15%/15%)
+    // rampSpinTurnExample(90, 35, 80);
     // pause(1000);
 
     // chassis.syncMovement(-20, -20, -500, MoveUnit.Degrees);
