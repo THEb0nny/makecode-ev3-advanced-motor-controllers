@@ -452,7 +452,7 @@ namespace chassis {
             // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
             const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             // pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
-            const u = pidChassisSync.compute(dt, -error); // Получить управляющее воздействие от регулятора
+            const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
             control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
@@ -503,7 +503,7 @@ namespace chassis {
             const out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
             if (out.isDone) break;
             const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
-            const u = pidChassisSync.compute(dt, -error);
+            const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
             const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
             control.pauseUntilTime(currTime, 1);
