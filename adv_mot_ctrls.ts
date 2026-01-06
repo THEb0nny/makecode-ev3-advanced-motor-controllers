@@ -306,14 +306,15 @@ namespace advmotctrls {
         const absMaxRight = Math.abs(maxPwrRight);
 
         // Коэффициент пропорциональности (отношение макс. скоростей)
-        const ratio = absMaxLeft < absMaxRight ? absMaxRight / absMaxLeft : absMaxLeft / absMaxRight;
-
-        if (absMaxLeft < absMaxRight) { // Левый мотор медленнее - он получает базовые значения
+        // Если один из моторов = 0, используем другой как базовый
+        const ratio = (absMaxLeft === 0 || absMaxRight === 0) ? 1 :
+            (absMaxLeft < absMaxRight ? absMaxRight / absMaxLeft : absMaxLeft / absMaxRight);
+        
+        if (absMaxLeft < absMaxRight && absMaxLeft > 0) { // Левый мотор медленнее - он получает базовые значения
             accMotorsStartingPwrsComplexMotion.left = startingPwr;
             accMotorsStartingPwrsComplexMotion.right = startingPwr * ratio;
             accMotorsFinishingPwrsComplexMotion.left = finishingPwr;
             accMotorsFinishingPwrsComplexMotion.right = finishingPwr * ratio;
-
             accMotorsTotalDistsComplexMotion.left = totalDistCenter;
             accMotorsTotalDistsComplexMotion.right = totalDistCenter * ratio;
             accMotorsAccelDistsComplexMotion.left = accelDistCenter;
@@ -325,7 +326,6 @@ namespace advmotctrls {
             accMotorsStartingPwrsComplexMotion.right = startingPwr;
             accMotorsFinishingPwrsComplexMotion.left = finishingPwr * ratio;
             accMotorsFinishingPwrsComplexMotion.right = finishingPwr;
-
             accMotorsTotalDistsComplexMotion.left = totalDistCenter * ratio;
             accMotorsTotalDistsComplexMotion.right = totalDistCenter;
             accMotorsAccelDistsComplexMotion.left = accelDistCenter * ratio;
@@ -336,8 +336,22 @@ namespace advmotctrls {
         accMotorsMaxPwrsComplexMotion.left = maxPwrLeft;
         accMotorsMaxPwrsComplexMotion.right = maxPwrRight;
 
+        // КРИТИЧНО для поворота относительно мотора, если скорость мотора 0, обнуляем ВСЕ параметры
+        zeroMotorProfile("left", absMaxLeft);
+        zeroMotorProfile("right", absMaxRight);
+
         accMotorsIsNegComplexMotion.left = maxPwrLeft < 0;
         accMotorsIsNegComplexMotion.right = maxPwrRight < 0;
+    }
+
+    function zeroMotorProfile(side: "left" | "right", absMax: number) {
+        if (absMax === 0) {
+            accMotorsStartingPwrsComplexMotion[side] = 0;
+            accMotorsFinishingPwrsComplexMotion[side] = 0;
+            accMotorsTotalDistsComplexMotion[side] = 0;
+            accMotorsAccelDistsComplexMotion[side] = 0;
+            accMotorsDecelDistsComplexMotion[side] = 0;
+        }
     }
 
     /**
