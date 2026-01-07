@@ -69,71 +69,6 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
 }
 
 
-function RampPivotTurnExample(wheelPivot: WheelPivot, deg: number, vMin: number, vMax: number, accelDeg?: number, decelDeg?: number, timeOut?: number, debug: boolean = false) {
-    chassis.stop(Braking.Hold); // Установить тормоз и удержание моторов перед поворотом
-    vMin = Math.clamp(-100, 100, vMin >> 0); // Ограничиваем мин скорость от -100 до 100 и отсекаем дробную часть
-    vMax = Math.clamp(-100, 100, vMax >> 0); // Ограничиваем макс скорость от -100 до 100 и отсекаем дробную часть
-    // Проверка перепутанных скоростей по модулю
-    if (Math.abs(vMin) > Math.abs(vMax)) {
-        const temp = vMin;
-        vMin = vMax;
-        vMax = temp;
-    }
-    // Проверка равенства скоростей по модулю
-    if (Math.abs(vMin) === Math.abs(vMax)) {
-        if (vMin > 0) vMin = Math.max(0, vMin - 10);
-        else vMin = Math.min(0, vMin + 10);
-    }
-    const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle(); // Считываем значение с энкодера с левого двигателя, правого двигателя перед запуском
-    const absDeg = Math.abs(deg); // Угол поворота
-    accelDeg = accelDeg !== undefined ? accelDeg : absDeg * 0.25; // 25% на ускорение
-    decelDeg = decelDeg !== undefined ? decelDeg : absDeg * 0.25; // 25% на замедление
-    if (accelDeg + decelDeg > absDeg) { // Проверка если ускорение + замедление > всего пути, обрезаем
-        const ratio = absDeg / (accelDeg + decelDeg);
-        accelDeg *= ratio;
-        decelDeg *= ratio;
-    }
-    const accelCalcMotRot = Math.round(((accelDeg * chassis.getBaseLength()) / chassis.getWheelDiametr()) * 2); // Расчёт угла поворота моторов для поворота для ускорения
-    const decelCalcMotRot = Math.round(((decelDeg * chassis.getBaseLength()) / chassis.getWheelDiametr()) * 2); // Расчёт угла поворота моторов для поворота для замедления
-    const totalCalcMotRot = Math.round(((Math.abs(deg) * chassis.getBaseLength()) / chassis.getWheelDiametr()) * 2); // Расчёт угла поворота моторов для поворота общего угла
-    const v = deg > 0 ? vMax : -vMax;
-    const vLeftMax = wheelPivot === WheelPivot.LeftWheel ? 0 : v;
-    const vRightMax = wheelPivot === WheelPivot.LeftWheel ? v : 0;
-
-    advmotctrls.accTwoEncComplexMotionConfig(vMin, vLeftMax, vRightMax, vMin, accelCalcMotRot, decelCalcMotRot, totalCalcMotRot);
-    chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd()); // Установка коэффицентов ПИД регулятора
-    chassis.pidChassisSync.setControlSaturation(-100, 100); // Установка интервалов регулирования
-    chassis.pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
-    chassis.pidChassisSync.reset(); // Сбросить регулятор
-
-    let prevTime = control.millis(); // Переменная для хранения предыдущего времени для цикла регулирования
-    const startTime = control.millis(); // Стартовое время алгоритма
-    while (true) {
-        const currTime = control.millis();
-        const dt = currTime - prevTime;
-        prevTime = currTime;
-        if (timeOut && currTime - startTime >= timeOut) break; // Выход из алгоритма, если время вышло
-        const eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
-        const out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
-        // Условие выхода: проверяем только движущееся колесо
-        if (wheelPivot == WheelPivot.LeftWheel && Math.abs(emr) >= totalCalcMotRot ||
-            wheelPivot == WheelPivot.RightWheel && Math.abs(eml) >= totalCalcMotRot) {
-                break;
-        }
-        const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
-        const u = chassis.pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
-        const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwrLeft, out.pwrRight);
-        chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
-        if (debug && control.timer8.millis() >= 10) {
-            console.log(`pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
-            control.timer8.reset();
-        }
-        control.pauseUntilTime(currTime, 1);
-    }
-    chassis.stop(Braking.Hold); // Удерживание при торможении
-}
-
-
 function Test() {
     chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setWheelDiametr(62.4);
@@ -160,10 +95,6 @@ function Test() {
     // pause(1000);
     // rampSpinTurnExample(90, 35, 80);
     // pause(1000);
-
-    RampPivotTurnExample(WheelPivot.LeftWheel, 90, 40, 70);
-    pause(1000);
-    RampPivotTurnExample(WheelPivot.LeftWheel, 90, -40, -70);
 }
 
 Test();
