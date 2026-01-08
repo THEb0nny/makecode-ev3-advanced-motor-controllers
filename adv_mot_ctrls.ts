@@ -13,17 +13,17 @@ namespace advmotctrls {
 
     let accMotorMinPwr: number;
     let accMotorMaxPwr: number;
+    let accMotorTotalDist: number;
     let accMotorAccelDist: number;
     let accMotorDecelDist: number;
-    let accMotorTotalDist: number;
     let accMotorIsNeg: boolean;
 
     let accMotorsStartPwr: number;
     let accMotorsMaxPwr: number;
     let accMotorsEndPwr: number;
+    let accMotorsTotalDist: number;
     let accMotorsAccelDist: number;
     let accMotorsDecelDist: number;
-    let accMotorsTotalDist: number;
     let accMotorsIsNeg: boolean;
 
     let accMotorsStartingPwrsComplexMotion = { left: 0, right: 0 };
@@ -154,9 +154,9 @@ namespace advmotctrls {
      * Конфигурация ускорения и замедления одного мотора.
      * @param minPwr входное значение скорости (мощности) на старте, eg: 20
      * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
+     * @param totalDist значение всей дистанции, eg: 500
      * @param accelDist значение дистанции ускорения, eg: 150
      * @param decelDist значение дистанции замедления, eg: 150
-     * @param totalDist значение всей дистанции, eg: 500
      */
     //% blockId="AccOneEncConfig"
     //% block="config motor acceleration minPwr = $minPwr maxPwr = $maxPwr accelDist = $accelDist decelDist = $decelDist totalDist = $totalDist"
@@ -166,12 +166,12 @@ namespace advmotctrls {
     //% maxPwr.shadow="motorSpeedPicker"
     //% weight="79"
     //% group="Ускорение/замедлениие мотора"
-    export function accOneEncConfig(minPwr: number, maxPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+    export function accOneEncConfig(minPwr: number, maxPwr: number, totalDist: number, accelDist: number, decelDist: number) {
         accMotorMinPwr = Math.abs(minPwr);
         accMotorMaxPwr = Math.abs(maxPwr);
+        accMotorTotalDist = totalDist;
         accMotorAccelDist = accelDist;
         accMotorDecelDist = decelDist;
-        accMotorTotalDist = totalDist;
         accMotorIsNeg = minPwr <= 0 && maxPwr < 0;
     }
     
@@ -216,9 +216,9 @@ namespace advmotctrls {
      * @param startPwr входное значение скорости (мощности) на старте, eg: 20
      * @param maxPwr входное значение максимальной скорости (мощности), eg: 50
      * @param endPwr входное значение скорости (мощности) при замедлении, eg: 20
+     * @param totalDist значение всей дистанции, eg: 500
      * @param accelDist значение дистанции ускорения, eg: 150
      * @param decelDist значение дистанции замедления, eg: 150
-     * @param totalDist значение всей дистанции, eg: 500
      */
     //% blockId="AccTwoEncLinearMotionConfig"
     //% block="config accel/deceleration chassis at startPwr = $startPwr maxPwr = $maxPwr endPwr = $endPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
@@ -229,13 +229,13 @@ namespace advmotctrls {
     //% endPwr.shadow="motorSpeedPicker"
     //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncLinearMotionConfig(startPwr: number, maxPwr: number, endPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+    export function accTwoEncLinearMotionConfig(startPwr: number, maxPwr: number, endPwr: number, totalDist: number, accelDist: number, decelDist: number) {
         accMotorsStartPwr = Math.abs(startPwr);
         accMotorsMaxPwr = Math.abs(maxPwr);
         accMotorsEndPwr = Math.abs(endPwr);
+        accMotorsTotalDist = Math.abs(totalDist);
         accMotorsAccelDist = Math.abs(accelDist);
         accMotorsDecelDist = Math.abs(decelDist);
-        accMotorsTotalDist = Math.abs(totalDist);
         accMotorsIsNeg = startPwr <= 0 && maxPwr < 0 && endPwr <= 0;
     }
 
@@ -286,9 +286,9 @@ namespace advmotctrls {
      * @param maxPwrLeft входное значение максимальной скорости (мощности) левого мотора, eg: 50
      * @param maxPwrRight входное значение максимальной скорости (мощности) правого мотора, eg: 75
      * @param finishingPwr входное значение скорости (мощности) моторов при замедлении, eg: 20
+     * @param totalDistCenter значение всей дистанции, eg: 500
      * @param accelDistCenter значение дистанции ускорения, eg: 150
      * @param decelDistCenter значение дистанции замедления, eg: 150
-     * @param totalDistCenter значение всей дистанции, eg: 500
      */
     //% blockId="AccTwoEncComplexMotionConfig"
     //% block="config accel/deceleration chassis at startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalDist = $totalDist accelDist = $accelDist decelDist = $decelDist"
@@ -300,7 +300,7 @@ namespace advmotctrls {
     //% finishingPwr.shadow="motorSpeedPicker"
     //% weight="59"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, accelDistCenter: number, decelDistCenter: number, totalDistCenter: number) {        
+    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, totalDistCenter: number, accelDistCenter: number, decelDistCenter: number) {
         // Определяем, какой мотор медленнее (с меньшей максимальной мощностью)
         const absMaxLeft = Math.abs(maxPwrLeft);
         const absMaxRight = Math.abs(maxPwrRight);

@@ -176,6 +176,7 @@ namespace chassis {
 
     /**
      * Установить время стабилизации тормоза шасси в мсек.
+     * Значение settleTime всегда должны быть положительными (отрицательные значения будут взяты по модулю).
      * @param settleTime время стабилизации шасси в мсек, eg: 100
      */
     //% blockId="ChassisSetBrakeSettleTime"
@@ -451,7 +452,6 @@ namespace chassis {
                 control.millis() >= endTime) break; // Условия завершения, если режим по времени
             // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
             const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
-            // pidChassisSync.setPoint(error); // Передать ошибку управления регулятору
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
@@ -484,9 +484,10 @@ namespace chassis {
     }
 
     // Функция выполнения синхронизированного движения с фазами
-    export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, accelDist: number, decelDist: number, totalDist: number) {
+    export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, totalDist: number, accelDist: number, decelDist: number) {
         // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
-        advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, accelDist, decelDist, totalDist);
+        advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, totalDist, accelDist, decelDist);
+
         pidChassisSync.setGains(syncKp, syncKi, syncKd);
         pidChassisSync.setControlSaturation(-100, 100);
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
@@ -538,7 +539,7 @@ namespace chassis {
             return;
         }
 
-        executeRampMovement(startSpeed, maxSpeed, finishSpeed, accelValue, decelValue, totalValue); // Выполнение синхронизированного движения с фазами
+        executeRampMovement(startSpeed, maxSpeed, finishSpeed, totalValue, accelValue, decelValue); // Выполнение синхронизированного движения с фазами
         stop(Braking.Hold); // Остановить с удержанием
     }
 

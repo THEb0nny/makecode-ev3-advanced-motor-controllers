@@ -76,7 +76,8 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         console.log(`Warning: accelDist (${absAccelDist}) + decelDist (${absDecelDist}) > totalDist (${absTotalDist}). Profile will be scaled down.`);
     }
 
-    advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, accelCalcMotRot, decelCalcMotRot, totalCalcMotRot);
+    advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, totalCalcMotRot, accelCalcMotRot, decelCalcMotRot);
+    
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
     chassis.pidChassisSync.setControlSaturation(-100, 100);
     chassis.pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
