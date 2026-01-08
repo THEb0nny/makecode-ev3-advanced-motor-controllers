@@ -34,11 +34,50 @@ function LineFollowExample(speed: number) {
 }
 */
 
+
 function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: number, vFinishing: number, accelDist: number, decelDist: number, totalDist: number, debug: boolean = false) {
+    if (totalDist == 0) {
+        return;
+    }
+    if (vLeftMax == 0 && vRightMax == 0) { // Если обе набираемых скоростей указаны как 0
+        console.log("Error: Both vLeftMax and vRightMax cannot be 0!");
+        control.assert(false, 2);
+        return;
+    }
+    
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
-    const accelCalcMotRot = (accelDist / (Math.PI * chassis.getWheelDiametr())) * motors.cpr;
-    const decelCalcMotRot = (decelDist / (Math.PI * chassis.getWheelDiametr())) * motors.cpr;
-    const totalCalcMotRot = (totalDist / (Math.PI * chassis.getWheelDiametr())) * motors.cpr;
+    const direction = totalDist >= 0 ? 1 : -1;
+    vStarting = Math.clamp(0, 100, Math.abs(vStarting) >> 0);
+    vLeftMax = Math.clamp(0, 100, Math.abs(vLeftMax) >> 0);
+    vRightMax = Math.clamp(0, 100, Math.abs(vRightMax) >> 0);
+    vFinishing = Math.clamp(0, 100, Math.abs(vFinishing) >> 0);
+    
+    if (vStarting > vLeftMax || vStarting > vRightMax) { // Проверка логики скоростей(стартовая должна быть меньше максимальной)
+        console.log(`Warning: vStarting (${vStarting}) greater than max speeds. This may cause unexpected behavior.`);
+    }
+
+    vLeftMax *= direction, vRightMax *= direction; // Указываем направление движения в макс скоростях
+
+    if (accelDist < 0) { // Проверка дистанций на отрицательные значения (должны быть положительными перед abs())
+        console.log(`Warning: accelDist is negative (${accelDist}). Using absolute value.`);
+    }
+    if (decelDist < 0) {
+        console.log(`Warning: decelDist is negative (${decelDist}). Using absolute value.`);
+    }
+
+    const absTotalDist = Math.abs(totalDist);
+    const absAccelDist = Math.abs(accelDist);
+    const absDecelDist = Math.abs(decelDist);
+    const accelCalcMotRot = (absAccelDist / (Math.PI * chassis.getWheelDiametr())) * motors.cpr;
+    const decelCalcMotRot = (absDecelDist / (Math.PI * chassis.getWheelDiametr())) * motors.cpr;
+    const totalCalcMotRot = (absTotalDist / (Math.PI * chassis.getWheelDiametr())) * motors.cpr;
+
+    if (absAccelDist + absDecelDist > absTotalDist) { // Проверка суммы дистанций ускорения/замедления
+        console.log(`Warning: accelDist (${absAccelDist}) + decelDist (${absDecelDist}) > totalDist (${absTotalDist}). Profile will be scaled down.`);
+    }
+    if (absAccelDist == 0 || absDecelDist == 0) { // Вообще может же и не нужен
+        console.log(`Warning: accelDist or decelDist is 0. Motion profile may be incomplete.`);
+    }
 
     advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, accelCalcMotRot, decelCalcMotRot, totalCalcMotRot);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
@@ -77,15 +116,21 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
-    // RampArcMovementExample(30, -50, -50, 20, 100, 150, 300);
+    // RampArcMovementExample(30, 50, 50, 20, 100, 150, 300);
     // pause(1000);
-    // RampArcMovementExample(30, -50, -80, 20, 100, 150, 300);
+    // RampArcMovementExample(30, 50, 50, 20, 0, 150, 300);
     // pause(1000);
-    // RampArcMovementExample(30, -80, -50, 20, 100, 150, 300);
+    // RampArcMovementExample(30, 50, 50, 20, 100, 0, 300);
     // pause(1000);
-    // RampArcMovementExample(30, -80, 80, 30, 200, 300, 600);
+    // RampArcMovementExample(30, 50, 50, 20, 100, 150, -300);
     // pause(1000);
-    // RampArcMovementExample(30, 70, -70, 30, 200, 300, 500);
+    // RampArcMovementExample(30, 50, 80, 20, 100, 150, 300);
+    // pause(1000);
+    // RampArcMovementExample(30, 80, 50, 20, 100, 150, 300);
+    // pause(1000);
+    // RampArcMovementExample(30, 50, 80, 20, 100, 150, -300);
+    // pause(1000);
+    // RampArcMovementExample(30, 80, 50, 20, 100, 150, -300);
 
     // rampSpinTurnExample(-90, 35, 90);
     // pause(1000);
