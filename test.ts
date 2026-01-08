@@ -75,9 +75,6 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
     if (absAccelDist + absDecelDist > absTotalDist) { // Проверка суммы дистанций ускорения/замедления
         console.log(`Warning: accelDist (${absAccelDist}) + decelDist (${absDecelDist}) > totalDist (${absTotalDist}). Profile will be scaled down.`);
     }
-    if (absAccelDist == 0 || absDecelDist == 0) { // Вообще может же и не нужен
-        console.log(`Warning: accelDist or decelDist is 0. Motion profile may be incomplete.`);
-    }
 
     advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, accelCalcMotRot, decelCalcMotRot, totalCalcMotRot);
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
