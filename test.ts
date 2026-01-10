@@ -107,7 +107,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
 
 
 function Test() {
-    chassis.setChassisMotors(motors.mediumB, motors.mediumC, true, false);
+    chassis.setMotors(motors.mediumB, motors.mediumC, true, false);
     chassis.setWheelDiametr(62.4);
     chassis.setBaseLength(175);
     chassis.setSyncRegulatorGains(0.01, 0, 0.5);

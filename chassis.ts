@@ -58,7 +58,7 @@ namespace chassis {
      * @param setLeftMotReverse свойство реверса левого двигателя, eg: false
      * @param setRightMotReverse свойство реверса правого двигателя, eg: false
      */
-    //% blockId="ChassisSetChassis"
+    //% blockId="ChassisSet"
     //% block="set motors to chassis $newMotorsPair||at reverse $setLeftMotReverse $setRightMotReverse"
     //% block.loc.ru="установить моторы шасси $newMotorsPair||с реверсом $setLeftMotReverse $setRightMotReverse"
     //% newMotorsPair.fieldEditor="motors"
@@ -127,7 +127,7 @@ namespace chassis {
      * @param setLeftMotReverse свойство реверса левого двигателя, eg: false
      * @param setRightMotReverse свойство реверса правого двигателя, eg: false
      */
-    //% blockId="ChassisSetChassisMotors"
+    //% blockId="ChassisSetMotors"
     //% block="set motors to chassis $newLeftMotors $newRightMotors|at reverse $setLeftMotReverse $setRightMotReverse"
     //% block.loc.ru="установить моторы шасси $newLeftMotors $newRightMotors|с реверсом $setLeftMotReverse $setRightMotReverse"
     //% newLeftMotors.fieldEditor="motors"
@@ -140,7 +140,7 @@ namespace chassis {
     //% expandableArgumentMode="disabled"
     //% weight="98"
     //% group="Установить"
-    export function setChassisMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
+    export function setMotors(newLeftMotors: motors.Motor, newRightMotors: motors.Motor, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
         if (newLeftMotors == newRightMotors) {
             console.log("Error: the same motor is specified for the left and right motors!");
             control.assert(false, 99);
