@@ -39,10 +39,8 @@ namespace chassis {
         else if (out == Output.AD) return [Output.A, Output.D];
         return [];
     }
-    */
     
     // Получить выход (Output) двигателей из входной строки
-    /*
     function strNameToOutput(outStr: string): Output {
         if (outStr == "B+C") return Output.BC;
         else if (outStr == "A+B") return Output.AB;
@@ -352,52 +350,6 @@ namespace chassis {
         leftMotor.run(speedLeft);
         rightMotor.run(speedRight);
     }
-
-    /**
-     * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с).
-     * @param speed скорость (мощность) центральной точки между двигателями, eg: 10
-     * @param rotationSpeed вращение робота вокруг центральной точки, eg: 30
-     * @param distance расстояние до места проезда, eg: 150
-     * @param unit размерность единицы перемещения, eg: MeasurementUnit.Millimeters
-     */
-    //% blockId="ChassisDrive"
-    //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance $unit"
-    //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance $unit"
-    //% inlineInputMode="inline"
-    //% weight="99" blockGap="8"
-    //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
-    //% group="Move"
-    //% blockHidden="true"
-    /*
-    export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
-        if (!leftMotor && !rightMotor) return;
-        if (speed == 0 || wheelDiametr == 0 || baseLength == 0) {
-            stop(Braking.Hold);
-            return;
-        }
-
-        // Speed is expressed in %
-        const D = wheelDiametr * 10; // cm
-        const R = D / 2; // cm
-        const L = baseLength * 10; // cm
-
-        const maxw = motorMaxRPM / 60 * 2 * Math.PI; // rad/s
-        const maxv = maxw * R; // cm/s
-        const v = speed; // speed is cm/s
-        const w = rotationSpeed / 360 * 2 * Math.PI; // rad/s
-
-        const vr = (2 * v + w * L) / (2 * R); // rad/s
-        const vl = (2 * v - w * L) / (2 * R); // rad/seconds
-
-        const sr = vr / maxw * 100; // %
-        const sl = vl / maxw * 100; // %
-
-        if (distance != 0 && unit == MeasurementUnit.Millimeters) distance / 10; // mm to cm
-        const seconds = distance / speed; // cm / (cm/s) = s
-
-        // motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
-    }
-    */
     
     /**
      * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
@@ -431,7 +383,6 @@ namespace chassis {
         const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // Значение, которое должен выполнить левый двигатель, если скорость мотора не 0
         const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
 
-        // advmotctrls.syncMotorsConfig(vLeft, vRight); // Установите скорости двигателя для последующего регулирования
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
         pidChassisSync.setControlSaturation(-100, 100); // Ограничение регулятора
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
@@ -570,6 +521,52 @@ namespace chassis {
             control.pauseUntilTime(currTime, 1);
         }
         stop(true);
+    }
+    */
+
+    /**
+     * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с).
+     * @param speed скорость (мощность) центральной точки между двигателями, eg: 10
+     * @param rotationSpeed вращение робота вокруг центральной точки, eg: 30
+     * @param distance расстояние до места проезда, eg: 150
+     * @param unit размерность единицы перемещения, eg: MeasurementUnit.Millimeters
+     */
+    //% blockId="ChassisDrive"
+    //% block="drive at $speed cm/s turning $rotationSpeed deg/s for $distance $unit"
+    //% block.loc.ru="движение $speed см/с поворотом $rotationSpeed град/с на дистанцию $distance $unit"
+    //% inlineInputMode="inline"
+    //% weight="99" blockGap="8"
+    //% rotationSpeed.min="-3200" rotationSpeed.max="3200"
+    //% group="Move"
+    //% blockHidden="true"
+    /*
+    export function drive(speed: number, rotationSpeed: number, distance: number = 0, unit: MeasurementUnit = MeasurementUnit.Millimeters) {
+        if (!leftMotor && !rightMotor) return;
+        if (speed == 0 || wheelDiametr == 0 || baseLength == 0) {
+            stop(Braking.Hold);
+            return;
+        }
+
+        // Speed is expressed in %
+        const D = wheelDiametr * 10; // cm
+        const R = D / 2; // cm
+        const L = baseLength * 10; // cm
+
+        const maxw = motorMaxRPM / 60 * 2 * Math.PI; // rad/s
+        const maxv = maxw * R; // cm/s
+        const v = speed; // speed is cm/s
+        const w = rotationSpeed / 360 * 2 * Math.PI; // rad/s
+
+        const vr = (2 * v + w * L) / (2 * R); // rad/s
+        const vl = (2 * v - w * L) / (2 * R); // rad/seconds
+
+        const sr = vr / maxw * 100; // %
+        const sl = vl / maxw * 100; // %
+
+        if (distance != 0 && unit == MeasurementUnit.Millimeters) distance / 10; // mm to cm
+        const seconds = distance / speed; // cm / (cm/s) = s
+
+        // motorsPair.tank(sr, sl, seconds, MoveUnit.Seconds);
     }
     */
 

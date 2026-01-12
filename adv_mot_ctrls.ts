@@ -305,10 +305,8 @@ namespace advmotctrls {
         const absMaxLeft = Math.abs(maxPwrLeft);
         const absMaxRight = Math.abs(maxPwrRight);
 
-        // Коэффициент пропорциональности (отношение макс. скоростей)
-        // Если один из моторов = 0, используем другой как базовый
-        const ratio = (absMaxLeft === 0 || absMaxRight === 0) ? 1 :
-            (absMaxLeft < absMaxRight ? absMaxRight / absMaxLeft : absMaxLeft / absMaxRight);
+        // Коэффициент пропорциональности (отношение макс. скоростей). Если один из моторов = 0, используем другой как базовый
+        const ratio = (absMaxLeft === 0 || absMaxRight === 0) ? 1 : (absMaxLeft < absMaxRight ? absMaxRight / absMaxLeft : absMaxLeft / absMaxRight);
         
         if (absMaxLeft < absMaxRight && absMaxLeft > 0) { // Левый мотор медленнее - он получает базовые значения
             accMotorsStartingPwrsComplexMotion.left = startingPwr;
