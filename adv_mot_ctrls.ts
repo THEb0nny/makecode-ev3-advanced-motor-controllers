@@ -6,11 +6,6 @@
 //% block="AdvMotCtrls" weight="50" color="#02ab38" icon="\uf3fd" advanced="true"
 namespace advmotctrls {
 
-    let syncVLeft: number;
-    let syncVRight: number;
-    let syncVLeftSign: number;
-    let syncVRightSign: number;
-
     let accMotorMinPwr: number;
     let accMotorMaxPwr: number;
     let accMotorTotalDist: number;
@@ -49,66 +44,6 @@ namespace advmotctrls {
         pwrRight: number,
         isDoneLeft: boolean,
         isDoneRight: boolean
-    }
-
-    /**
-     * Конфигурация синхронизации моторов шассии на нужной скорости (мощности).
-     * @param vLeft входное значение скорости левого мотора, eg: 50
-     * @param vRight входное значение скорости правого мотора, eg: 50
-     */
-    //% blockId="SyncMotorsConfig"
-    //% block="config sync сhassis control at vLeft = $vLeft vRight = $vRight"
-    //% block.loc.ru="конфигурирация синхронизации управления шасси при vLeft = $vLeft vRight = $vRight"
-    //% inlineInputMode="inline"
-    //% vLeft.shadow="motorSpeedPicker"
-    //% vRight.shadow="motorSpeedPicker"
-    //% weight="99"
-    //% group="Синхронизация шасси на скорости"
-    //% blockHidden="true"
-    export function syncMotorsConfig(vLeft: number, vRight: number) {
-        syncVLeft = vLeft;
-        syncVRight = vRight;
-        syncVLeftSign = Math.abs(vLeft + 1) - Math.abs(vLeft);
-        syncVRightSign = Math.abs(vRight + 1) - Math.abs(vRight);
-    }
-
-    /**
-     * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров.
-     * Скорость (мощность) постоянная.
-     * Возвращает число ошибки для регулятора.
-     * @param eLeft входное значение энкодера левого мотора, eg: 0
-     * @param eRight входное значение энкодера правого мотора, eg: 0
-     */
-    //% blockId="GetErrorSyncMotors"
-    //% block="get error sync chassis at eLeft = $eLeft eRight = $eRight"
-    //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight"
-    //% inlineInputMode="inline"
-    //% weight="98"
-    //% group="Синхронизация шасси на скорости"
-    //% blockHidden="true"
-    export function getErrorSyncMotors(eLeft: number, eRight: number): number {
-        return (syncVRight * eLeft) - (syncVLeft * eRight);
-    }
-    
-    /**
-     * Получить значения скоростей (мощности) для моторов шассии на основе управляющего воздействия, полученного от регулятора синхронизации.
-     * Возвращает интерфейс скорости (мощности) левого и правого моторов.
-     * @param u входное значение управляющего воздействия от регулятора, eg: 0
-     */
-    //% blockId="GetPwrSyncMotors"
-    //% block="get pwr sync сhassis at u = $u"
-    //% block.loc.ru="получить скорости синхронизации шасси при u = $u"
-    //% inlineInputMode="inline"
-    //% weight="97"
-    //% group="Синхронизация шасси на скорости"
-    //% blockHidden="true"
-    export function getPwrSyncMotors(u: number): MotorsPower {
-        const pLeft = syncVLeft - syncVRightSign * u;
-        const pRight = syncVRight + syncVLeftSign * u;
-        return {
-            pwrLeft: pLeft,
-            pwrRight: pRight
-        };
     }
     
     /**
