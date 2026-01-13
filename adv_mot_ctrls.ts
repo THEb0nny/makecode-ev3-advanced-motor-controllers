@@ -13,9 +13,9 @@ namespace advmotctrls {
     let accMotorDecelDist: number;
     let accMotorIsNeg: boolean;
 
-    let accMotorsStartPwr: number;
+    let accMotorsStartingPwr: number;
     let accMotorsMaxPwr: number;
-    let accMotorsEndPwr: number;
+    let accMotorsFinishingPwr: number;
     let accMotorsTotalDist: number;
     let accMotorsAccelDist: number;
     let accMotorsDecelDist: number;
@@ -163,9 +163,9 @@ namespace advmotctrls {
     //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncLinearMotionConfig(startPwr: number, maxPwr: number, endPwr: number, totalDist: number, accelDist: number, decelDist: number) {
-        accMotorsStartPwr = Math.abs(startPwr);
+        accMotorsStartingPwr = Math.abs(startPwr);
         accMotorsMaxPwr = Math.abs(maxPwr);
-        accMotorsEndPwr = Math.abs(endPwr);
+        accMotorsFinishingPwr = Math.abs(endPwr);
         accMotorsTotalDist = Math.abs(totalDist);
         accMotorsAccelDist = Math.abs(accelDist);
         accMotorsDecelDist = Math.abs(decelDist);
@@ -193,12 +193,12 @@ namespace advmotctrls {
             done = true;
         } else if (currEnc > accMotorsTotalDist - accMotorsDecelDist) { // Фаза замедления
             if (accMotorsDecelDist == 0) pwrOut = accMotorsMaxPwr;
-            else pwrOut = (accMotorsMaxPwr - accMotorsEndPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsEndPwr;
-            pwrOut = Math.max(accMotorsEndPwr, pwrOut); // Защита от "проседания" ниже EndPwr (мало ли, плавающая точка)
+            else pwrOut = (accMotorsMaxPwr - accMotorsFinishingPwr) / Math.pow(accMotorsDecelDist, 2) * Math.pow(currEnc - accMotorsTotalDist, 2) + accMotorsFinishingPwr;
+            pwrOut = Math.max(accMotorsFinishingPwr, pwrOut); // Защита от "проседания" ниже EndPwr (мало ли, плавающая точка)
         } else if (currEnc < accMotorsAccelDist) { // Фаза ускорения
             if (accMotorsAccelDist == 0) pwrOut = accMotorsMaxPwr;
-            else pwrOut = (accMotorsMaxPwr - accMotorsStartPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc, 2) + accMotorsStartPwr;
-            pwrOut = Math.max(accMotorsStartPwr, pwrOut); // Защита от стартовой скорсоти ниже StartPwr
+            else pwrOut = (accMotorsMaxPwr - accMotorsStartingPwr) / Math.pow(accMotorsAccelDist, 2) * Math.pow(currEnc, 2) + accMotorsStartingPwr;
+            pwrOut = Math.max(accMotorsStartingPwr, pwrOut); // Защита от стартовой скорсоти ниже StartPwr
         } else { // Фаза постоянной скорости (между ускорением и замедлением)
             pwrOut = accMotorsMaxPwr;
         }
