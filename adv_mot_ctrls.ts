@@ -21,13 +21,13 @@ namespace advmotctrls {
     let accMotorsDecelDist: number;
     let accMotorsIsNeg: boolean;
 
-    let accMotorsStartingPwrsComplexMotion = { left: 0, right: 0 };
-    let accMotorsMaxPwrsComplexMotion = { left: 0, right: 0 };
-    let accMotorsFinishingPwrsComplexMotion = { left: 0, right: 0 };
-    let accMotorsIsNegComplexMotion = { left: false, right: false };
-    let accMotorsTotalDistsComplexMotion = { left: 0, right: 0 };
-    let accMotorsAccelDistsComplexMotion = { left: 0, right: 0 };
-    let accMotorsDecelDistsComplexMotion = { left: 0, right: 0 };
+    let accMotorsComplexMotionStartingPwrs = { left: 0, right: 0 };
+    let accMotorsComplexMotionMaxPwrs = { left: 0, right: 0 };
+    let accMotorsComplexMotionFinishingPwrs = { left: 0, right: 0 };
+    let accMotorsComplexMotionIsNeg = { left: false, right: false };
+    let accMotorsComplexMotionTotalDist = { left: 0, right: 0 };
+    let accMotorsComplexMotionAccelDist = { left: 0, right: 0 };
+    let accMotorsComplexMotionDecelDist = { left: 0, right: 0 };
 
     interface MotorsPower {
         pwrLeft: number;
@@ -229,7 +229,7 @@ namespace advmotctrls {
     //% finishingPwr.shadow="motorSpeedPicker"
     //% weight="59"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, totalDist: number, accelDist: number, decelCenter: number) {
+    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, totalDist: number, accelDist: number, decelDist: number) {
         // Определяем, какой мотор медленнее (с меньшей максимальной мощностью)
         const absMaxLeft = Math.abs(maxPwrLeft);
         const absMaxRight = Math.abs(maxPwrRight);
@@ -238,46 +238,46 @@ namespace advmotctrls {
         const ratio = (absMaxLeft === 0 || absMaxRight === 0) ? 1 : (absMaxLeft < absMaxRight ? absMaxRight / absMaxLeft : absMaxLeft / absMaxRight);
         
         if (absMaxLeft < absMaxRight && absMaxLeft > 0) { // Левый мотор медленнее - он получает базовые значения
-            accMotorsStartingPwrsComplexMotion.left = startingPwr;
-            accMotorsStartingPwrsComplexMotion.right = startingPwr * ratio;
-            accMotorsFinishingPwrsComplexMotion.left = finishingPwr;
-            accMotorsFinishingPwrsComplexMotion.right = finishingPwr * ratio;
-            accMotorsTotalDistsComplexMotion.left = totalDist;
-            accMotorsTotalDistsComplexMotion.right = totalDist * ratio;
-            accMotorsAccelDistsComplexMotion.left = accelDist;
-            accMotorsAccelDistsComplexMotion.right = accelDist * ratio;
-            accMotorsDecelDistsComplexMotion.left = decelCenter;
-            accMotorsDecelDistsComplexMotion.right = decelCenter * ratio;
+            accMotorsComplexMotionStartingPwrs.left = startingPwr;
+            accMotorsComplexMotionStartingPwrs.right = startingPwr * ratio;
+            accMotorsComplexMotionFinishingPwrs.left = finishingPwr;
+            accMotorsComplexMotionFinishingPwrs.right = finishingPwr * ratio;
+            accMotorsComplexMotionTotalDist.left = totalDist;
+            accMotorsComplexMotionTotalDist.right = totalDist * ratio;
+            accMotorsComplexMotionAccelDist.left = accelDist;
+            accMotorsComplexMotionAccelDist.right = accelDist * ratio;
+            accMotorsComplexMotionDecelDist.left = decelDist;
+            accMotorsComplexMotionDecelDist.right = decelDist * ratio;
         } else { // Правый мотор медленнее - он получает базовые значения
-            accMotorsStartingPwrsComplexMotion.left = startingPwr * ratio;
-            accMotorsStartingPwrsComplexMotion.right = startingPwr;
-            accMotorsFinishingPwrsComplexMotion.left = finishingPwr * ratio;
-            accMotorsFinishingPwrsComplexMotion.right = finishingPwr;
-            accMotorsTotalDistsComplexMotion.left = totalDist * ratio;
-            accMotorsTotalDistsComplexMotion.right = totalDist;
-            accMotorsAccelDistsComplexMotion.left = accelDist * ratio;
-            accMotorsAccelDistsComplexMotion.right = accelDist;
-            accMotorsDecelDistsComplexMotion.left = decelCenter * ratio;
-            accMotorsDecelDistsComplexMotion.right = decelCenter;
+            accMotorsComplexMotionStartingPwrs.left = startingPwr * ratio;
+            accMotorsComplexMotionStartingPwrs.right = startingPwr;
+            accMotorsComplexMotionFinishingPwrs.left = finishingPwr * ratio;
+            accMotorsComplexMotionFinishingPwrs.right = finishingPwr;
+            accMotorsComplexMotionTotalDist.left = totalDist * ratio;
+            accMotorsComplexMotionTotalDist.right = totalDist;
+            accMotorsComplexMotionAccelDist.left = accelDist * ratio;
+            accMotorsComplexMotionAccelDist.right = accelDist;
+            accMotorsComplexMotionDecelDist.left = decelDist * ratio;
+            accMotorsComplexMotionDecelDist.right = decelDist;
         }
-        accMotorsMaxPwrsComplexMotion.left = maxPwrLeft;
-        accMotorsMaxPwrsComplexMotion.right = maxPwrRight;
+        accMotorsComplexMotionMaxPwrs.left = maxPwrLeft;
+        accMotorsComplexMotionMaxPwrs.right = maxPwrRight;
 
         // КРИТИЧНО для поворота относительно мотора, если скорость мотора 0, обнуляем ВСЕ параметры
         zeroMotorProfile("left", absMaxLeft);
         zeroMotorProfile("right", absMaxRight);
 
-        accMotorsIsNegComplexMotion.left = maxPwrLeft < 0;
-        accMotorsIsNegComplexMotion.right = maxPwrRight < 0;
+        accMotorsComplexMotionIsNeg.left = maxPwrLeft < 0;
+        accMotorsComplexMotionIsNeg.right = maxPwrRight < 0;
     }
 
     function zeroMotorProfile(side: "left" | "right", absMax: number) {
         if (absMax === 0) {
-            accMotorsStartingPwrsComplexMotion[side] = 0;
-            accMotorsFinishingPwrsComplexMotion[side] = 0;
-            accMotorsTotalDistsComplexMotion[side] = 0;
-            accMotorsAccelDistsComplexMotion[side] = 0;
-            accMotorsDecelDistsComplexMotion[side] = 0;
+            accMotorsComplexMotionStartingPwrs[side] = 0;
+            accMotorsComplexMotionFinishingPwrs[side] = 0;
+            accMotorsComplexMotionTotalDist[side] = 0;
+            accMotorsComplexMotionAccelDist[side] = 0;
+            accMotorsComplexMotionDecelDist[side] = 0;
         }
     }
 
@@ -295,15 +295,15 @@ namespace advmotctrls {
     export function accTwoEncComplexMotionCompute(eLeft: number, eRight: number): AccelMotors {
         const profileLeft = accTwoEncComplexMotionComputeMotorProfile(
             eLeft,
-            accMotorsTotalDistsComplexMotion.left, accMotorsAccelDistsComplexMotion.left, accMotorsDecelDistsComplexMotion.left,
-            accMotorsStartingPwrsComplexMotion.left, Math.abs(accMotorsMaxPwrsComplexMotion.left), accMotorsFinishingPwrsComplexMotion.left,
-            accMotorsIsNegComplexMotion.left
+            accMotorsComplexMotionTotalDist.left, accMotorsComplexMotionAccelDist.left, accMotorsComplexMotionDecelDist.left,
+            accMotorsComplexMotionStartingPwrs.left, Math.abs(accMotorsComplexMotionMaxPwrs.left), accMotorsComplexMotionFinishingPwrs.left,
+            accMotorsComplexMotionIsNeg.left
         ); // Расчёт мощности левого мотора
         const profileRight = accTwoEncComplexMotionComputeMotorProfile(
             eRight,
-            accMotorsTotalDistsComplexMotion.right, accMotorsAccelDistsComplexMotion.right, accMotorsDecelDistsComplexMotion.right,
-            accMotorsStartingPwrsComplexMotion.right, Math.abs(accMotorsMaxPwrsComplexMotion.right), accMotorsFinishingPwrsComplexMotion.right,
-            accMotorsIsNegComplexMotion.right
+            accMotorsComplexMotionTotalDist.right, accMotorsComplexMotionAccelDist.right, accMotorsComplexMotionDecelDist.right,
+            accMotorsComplexMotionStartingPwrs.right, Math.abs(accMotorsComplexMotionMaxPwrs.right), accMotorsComplexMotionFinishingPwrs.right,
+            accMotorsComplexMotionIsNeg.right
         ); // Расчёт мощности правого мотора
 
         return {
