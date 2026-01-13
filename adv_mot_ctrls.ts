@@ -322,7 +322,7 @@ namespace advmotctrls {
     // Расчёт профиля скорости (мощности) мотора 
     function accTwoEncComplexMotionComputeMotorProfile(enc: number, totalDist: number, accelDist: number, decelDist: number, startPwr: number, maxPwr: number, endPwr: number, isNeg: boolean): AccelMotor {
         let done: boolean = false;
-        let pwr: number;
+        let pwrOut: number;
         const currEnc = Math.abs(enc);
 
         const absStartPwr = Math.abs(startPwr);
@@ -330,22 +330,22 @@ namespace advmotctrls {
         const absEndPwr = Math.abs(endPwr);
 
         if (currEnc >= totalDist) { // Фаза финиша
-            pwr = 0;
+            pwrOut = 0;
             done = true;
         } else if (currEnc > totalDist - decelDist) { // Фаза замедления
-            if (decelDist == 0) pwr = absMaxPwr;
-            else pwr = (absMaxPwr - absEndPwr) / Math.pow(decelDist, 2) * Math.pow(currEnc - totalDist, 2) + absEndPwr;
-            pwr = Math.max(absEndPwr, Math.min(absMaxPwr, pwr)); // Ограничение для фазы замедления
+            if (decelDist == 0) pwrOut = absMaxPwr;
+            else pwrOut = (absMaxPwr - absEndPwr) / Math.pow(decelDist, 2) * Math.pow(currEnc - totalDist, 2) + absEndPwr;
+            pwrOut = Math.max(absEndPwr, Math.min(absMaxPwr, pwrOut)); // Ограничение для фазы замедления
         } else if (currEnc < accelDist) { // Фаза ускорения
-            if (accelDist == 0) pwr = absMaxPwr;
-            else pwr = (absMaxPwr - absStartPwr) / Math.pow(accelDist, 2) * Math.pow(currEnc, 2) + absStartPwr;
-            pwr = Math.max(absStartPwr, Math.min(absMaxPwr, pwr)); // Ограничение для фазы ускорения
+            if (accelDist == 0) pwrOut = absMaxPwr;
+            else pwrOut = (absMaxPwr - absStartPwr) / Math.pow(accelDist, 2) * Math.pow(currEnc, 2) + absStartPwr;
+            pwrOut = Math.max(absStartPwr, Math.min(absMaxPwr, pwrOut)); // Ограничение для фазы ускорения
         } else { // Фаза постоянной скорости (между ускорением и замедлением)
-            pwr = absMaxPwr;
+            pwrOut = absMaxPwr;
         }
 
         return {
-            pwr: isNeg ? -pwr : pwr,
+            pwr: isNeg ? -pwrOut : pwrOut,
             isDone: done
         };
     }
