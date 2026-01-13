@@ -104,9 +104,9 @@ namespace advmotctrls {
     export function accOneEncConfig(minPwr: number, maxPwr: number, totalDist: number, accelDist: number, decelDist: number) {
         accMotorMinPwr = Math.abs(minPwr);
         accMotorMaxPwr = Math.abs(maxPwr);
-        accMotorTotalDist = totalDist;
-        accMotorAccelDist = accelDist;
-        accMotorDecelDist = decelDist;
+        accMotorTotalDist = Math.abs(totalDist);
+        accMotorAccelDist = Math.abs(accelDist);
+        accMotorDecelDist = Math.abs(decelDist);
         accMotorIsNeg = maxPwr < 0;
     }
     
