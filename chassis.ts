@@ -327,6 +327,12 @@ namespace chassis {
         return { speedLeft, speedRight };
     }
 
+    // Команда установки моторам скоростей (мощностей)
+    export function setSpeedsCommand(speedLeft: number, speedRight: number) {
+        leftMotor.run(speedLeft);
+        rightMotor.run(speedRight);
+    }
+
     /**
      * Команда рулевого управления моторами шасси.
      * @param turnRatio рулевой параметр, если больше 0, то поворачиваем вправо, а если меньше, то влево, eg: 0
@@ -344,15 +350,9 @@ namespace chassis {
         const { speedLeft, speedRight } = getSpeedsAtSteering(turnRatio, speed);
         setSpeedsCommand(speedLeft, speedRight);
     }
-
-    // Команда установки моторам скоростей (мощностей)
-    export function setSpeedsCommand(speedLeft: number, speedRight: number) {
-        leftMotor.run(speedLeft);
-        rightMotor.run(speedRight);
-    }
     
     /**
-     * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя. Нет поддержки ускорения или замедления.
+     * Синхронизация двигателей в шасси с настройкой скоростей для каждого двигателя.
      * @param vLeft входное значение частоты вращения левого двигателя, eg: 50
      * @param vRight входное значение частоты вращения правого двигателя, eg: 50
      * @param value размерность вращения, eg: 500
@@ -378,7 +378,9 @@ namespace chassis {
         
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // Ограничиваем скорость левого мотора от -100 до 100 и отсекаем дробную часть
         vRight = Math.clamp(-100, 100, vRight >> 0); // Ограничиваем скорость правого мотора от -100 до 100 и отсекаем дробную часть
+
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском считываем значение с энкодеров левого и правого двигателя
+        
         if (unit == MoveUnit.Rotations) value /= 360; // Преобразуем градусы в обороты, если выбран соответствующий режим
         const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // Значение, которое должен выполнить левый двигатель, если скорость мотора не 0
         const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
@@ -463,7 +465,11 @@ namespace chassis {
     }
 
     /**
-     * Синхронизация с плавным ускорением и замедлением при прямолинейном движении. Значения расстояний устанавливается в тиках энкодера.
+     * Синхронизация с плавным ускорением и замедлением при прямолинейном движении. 
+     * Значения расстояний устанавливается в тиках энкодера.
+     * Для движения вперёд устанавливается положительная дистанция totalValue, а назад - отрицательная.
+     * Расстояния accelValue и decelValue всегда должны быть положительными (отрицательные значения будут взяты по модулю).
+     * Скорости всегда должны быть положительными (отрицательное значение будет взято по модулю).
      * @param startSpeed начальная скорость (мощность) двигателя, eg: 20
      * @param maxSpeed максимальная скорость (мощность) двигателя, eg: 50
      * @param finishSpeed конечная скорость (мощность) двигателя, eg: 10
@@ -479,50 +485,43 @@ namespace chassis {
     //% maxSpeed.shadow="motorSpeedPicker"
     //% finishSpeed.shadow="motorSpeedPicker"
     //% weight="99"
+    //% subcategory="Движение"
     //% group="Синхронизированное движение с ускорениями"
     export function syncRampMovement(startSpeed: number, maxSpeed: number, finishSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
         if (!leftMotor && !rightMotor) return;
         if (maxSpeed == 0 || totalValue == 0) {
             stop(Braking.Hold);
             return;
-        } else if (Math.abs(startSpeed) > Math.abs(maxSpeed) || Math.abs(finishSpeed) > Math.abs(maxSpeed)) {
-            stop(Braking.Hold);
-            return;
+        }
+        if (startSpeed < 0) console.log("Warning: startSpeed is negative, using absolute value."); // Предупреждения о модулях скоростей
+        if (maxSpeed < 0) console.log("Warning: maxSpeed is negative, using absolute value.");
+        if (finishSpeed < 0) console.log("Warning: finishSpeed is negative, using absolute value.");
+        if (accelValue < 0) console.log("Warning: accelValue is negative, using absolute value."); // Предупреждения о модулях расстояний
+        if (decelValue < 0) console.log("Warning: decelValue is negative, using absolute value.");
+
+        // Берём модули скоростей
+        let absStartSpeed = Math.abs(startSpeed);
+        let absMaxSpeed = Math.abs(maxSpeed);
+        let absFinishSpeed = Math.abs(finishSpeed);
+
+        if (absStartSpeed > absMaxSpeed) { // Замена и предупреждение если startSpeed > maxSpeed
+            console.log("Warning: startSpeed > maxSpeed, swapping values.");
+            const tempV = absStartSpeed;
+            absStartSpeed = absMaxSpeed;
+            absMaxSpeed = tempV;
+        }
+        if (absFinishSpeed > absMaxSpeed) { // Замена и предупреждение если finishSpeed > maxSpeed
+            console.log("Warning: finishSpeed > maxSpeed, swapping values.");
+            const tempV = absFinishSpeed;
+            absFinishSpeed = absMaxSpeed;
+            absMaxSpeed = tempV;
         }
 
-        executeRampMovement(startSpeed, maxSpeed, finishSpeed, totalValue, accelValue, decelValue); // Выполнение синхронизированного движения с фазами
+        const dirSign = totalValue >= 0 ? 1 : -1; // Направление по знаку totalValue
+
+        executeRampMovement(absStartSpeed, absMaxSpeed * dirSign, absFinishSpeed, totalValue, accelValue, decelValue); // Выполнение синхронизированного движения с фазами
         stop(Braking.Hold); // Остановить с удержанием
     }
-
-    /*
-    export function syncRampArcMovement(minSpeedLeft: number, maxSpeedLeft: number, minSpeedRight: number, maxSpeedRight: number, totalValue: number, accelValue: number, decelValue: number) {
-        if (maxSpeedLeft == 0 && maxSpeedRight == 0 || totalValue == 0) {
-            stop(true);
-            return;
-        }
-
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle();
-
-        advmotctrls.accTwoEncConfig(minSpeedLeft, maxSpeedLeft, minSpeedLeft, minSpeedRight, maxSpeedRight, minSpeedRight, accelValue, decelValue, totalValue);
-
-        let prevTime = control.millis();
-        while (true) {
-            const currTime = control.millis();
-            const dt = currTime - prevTime;
-            prevTime = currTime;
-
-            const eml = leftMotor.angle() - emlPrev;
-            const emr = rightMotor.angle() - emrPrev;
-
-            const powers = advmotctrls.accTwoEnc(eml, emr);
-            if (powers.isDone) break;
-
-            setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
-            control.pauseUntilTime(currTime, 1);
-        }
-        stop(true);
-    }
-    */
 
     /**
      * Заставляет робота с дифференциальным приводом двигаться с заданной скоростью (см/с) и частотой вращения (град/с).

@@ -46,7 +46,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
     }
     
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
-    const direction = totalDist >= 0 ? 1 : -1;
+    const dirSign = totalDist >= 0 ? 1 : -1;
     vStarting = Math.clamp(0, 100, Math.abs(vStarting) >> 0);
     vLeftMax = Math.clamp(0, 100, Math.abs(vLeftMax) >> 0);
     vRightMax = Math.clamp(0, 100, Math.abs(vRightMax) >> 0);
@@ -56,7 +56,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         console.log(`Warning: vStarting (${vStarting}) greater than max speeds. This may cause unexpected behavior.`);
     }
 
-    vLeftMax *= direction, vRightMax *= direction; // Указываем направление движения в макс скоростях
+    vLeftMax *= dirSign, vRightMax *= dirSign; // Указываем направление движения в макс скоростях
 
     if (accelDist < 0) { // Проверка дистанций на отрицательные значения (должны быть положительными перед abs())
         console.log(`Warning: accelDist is negative (${accelDist}). Using absolute value.`);
