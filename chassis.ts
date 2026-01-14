@@ -470,9 +470,9 @@ namespace chassis {
      * Для движения вперёд устанавливается положительная дистанция totalValue, а назад - отрицательная.
      * Расстояния accelValue и decelValue всегда должны быть положительными (отрицательные значения будут взяты по модулю).
      * Скорости всегда должны быть положительными (отрицательное значение будет взято по модулю).
-     * @param startSpeed начальная скорость (мощность) двигателя, eg: 20
-     * @param maxSpeed максимальная скорость (мощность) двигателя, eg: 50
-     * @param finishSpeed конечная скорость (мощность) двигателя, eg: 10
+     * @param vStart начальная скорость (мощность) двигателя, eg: 20
+     * @param vMax максимальная скорость (мощность) двигателя, eg: 50
+     * @param vFinish конечная скорость (мощность) двигателя, eg: 10
      * @param totalValue значение общей длины для энкодера, eg: 300
      * @param accelValue значение длины ускорения для энкодера, eg: 50
      * @param decelValue значение длины замедления для энкодера, eg: 100
@@ -481,45 +481,45 @@ namespace chassis {
     //% block="sync chassis ramp movement at start $startSpeed\\% max $maxSpeed\\% finish $finishSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
     //% block.loc.ru="синхронизированное управление шасси с ускорением на старте $startSpeed\\% макс $maxSpeed\\% финише $finishSpeed\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
     //% inlineInputMode="inline"
-    //% startSpeed.shadow="motorSpeedPicker"
-    //% maxSpeed.shadow="motorSpeedPicker"
-    //% finishSpeed.shadow="motorSpeedPicker"
+    //% vStart.shadow="motorSpeedPicker"
+    //% vMax.shadow="motorSpeedPicker"
+    //% vFinish.shadow="motorSpeedPicker"
     //% weight="99"
     //% subcategory="Движение"
     //% group="Синхронизированное движение с ускорениями"
-    export function syncRampMovement(startSpeed: number, maxSpeed: number, finishSpeed: number, totalValue: number, accelValue: number, decelValue: number) {
+    export function syncRampMovement(vStart: number, vMax: number, vFinish: number, totalValue: number, accelValue: number, decelValue: number) {
         if (!leftMotor && !rightMotor) return;
-        if (maxSpeed == 0 || totalValue == 0) {
+        if (vMax == 0 || totalValue == 0) {
             stop(Braking.Hold);
             return;
         }
-        if (startSpeed < 0) console.log("Warning: startSpeed is negative, using absolute value."); // Предупреждения о модулях скоростей
-        if (maxSpeed < 0) console.log("Warning: maxSpeed is negative, using absolute value.");
-        if (finishSpeed < 0) console.log("Warning: finishSpeed is negative, using absolute value.");
-        if (accelValue < 0) console.log("Warning: accelValue is negative, using absolute value."); // Предупреждения о модулях расстояний
-        if (decelValue < 0) console.log("Warning: decelValue is negative, using absolute value.");
+        if (vStart < 0) console.log(`Warning: vStart is negative (${vStart}). Using absolute value.`); // Предупреждения о модулях скоростей
+        if (vMax < 0) console.log(`Warning: vMax is negative (${vMax}). Using absolute value.`);
+        if (vFinish < 0) console.log(`Warning: vFinish is negative (${vFinish}). Using absolute value.`);
+        if (accelValue < 0) console.log(`Warning: accelValue is negative (${accelValue}). Using absolute value.`); // Предупреждения о модулях расстояний
+        if (decelValue < 0) console.log(`Warning: decelValue is negative (${decelValue}). Using absolute value.`);
 
         // Берём модули скоростей
-        let absStartSpeed = Math.abs(startSpeed);
-        let absMaxSpeed = Math.abs(maxSpeed);
-        let absFinishSpeed = Math.abs(finishSpeed);
+        let absStartV = Math.abs(vStart);
+        let absMaxV = Math.abs(vMax);
+        let absFinishV = Math.abs(vFinish);
 
-        if (absStartSpeed > absMaxSpeed) { // Замена и предупреждение если startSpeed > maxSpeed
-            console.log("Warning: startSpeed > maxSpeed, swapping values.");
-            const tempV = absStartSpeed;
-            absStartSpeed = absMaxSpeed;
-            absMaxSpeed = tempV;
+        if (absStartV > absMaxV) { // Замена и предупреждение если vStart > vMax
+            const tempV = absStartV;
+            absStartV = absMaxV;
+            absMaxV = tempV;
+            console.log(`Warning: vStart > vMax,  Swapped: startSpeed=${absStartV}, absMaxV=${absMaxV}`);
         }
-        if (absFinishSpeed > absMaxSpeed) { // Замена и предупреждение если finishSpeed > maxSpeed
-            console.log("Warning: finishSpeed > maxSpeed, swapping values.");
-            const tempV = absFinishSpeed;
-            absFinishSpeed = absMaxSpeed;
-            absMaxSpeed = tempV;
+        if (absFinishV > absMaxV) { // Замена и предупреждение если vFinish > vMax
+            const tempV = absFinishV;
+            absFinishV = absMaxV;
+            absMaxV = tempV;
+            console.log(`Warning: vFinish > vMax,  Swapped: absFinishV=${absFinishV}, absStartV=${absStartV}`);
         }
 
         const dirSign = totalValue >= 0 ? 1 : -1; // Направление по знаку totalValue
 
-        executeRampMovement(absStartSpeed, absMaxSpeed * dirSign, absFinishSpeed, totalValue, accelValue, decelValue); // Выполнение синхронизированного движения с фазами
+        executeRampMovement(absStartV, absMaxV * dirSign, absFinishV, totalValue, accelValue, decelValue); // Выполнение синхронизированного движения с фазами
         stop(Braking.Hold); // Остановить с удержанием
     }
 
