@@ -5,6 +5,7 @@
  */
 //% block="AdvMotCtrls" weight="50" color="#02ab38" icon="\uf3fd" advanced="true"
 namespace advmotctrls {
+    // Используется математика параболистического профиль ускорения моторов
 
     let accMotorMinPwr: number;
     let accMotorMaxPwr: number;
