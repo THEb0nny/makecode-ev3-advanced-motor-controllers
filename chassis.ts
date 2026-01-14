@@ -143,8 +143,7 @@ namespace chassis {
             console.log("Error: the same motor is specified for the left and right motors!");
             control.assert(false, 99);
         }
-        leftMotor = newLeftMotors; // Установите левый экземпляр двигателя
-        rightMotor = newRightMotors; // Установите правильный экземпляр двигателя
+        leftMotor = newLeftMotors, rightMotor = newRightMotors; // Установите левый и правый экземпляр двигателя
         leftMotor.setInverted(setLeftMotReverse); // Установите свойство реверса левого двигателя
         rightMotor.setInverted(setRightMotReverse); // Установите правильное свойство реверса двигателя
         setSpeedRegulated(false); // Отключить регулирование скорости прошивки моторов
@@ -184,11 +183,13 @@ namespace chassis {
     //% weight="96"
     //% group="Установить"
     export function setBrakeSettleTime(settleTime: number) {
-        brakeSettleTime = Math.max(0, settleTime);
+        if (settleTime < 0) console.log("Warning: settleTime is negative. Using absolute value.");
+        brakeSettleTime = Math.max(0, Math.abs(settleTime));
     }
 
     /**
      * Установите управляющие значения синхронизации шасси.
+     * Значения Kp, Ki, Kd, Kf должны быть положительными (отрицательные значения будут взяты по модулю).
      * @param Kp значение синхронизации Kp, eg: 0.03
      * @param Ki значение синхронизации Ki, eg: 0
      * @param Kd значение синхронизации Kd, eg: 0.5
@@ -202,10 +203,14 @@ namespace chassis {
     //% weight="95"
     //% group="Установить"
     export function setSyncRegulatorGains(Kp: number, Ki: number, Kd: number, Kf?: number) {
-        syncKp = Kp;
-        syncKi = Ki;
-        syncKd = Kd;
-        if (Kf) syncKf = Kf;
+        if (Kp < 0) console.log("Warning: Kp is negative. Using absolute value.");
+        if (Ki < 0) console.log("Warning: Ki is negative. Using absolute value.");
+        if (Kd < 0) console.log("Warning: Kd is negative. Using absolute value.");
+        if (Kf && Kf < 0) console.log("Warning: Kf is negative. Using absolute value.");
+        syncKp = Math.abs(Kp);
+        syncKi = Math.abs(Ki);
+        syncKd = Math.abs(Kd);
+        if (Kf) syncKf = Math.abs(Kf);
     }
 
     export function getSyncRegulatorKp(): number {
@@ -226,6 +231,7 @@ namespace chassis {
 
     /**
      * Задает диаметр колеса в мм.
+     * Значение diametr должно быть положительным (отрицательное значение будет взято по модулю).
      * @param diametr диаметр колеса, eg: 56
      */
     //% blockId="ChassisSetWheelВiametr"
@@ -234,7 +240,8 @@ namespace chassis {
     //% weight="95" blockGap="8"
     //% group="Колёса"
     export function setWheelDiametr(diametr: number) {
-        wheelDiametr = diametr;
+        if (diametr < 0) console.log("Warning: diametr is negative, using absolute value.");
+        wheelDiametr = Math.abs(diametr);
     }
 
     /**
@@ -251,6 +258,7 @@ namespace chassis {
 
     /**
      * Устанавливает длину базы (колеи) в мм.
+     * Значение length должно быть положительным (отрицательное значение будет взято по модулю).
      * @param length расстояние между центрами колёс в мм, eg: 130
      */
     //% blockId="ChassisSetBaseLength"
@@ -259,7 +267,8 @@ namespace chassis {
     //% weight="93" blockGap="8"
     //% group="Колея"
     export function setBaseLength(length: number) {
-        baseLength = length;
+        if (length < 0) console.log("Warning: length is negative. Using absolute value.");
+        baseLength = Math.abs(length);
     }
 
     /**
@@ -386,6 +395,7 @@ namespace chassis {
         const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
 
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
+        pidChassisSync.setDerivativeFilter(syncKf); // Установить фильтр дифференциального регулятора
         pidChassisSync.setControlSaturation(-100, 100); // Ограничение регулятора
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
         pidChassisSync.reset(); // Сброс ПИД-регулятора
@@ -438,15 +448,16 @@ namespace chassis {
 
     // Функция выполнения синхронизированного движения с фазами
     export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, totalDist: number, accelDist: number, decelDist: number) {
+        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
+
         // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
         advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, totalDist, accelDist, decelDist);
 
-        pidChassisSync.setGains(syncKp, syncKi, syncKd);
-        pidChassisSync.setControlSaturation(-100, 100);
+        pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
+        pidChassisSync.setDerivativeFilter(syncKf); // Установить фильтр дифференциального регулятора
+        pidChassisSync.setControlSaturation(-100, 100); // Ограничение регулятора
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
-        pidChassisSync.reset();
-
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
+        pidChassisSync.reset(); // Сброс ПИД-регулятора
 
         let prevTime = control.millis();
         while (true) {
@@ -508,13 +519,13 @@ namespace chassis {
             const tempV = absStartV;
             absStartV = absMaxV;
             absMaxV = tempV;
-            console.log(`Warning: vStart > vMax,  Swapped: startSpeed=${absStartV}, absMaxV=${absMaxV}`);
+            console.log(`Warning: vStart > vMax. Swapped: startSpeed=${absStartV}, absMaxV=${absMaxV}`);
         }
         if (absFinishV > absMaxV) { // Замена и предупреждение если vFinish > vMax
             const tempV = absFinishV;
             absFinishV = absMaxV;
             absMaxV = tempV;
-            console.log(`Warning: vFinish > vMax,  Swapped: absFinishV=${absFinishV}, absStartV=${absStartV}`);
+            console.log(`Warning: vFinish > vMax. Swapped: absFinishV=${absFinishV}, absStartV=${absStartV}`);
         }
 
         const dirSign = totalValue >= 0 ? 1 : -1; // Направление по знаку totalValue
