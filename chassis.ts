@@ -376,6 +376,7 @@ namespace chassis {
     //% vLeft.shadow="motorSpeedPicker"
     //% vRight.shadow="motorSpeedPicker"
     //% weight="98" blockGap="8"
+    //% subcategory="Движение"
     //% group="Синхронизированное движение"
     export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: MotionBraking = MotionBraking.Hold) {
         if (!leftMotor && !rightMotor) return;
@@ -441,6 +442,7 @@ namespace chassis {
     //% turnRatio.shadow="motorTurnRatioPicker"
     //% speed.shadow="motorSpeedPicker"
     //% weight="98" blockGap="8"
+    //% subcategory="Движение"
     //% group="Синхронизированное движение"
     export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: MotionBraking = MotionBraking.Hold) {
         const { speedLeft, speedRight } = getSpeedsAtSteering(turnRatio, speed);
