@@ -391,10 +391,28 @@ namespace chassis {
         vRight = Math.clamp(-100, 100, vRight >> 0); // Ограничиваем скорость правого мотора от -100 до 100 и отсекаем дробную часть
 
         const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском считываем значение с энкодеров левого и правого двигателя
+
+        let targetAngle = 0;
+        let targetTimeMs = 0;
+
+        switch (unit) {
+            case MoveUnit.Rotations: value /= 360;  // В обороты
+            case MoveUnit.Degrees:
+                targetAngle = value;
+                break;
+            case MoveUnit.Seconds: value *= 1000;
+            case MoveUnit.MilliSeconds:
+                targetTimeMs = value;
+                break;
+            default: return;
+        }
+
+        const emlTarget = Math.abs(vLeft) ? targetAngle : 0;
+        const emrTarget = Math.abs(vRight) ? targetAngle : 0;
         
-        if (unit == MoveUnit.Rotations) value /= 360; // Преобразуем градусы в обороты, если выбран соответствующий режим
-        const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // Значение, которое должен выполнить левый двигатель, если скорость мотора не 0
-        const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
+        // if (unit == MoveUnit.Rotations) value /= 360; // Преобразуем градусы в обороты, если выбран соответствующий режим
+        // const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // Значение, которое должен выполнить левый двигатель, если скорость мотора не 0
+        // const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
 
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
         pidChassisSync.setDerivativeFilter(syncKf); // Установить фильтр дифференциального регулятора
@@ -410,12 +428,15 @@ namespace chassis {
             const currTime = control.millis();
             const dt = currTime - prevTime;
             prevTime = currTime;
+            if (targetTimeMs > 0 && control.millis() >= startTime + targetTimeMs) break;
             const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
-            if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) &&
-                Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break; // Условие завершения, если режим поворота на градусы или обороты
-            else if ((unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds) && 
-                control.millis() >= endTime) break; // Условия завершения, если режим по времени
+            if (targetAngle > 0 && eml >= emlTarget && emr >= emrTarget) break;
+            // if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) &&
+            //     Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break; // Условие завершения, если режим поворота на градусы или обороты
+            // else if ((unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds) && 
+            //     control.millis() >= endTime) break; // Условия завершения, если режим по времени
             // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
+
             const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
