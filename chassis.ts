@@ -304,7 +304,7 @@ namespace chassis {
         if (setBrake !== undefined) chassis.setBrake(setBrake);
         leftMotor.setBrakeSettleTime(0); rightMotor.setBrakeSettleTime(0); // Установить двигателям по отдельности задержку для стабилизации при остановке на 0, т.к. нам не нужно, чтобы один мотор отстаналвивался и ждал, а потом это же делал второй
         leftMotor.stop(); rightMotor.stop(); // Команда остановки моторам
-        leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Установить обратно моторам по отдельности ожидание для стабилизации
+        // leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Установить обратно моторам по отдельности ожидание для стабилизации
         pause(Math.max(0, Math.abs(settleTime))); // Пауза для стабилизации шассии
     }
 
@@ -424,7 +424,7 @@ namespace chassis {
         }
         if (braking == MotionBraking.Hold) stop(Braking.Hold); // Торможение и удержание
         else if (braking == MotionBraking.Float) stop(Braking.Float); // Торможение с освобождением (без удержания)
-        else if (braking == MotionBraking.Coasting) setSpeedsCommand(vLeft, vRight); // Двигаться дальше
+        else if (braking == MotionBraking.Continue) setSpeedsCommand(vLeft, vRight); // Двигаться дальше
     }
 
     /**

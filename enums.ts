@@ -37,7 +37,7 @@ const enum MotionBraking {
     //% block="float"
     //% block.loc.ru="тормоз без удержания"
     Float,
-    //% block="nothing"
-    //% block.loc.ru="не тормозить"
-    Coasting
+    //% block="continue"
+    //% block.loc.ru="не останавливаться"
+    Continue
 }
