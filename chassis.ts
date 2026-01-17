@@ -378,7 +378,7 @@ namespace chassis {
     //% weight="98" blockGap="8"
     //% subcategory="Движение"
     //% group="Синхронизированное движение"
-    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: MotionBraking = MotionBraking.Hold) {
+    export function syncMovement(vLeft: number, vRight: number, value: number, unit: MoveUnit, braking: MotionBraking) {
         if (!leftMotor && !rightMotor) return;
         if (vLeft == 0 && vRight == 0 ||
             ((unit == MoveUnit.Rotations || unit == MoveUnit.Degrees) && value == 0) ||
@@ -396,7 +396,7 @@ namespace chassis {
         let targetTimeMs = 0;
 
         switch (unit) {
-            case MoveUnit.Rotations: value /= 360;  // В обороты
+            case MoveUnit.Rotations: value *= 360;  // В обороты
             case MoveUnit.Degrees:
                 targetAngle = value;
                 break;
@@ -409,10 +409,6 @@ namespace chassis {
 
         const emlTarget = Math.abs(vLeft) ? targetAngle : 0;
         const emrTarget = Math.abs(vRight) ? targetAngle : 0;
-        
-        // if (unit == MoveUnit.Rotations) value /= 360; // Преобразуем градусы в обороты, если выбран соответствующий режим
-        // const emlValue = (Math.abs(vLeft) != 0 ? value : 0); // Значение, которое должен выполнить левый двигатель, если скорость мотора не 0
-        // const emrValue = (Math.abs(vRight) != 0 ? value : 0); // Значение, которое должен выполнить правый двигатель, если скорость мотора не 0
 
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
         pidChassisSync.setDerivativeFilter(syncKf); // Установить фильтр дифференциального регулятора
@@ -421,8 +417,7 @@ namespace chassis {
         pidChassisSync.reset(); // Сброс ПИД-регулятора
 
         let prevTime = control.millis(); // Переменная для хранения предыдущего времени для цикла регулятора
-        if (unit == MoveUnit.Seconds) value *= 0.001; // Если значение было указано в сек, то перевести его в мсек
-        const startTime = control.millis() * (unit == MoveUnit.Seconds ? 0.001 : 1); // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
+        const startTime = control.millis(); // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
         const endTime = (unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds ? startTime + value : 0); // Вычисляем время окончания цикла регулирования, если выбран соответствующий режим
         while (true) { // Цикл синхронизации движения
             const currTime = control.millis();
@@ -431,12 +426,6 @@ namespace chassis {
             if (targetTimeMs > 0 && control.millis() >= startTime + targetTimeMs) break;
             const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
             if (targetAngle > 0 && eml >= emlTarget && emr >= emrTarget) break;
-            // if ((unit == MoveUnit.Degrees || unit == MoveUnit.Rotations) &&
-            //     Math.abs(eml) >= Math.abs(emlValue) && Math.abs(emr) >= Math.abs(emrValue)) break; // Условие завершения, если режим поворота на градусы или обороты
-            // else if ((unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds) && 
-            //     control.millis() >= endTime) break; // Условия завершения, если режим по времени
-            // else if (unit == MoveUnit.Seconds && control.millis() * 0.001 >= endTime) break; // Условие завершения, если выбран режим в мсек
-
             const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие

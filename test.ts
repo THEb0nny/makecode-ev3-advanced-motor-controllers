@@ -114,6 +114,9 @@ function Test() {
     brick.printString("RUN example", 7, 10);
     brick.buttonEnter.pauseUntil(ButtonEvent.Pressed);
     brick.clearScreen();
+
+    // chassis.syncMovement(50, 50, 1, MoveUnit.Rotations, MotionBraking.Hold);
+
     // RampArcMovementExample(30, 50, 50, 20, 100, 150, 300);
     // pause(1000);
     // RampArcMovementExample(30, 50, 50, 20, 0, 150, 300);
