@@ -263,8 +263,8 @@ namespace chassis {
      * @param length расстояние между центрами колёс в мм, eg: 130
      */
     //% blockId="ChassisSetBaseLength"
-    //% block="set base length = $length $unit"
-    //% block.loc.ru="установить размер колеи шасси = $length"
+    //% block="set base length = $length $unit mm"
+    //% block.loc.ru="установить размер колеи шасси = $length мм"
     //% weight="93" blockGap="8"
     //% group="Колея"
     export function setBaseLength(length: number) {
