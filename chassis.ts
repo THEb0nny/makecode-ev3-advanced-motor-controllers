@@ -50,26 +50,27 @@ namespace chassis {
     }
     */
 
-    /**
+    
+    /*
      * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
      * @param newMotorsPair пара двигателей, eg: motors.largeBC
      * @param setLeftMotReverse свойство реверса левого двигателя, eg: false
      * @param setRightMotReverse свойство реверса правого двигателя, eg: false
      */
-    //% blockId="ChassisSet"
-    //% block="set motors to chassis $newMotorsPair||at reverse $setLeftMotReverse $setRightMotReverse"
-    //% block.loc.ru="установить моторы шасси $newMotorsPair||с реверсом $setLeftMotReverse $setRightMotReverse"
-    //% newMotorsPair.fieldEditor="motors"
-    //% newMotorsPair.fieldOptions.decompileLiterals="1"
-    //% setLeftMotReverse.shadow="toggleOnOff"
-    //% setRightMotReverse.shadow="toggleOnOff"
-    //% inlineInputMode="inline"
-    //% expandableArgumentMode="toggle"
-    //% weight="99"
-    //% subcategory="Свойства"
-    //% group="Установить"
-    //% blockHidden="true"
     /*
+    \\% blockId="ChassisSet"
+    \\% block="set motors to chassis $newMotorsPair||at reverse $setLeftMotReverse $setRightMotReverse"
+    \\% block.loc.ru="установить моторы шасси $newMotorsPair||с реверсом $setLeftMotReverse $setRightMotReverse"
+    \\% newMotorsPair.fieldEditor="motors"
+    \\% newMotorsPair.fieldOptions.decompileLiterals="1"
+    \\% setLeftMotReverse.shadow="toggleOnOff"
+    \\% setRightMotReverse.shadow="toggleOnOff"
+    \\% inlineInputMode="inline"
+    \\% expandableArgumentMode="toggle"
+    \\% weight="99"
+    \\% subcategory="Свойства"
+    \\% group="Установить"
+    \\% blockHidden="true"
     function setChassis(newMotorsPair: motors.SynchedMotorPair, setLeftMotReverse: boolean, setRightMotReverse: boolean) {
         return;
         motorsPair = newMotorsPair;
@@ -174,7 +175,7 @@ namespace chassis {
     /**
      * Установить время стабилизации тормоза шасси в мсек.
      * Значение settleTime всегда должны быть положительными (отрицательные значения будут взяты по модулю).
-     * @param settleTime время стабилизации шасси в мсек, eg: 100
+     * @param settleTime время стабилизации шасси в мсек, eg: 10
      */
     //% blockId="ChassisSetBrakeSettleTime"
     //% block="set settle time after break $settleTime ms"
@@ -502,8 +503,8 @@ namespace chassis {
      * @param decelValue значение длины замедления для энкодера, eg: 100
      */
     //% blockId="ChassisSyncRampMovement"
-    //% block="sync chassis ramp movement at start $startSpeed\\% max $maxSpeed\\% finish $finishSpeed\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
-    //% block.loc.ru="синхронизированное управление шасси с ускорением на старте $startSpeed\\% макс $maxSpeed\\% финише $finishSpeed\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
+    //% block="sync chassis ramp movement at start $vStart\\% max $vMax\\% finish $vFinish\\% for distance $totalValue acceleration $accelValue deceleration $decelValue"
+    //% block.loc.ru="синхронизированное управление шасси с ускорением на старте $vStart\\% макс $vMax\\% финише $vFinish\\% на расстояние $totalValue ускорения $accelValue замедления $decelValue"
     //% inlineInputMode="inline"
     //% vStart.shadow="motorSpeedPicker"
     //% vMax.shadow="motorSpeedPicker"
