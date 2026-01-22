@@ -455,7 +455,7 @@ namespace chassis {
     //% weight="98" blockGap="8"
     //% subcategory="Движение"
     //% group="Синхронизированное движение"
-    export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit = MoveUnit.Degrees, braking: MotionBraking = MotionBraking.Hold) {
+    export function syncSteeringMovement(turnRatio: number, speed: number, value: number, unit: MoveUnit, braking: MotionBraking) {
         const { speedLeft, speedRight } = getSpeedsAtSteering(turnRatio, speed);
         syncMovement(speedLeft, speedRight, value, unit, braking);
     }
