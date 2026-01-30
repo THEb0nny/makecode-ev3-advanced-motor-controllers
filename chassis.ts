@@ -426,7 +426,7 @@ namespace chassis {
             prevTime = currTime;
             if (targetTimeMs > 0 && control.millis() >= startTime + targetTimeMs) break;
             const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
-            if (targetAngle > 0 && eml >= emlTarget && emr >= emrTarget) break;
+            if (targetAngle > 0 && Math.abs(eml) >= Math.abs(emlTarget) && Math.abs(emr) >= Math.abs(emrTarget)) break;
             const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
