@@ -30,8 +30,8 @@ namespace chassis {
         rightMotor.setBrake(hold == Braking.Hold);
     }
 
-    // Только для двух двигателей одновременно в моторной паре
     /*
+    // Только для двух двигателей одновременно в моторной паре
     function splitDoubleOutput(out: Output): Output[] {
         if (out == Output.BC) return [Output.B, Output.C];
         else if (out == Output.AB) return [Output.A, Output.B];
@@ -49,7 +49,6 @@ namespace chassis {
         return Output.ALL;
     }
     */
-
     
     /*
      * Устанавливает двигатели, используемые шасси. При необходимости вы можете сразу же установить реверс моторам.
@@ -542,7 +541,7 @@ namespace chassis {
             console.log(`Warning: vFinish > vMax. Swapped: absFinishV=${absFinishV}, absStartV=${absStartV}`);
         }
 
-        const dirSign = totalValue >= 0 ? 1 : -1; // Направление по знаку totalValue
+        const dirSign = Math.sign(totalValue); // Направление по знаку totalValue
 
         executeRampMovement(absStartV, absMaxV * dirSign, absFinishV, totalValue, accelValue, decelValue); // Выполнение синхронизированного движения с фазами
         stop(Braking.Hold); // Остановить с удержанием
