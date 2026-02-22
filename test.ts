@@ -92,9 +92,9 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         const eml = chassis.leftMotor.angle() - emlPrev, emr = chassis.rightMotor.angle() - emrPrev;
         const out = advmotctrls.accTwoEncComplexMotionCompute(eml, emr);
         if (out.isDoneLeft || out.isDoneRight) break;
-        const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwrLeft, out.pwrRight);
+        const error = advmotctrls.getErrorSyncMotors(eml, emr, out.pwrLeft, out.pwrRight);
         const u = chassis.pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
-        const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwrLeft, out.pwrRight);
+        const powers = advmotctrls.getPwrSyncMotors(u, out.pwrLeft, out.pwrRight);
         chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
         if (debug && control.timer8.millis() >= 10) {
             console.log(`pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);

@@ -426,9 +426,9 @@ namespace chassis {
             if (targetTimeMs > 0 && control.millis() >= startTime + targetTimeMs) break;
             const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
             if (targetAngle > 0 && Math.abs(eml) >= Math.abs(emlTarget) && Math.abs(emr) >= Math.abs(emrTarget)) break;
-            const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
+            const error = advmotctrls.getErrorSyncMotors(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
-            const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
+            const powers = advmotctrls.getPwrSyncMotors(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
             control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
@@ -480,9 +480,9 @@ namespace chassis {
             const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
             const out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
             if (out.isDone) break;
-            const error = advmotctrls.getErrorSyncMotorsAtPwr(eml, emr, out.pwr, out.pwr);
+            const error = advmotctrls.getErrorSyncMotors(eml, emr, out.pwr, out.pwr);
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
-            const powers = advmotctrls.getPwrSyncMotorsAtPwr(u, out.pwr, out.pwr);
+            const powers = advmotctrls.getPwrSyncMotors(u, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
             control.pauseUntilTime(currTime, 1);
         }

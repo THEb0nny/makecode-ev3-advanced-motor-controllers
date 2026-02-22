@@ -55,13 +55,13 @@ namespace advmotctrls {
      * @param vLeft входное значение скорости (мощности) левого мотора, eg: 50
      * @param vRight входное значение скорости (мощности) правого мотора, eg: 50
      */
-    //% blockId="GetErrorSyncMotorsAtPwr"
+    //% blockId="GetErrorSyncMotors"
     //% block="get error sync сhassis at eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
     //% weight="89"
     //% group="Синхронизация шасси на разных скоростях"
-    export function getErrorSyncMotorsAtPwr(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
+    export function getErrorSyncMotors(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
         return (vRight * eLeft) - (vLeft * eRight);
     }
 
@@ -71,13 +71,13 @@ namespace advmotctrls {
      * @param vLeft входное значение скорости (мощности) левого мотора, eg: 50
      * @param vRight входное значение скорости (мощности) правого мотора, eg: 50
      */
-    //% blockId="GetPwrSyncMotorsAtPwr"
+    //% blockId="GetPwrSyncMotors"
     //% block="get pwr sync сhassis at u = $u vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить скорости синхронизации шасси при u = $u vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
     //% weight="88"
     //% group="Синхронизация шасси на разных скоростях"
-    export function getPwrSyncMotorsAtPwr(u: number, vLeft: number, vRight: number): MotorsPower {
+    export function getPwrSyncMotors(u: number, vLeft: number, vRight: number): MotorsPower {
         const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * u;
         const pRight = vRight + (Math.abs(vLeft + 1) - Math.abs(vLeft)) * u;
         return {
