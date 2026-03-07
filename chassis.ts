@@ -407,8 +407,8 @@ namespace chassis {
             default: return;
         }
 
-        const emlTarget = Math.abs(vLeft) ? targetAngle : 0;
-        const emrTarget = Math.abs(vRight) ? targetAngle : 0;
+        const emlTarget = vLeft != 0 ? targetAngle : 0;
+        const emrTarget = vRight != 0 ? targetAngle : 0;
 
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
         pidChassisSync.setDerivativeFilter(syncKf); // Установить фильтр дифференциального регулятора
