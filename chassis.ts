@@ -299,13 +299,16 @@ namespace chassis {
     export function stop(setBrake?: Braking, settleTime?: number) {
         if (!leftMotor && !rightMotor) return;
         if (settleTime == undefined) settleTime = brakeSettleTime; // Возьмём значение по умолчанию
-        else if (settleTime < 0) console.log("Warning: settleTime is negative, using absolute value.");
+        else if (settleTime < 0) {
+            console.log("Warning: settleTime is negative, using absolute value.");
+            settleTime = Math.abs(settleTime)
+        }
 
         if (setBrake !== undefined) chassis.setBrake(setBrake);
         leftMotor.setBrakeSettleTime(0); rightMotor.setBrakeSettleTime(0); // Установить двигателям по отдельности задержку для стабилизации при остановке на 0, т.к. нам не нужно, чтобы один мотор отстаналвивался и ждал, а потом это же делал второй
         leftMotor.stop(); rightMotor.stop(); // Команда остановки моторам
         // leftMotor.setBrakeSettleTime(10); rightMotor.setBrakeSettleTime(10); // Установить обратно моторам по отдельности ожидание для стабилизации
-        pause(Math.max(0, Math.abs(settleTime))); // Пауза для стабилизации шассии
+        pause(Math.max(0, settleTime)); // Пауза для стабилизации шассии
     }
 
     // Получить скорости моторов при входном значении рулевого параметра и скорости
