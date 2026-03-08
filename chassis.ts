@@ -184,7 +184,7 @@ namespace chassis {
     //% group="Установить"
     export function setBrakeSettleTime(settleTime: number) {
         if (settleTime < 0) console.log("Warning: settleTime is negative. Using absolute value.");
-        brakeSettleTime = Math.max(0, Math.abs(settleTime));
+        brakeSettleTime = Math.abs(settleTime);
     }
 
     /**
