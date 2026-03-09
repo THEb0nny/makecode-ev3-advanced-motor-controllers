@@ -213,18 +213,22 @@ namespace chassis {
         if (Kf) syncKf = Math.abs(Kf);
     }
 
+    // Получить коэффицент Kp синхронизации моторов
     export function getSyncRegulatorKp(): number {
         return syncKp;
     }
 
+    // Получить коэффицент Ki синхронизации моторов
     export function getSyncRegulatorKi(): number {
         return syncKi;
     }
 
+    // Получить коэффицент Kd синхронизации моторов
     export function getSyncRegulatorKd(): number {
         return syncKd;
     }
 
+    // Получить коэффицент Kf фильтра дифференциального регулятора синхронизации моторов
     export function getSyncRegulatorKf(): number {
         return syncKf;
     }
