@@ -397,7 +397,8 @@ namespace chassis {
         vLeft = Math.clamp(-100, 100, vLeft >> 0); // Ограничиваем скорость левого мотора от -100 до 100 и отсекаем дробную часть
         vRight = Math.clamp(-100, 100, vRight >> 0); // Ограничиваем скорость правого мотора от -100 до 100 и отсекаем дробную часть
 
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском считываем значение с энкодеров левого и правого двигателя
+        const emlPrev = leftMotor.angle(); // Перед запуском считываем значение с энкодеров левого и правого двигателя
+        const emrPrev = rightMotor.angle();
 
         let targetAngle = 0;
         let targetTimeMs = 0;
@@ -431,7 +432,8 @@ namespace chassis {
             const dt = currTime - prevTime;
             prevTime = currTime;
             if (targetTimeMs > 0 && control.millis() >= startTime + targetTimeMs) break;
-            const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev; // Получить текущее значение энкодера левого и правого двигателя
+            const eml = leftMotor.angle() - emlPrev; // Получить текущее значение энкодера левого и правого двигателя
+            const emr = rightMotor.angle() - emrPrev;
             if (targetAngle > 0 && Math.abs(eml) >= Math.abs(emlTarget) && Math.abs(emr) >= Math.abs(emrTarget)) break;
             const error = advmotctrls.getErrorSyncMotors(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
@@ -468,7 +470,8 @@ namespace chassis {
 
     // Функция выполнения синхронизированного движения с фазами
     export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, totalDist: number, accelDist: number, decelDist: number) {
-        const emlPrev = leftMotor.angle(), emrPrev = rightMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
+        const emlPrev = leftMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
+        const emrPrev = rightMotor.angle();
 
         // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
         advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, totalDist, accelDist, decelDist);
@@ -484,7 +487,8 @@ namespace chassis {
             const currTime = control.millis();
             const dt = currTime - prevTime;
             prevTime = currTime;
-            const eml = leftMotor.angle() - emlPrev, emr = rightMotor.angle() - emrPrev;
+            const eml = leftMotor.angle() - emlPrev;
+            const emr = rightMotor.angle() - emrPrev;
             const out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
             if (out.isDone) break;
             const error = advmotctrls.getErrorSyncMotors(eml, emr, out.pwr, out.pwr);
@@ -536,15 +540,11 @@ namespace chassis {
         let absFinishV = Math.abs(vFinish);
 
         if (absStartV > absMaxV) { // Замена и предупреждение если vStart > vMax
-            const tempV = absStartV;
-            absStartV = absMaxV;
-            absMaxV = tempV;
+            [absStartV, absMaxV] = [absMaxV, absStartV];
             console.log(`Warning: vStart > vMax. Swapped: startSpeed=${absStartV}, absMaxV=${absMaxV}`);
         }
         if (absFinishV > absMaxV) { // Замена и предупреждение если vFinish > vMax
-            const tempV = absFinishV;
-            absFinishV = absMaxV;
-            absMaxV = tempV;
+            [absFinishV, absMaxV] = [absMaxV, absFinishV];
             console.log(`Warning: vFinish > vMax. Swapped: absFinishV=${absFinishV}, absStartV=${absStartV}`);
         }
 
