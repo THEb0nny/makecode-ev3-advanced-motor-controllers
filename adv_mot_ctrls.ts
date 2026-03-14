@@ -5,7 +5,25 @@
  */
 //% block="AdvMotCtrls" weight="50" color="#02ab38" icon="\uf3fd" advanced="true"
 namespace advmotctrls {
+    // Синхронизация колёс по соотношению скоростей
     // Используется математика параболистического профиля ускорения моторов
+
+    interface MotorsPower {
+        pwrLeft: number;
+        pwrRight: number;
+    }
+
+    interface AccelMotor {
+        pwr: number,
+        isDone: boolean
+    }
+
+    interface AccelMotors {
+        pwrLeft: number,
+        pwrRight: number,
+        isDoneLeft: boolean,
+        isDoneRight: boolean
+    }
 
     let accMotorMinPwr: number;
     let accMotorMaxPwr: number;
@@ -29,23 +47,6 @@ namespace advmotctrls {
     let accMotorsComplexMotionTotalValue = { left: 0, right: 0 };
     let accMotorsComplexMotionAccelValue = { left: 0, right: 0 };
     let accMotorsComplexMotionDecelValue = { left: 0, right: 0 };
-
-    interface MotorsPower {
-        pwrLeft: number;
-        pwrRight: number;
-    }
-
-    interface AccelMotor {
-        pwr: number,
-        isDone: boolean
-    }
-
-    interface AccelMotors {
-        pwrLeft: number,
-        pwrRight: number,
-        isDoneLeft: boolean,
-        isDoneRight: boolean
-    }
     
     /**
      * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров и с учётом необходимых скоростей (мощностей) для моторов.
@@ -59,7 +60,7 @@ namespace advmotctrls {
     //% block="get error sync сhassis at eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить ошибку синхронизации шасси при eLeft = $eLeft eRight = $eRight vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
-    //% weight="89"
+    //% weight="99"
     //% group="Синхронизация шасси на разных скоростях"
     export function getErrorSyncMotors(eLeft: number, eRight: number, vLeft: number, vRight: number): number {
         return (vRight * eLeft) - (vLeft * eRight);
@@ -75,7 +76,7 @@ namespace advmotctrls {
     //% block="get pwr sync сhassis at u = $u vLeft = $vLeft vRight = $vRight"
     //% block.loc.ru="получить скорости синхронизации шасси при u = $u vLeft = $vLeft vRight = $vRight"
     //% inlineInputMode="inline"
-    //% weight="88"
+    //% weight="98"
     //% group="Синхронизация шасси на разных скоростях"
     export function getPwrSyncMotors(u: number, vLeft: number, vRight: number): MotorsPower {
         const pLeft = vLeft - (Math.abs(vRight + 1) - Math.abs(vRight)) * u;
@@ -100,7 +101,7 @@ namespace advmotctrls {
     //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
-    //% weight="79"
+    //% weight="89"
     //% group="Ускорение/замедлениие мотора"
     export function accOneEncConfig(minPwr: number, maxPwr: number, totalValue: number, accelValue: number, decelValue: number) {
         accMotorMinPwr = Math.abs(minPwr);
@@ -119,11 +120,11 @@ namespace advmotctrls {
     //% block="compute accel/deceleration motor at enc = $enc"
     //% block.loc.ru="расчитать ускорение/замедление управления мотора при enc = $enc"
     //% inlineInputMode="inline"
-    //% weight="78"
+    //% weight="88"
     //% group="Ускорение/замедлениие мотора"
     export function accOneEncCompute(enc: number): AccelMotor {
-        let done: boolean = false;
-        let pwrOut: number;
+        let done = false;
+        let pwrOut = 0;
         const currEnc = Math.abs(enc);
 
         if (currEnc >= accMotorTotalValue) {
@@ -161,7 +162,7 @@ namespace advmotctrls {
     //% startPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
     //% endPwr.shadow="motorSpeedPicker"
-    //% weight="69"
+    //% weight="79"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncLinearMotionConfig(startPwr: number, maxPwr: number, endPwr: number, totalValue: number, accelValue: number, decelValue: number) {
         accMotorsStartingPwr = Math.abs(startPwr);
@@ -182,11 +183,11 @@ namespace advmotctrls {
     //% block="compute accel/deceleration chassis at eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
-    //% weight="68"
+    //% weight="78"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncLinearMotionCompute(eLeft: number, eRight: number): AccelMotor {
-        let done: boolean = false;
-        let pwrOut: number;
+        let done = false;
+        let pwrOut = 0;
         const currEnc = (Math.abs(eLeft) + Math.abs(eRight)) / 2;
 
         if (currEnc >= accMotorsTotalValue) { // Фаза финиша
@@ -228,7 +229,7 @@ namespace advmotctrls {
     //% maxPwrLeft.shadow="motorSpeedPicker"
     //% maxPwrRight.shadow="motorSpeedPicker"
     //% finishingPwr.shadow="motorSpeedPicker"
-    //% weight="59"
+    //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, totalValue: number, accelValue: number, decelValue: number) {
         const absStartingPwr = Math.abs(startingPwr);
@@ -296,7 +297,7 @@ namespace advmotctrls {
     //% block="compute accel/deceleration chassis at with different max speeds eLeft = $eLeft eRight = $eRight"
     //% block.loc.ru="расчитать ускорение/замедление управления шасси с разными макс скоростями при eLeft = $eLeft eRight = $eRight"
     //% inlineInputMode="inline"
-    //% weight="58"
+    //% weight="68"
     //% group="Синхронизация шасси с ускорением/замедлением"
     export function accTwoEncComplexMotionCompute(eLeft: number, eRight: number): AccelMotors {
         const profileLeft = accTwoEncComplexMotionComputeMotorProfile(
@@ -322,8 +323,8 @@ namespace advmotctrls {
 
     // Расчёт профиля скорости (мощности) мотора 
     function accTwoEncComplexMotionComputeMotorProfile(enc: number, totalValue: number, accelValue: number, decelValue: number, startPwr: number, maxPwr: number, endPwr: number, isNeg: boolean): AccelMotor {
-        let done: boolean = false;
-        let pwrOut: number;
+        let done = false;
+        let pwrOut = 0;
         const currEnc = Math.abs(enc);
 
         const absStartPwr = Math.abs(startPwr);
