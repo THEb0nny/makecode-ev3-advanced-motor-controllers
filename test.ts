@@ -100,7 +100,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
             console.log(`pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
             control.timer8.reset();
         }
-        control.pauseUntilTime(currTime, 1);
+        control.pauseUntilTimeUs(currTime, 1000);
     }
     chassis.stop(Braking.Hold);
 }

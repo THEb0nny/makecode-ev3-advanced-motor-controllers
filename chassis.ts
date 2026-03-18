@@ -439,7 +439,7 @@ namespace chassis {
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotors(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
-            control.pauseUntilTime(currTime, 1); // Подождите, пока цикл управления не достигнет установленного количества времени
+            control.pauseUntilTimeUs(currTime, 1000); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
         if (braking == MotionBraking.Hold) stop(Braking.Hold); // Торможение и удержание
         else if (braking == MotionBraking.Float) stop(Braking.Float); // Торможение с освобождением (без удержания)
@@ -495,7 +495,7 @@ namespace chassis {
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
             const powers = advmotctrls.getPwrSyncMotors(u, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
-            control.pauseUntilTime(currTime, 1);
+            control.pauseUntilTimeUs(currTime, 1000);
         }
     }
 
