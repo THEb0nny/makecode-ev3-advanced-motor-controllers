@@ -429,7 +429,7 @@ namespace chassis {
         pidChassisSync.reset(); // Сброс ПИД-регулятора
 
         let prevTime = control.micros(); // Переменная для хранения предыдущего времени для цикла регулятора
-        const startTime = control.micros(); // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
+        const startTime = prevTime; // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
         while (true) { // Цикл синхронизации движения
             const currTime = control.micros();
             const dt = (currTime - prevTime) / 1000;
