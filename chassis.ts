@@ -401,16 +401,20 @@ namespace chassis {
         const emrPrev = rightMotor.angle();
 
         let targetAngle = 0;
-        let targetTimeMs = 0;
+        let targetTimeUs = 0;
 
         switch (unit) {
-            case MoveUnit.Rotations: value *= 360;  // В обороты
+            case MoveUnit.Rotations:
+                targetAngle = value * 360; // В обороты
+                break;
             case MoveUnit.Degrees:
                 targetAngle = value;
                 break;
-            case MoveUnit.Seconds: value *= 1000;
+            case MoveUnit.Seconds:
+                targetTimeUs = value * 1000000;
+                break;
             case MoveUnit.MilliSeconds:
-                targetTimeMs = value;
+                targetTimeUs = value * 1000;
                 break;
             default: return;
         }
@@ -424,14 +428,13 @@ namespace chassis {
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
         pidChassisSync.reset(); // Сброс ПИД-регулятора
 
-        let prevTime = control.millis(); // Переменная для хранения предыдущего времени для цикла регулятора
-        const startTime = control.millis(); // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
-        const endTime = (unit == MoveUnit.MilliSeconds || unit == MoveUnit.Seconds ? startTime + value : 0); // Вычисляем время окончания цикла регулирования, если выбран соответствующий режим
+        let prevTime = control.micros(); // Переменная для хранения предыдущего времени для цикла регулятора
+        const startTime = control.micros(); // Фиксируем время до начала цикла регулирования, если время было указано в секундах, тогда перевести в мсек
         while (true) { // Цикл синхронизации движения
-            const currTime = control.millis();
-            const dt = currTime - prevTime;
+            const currTime = control.micros();
+            const dt = (currTime - prevTime) / 1000;
             prevTime = currTime;
-            if (targetTimeMs > 0 && control.millis() >= startTime + targetTimeMs) break;
+            if (targetTimeUs > 0 && (currTime - startTime) >= targetTimeUs) break;
             const eml = leftMotor.angle() - emlPrev; // Получить текущее значение энкодера левого и правого двигателя
             const emr = rightMotor.angle() - emrPrev;
             if (targetAngle > 0 && Math.abs(eml) >= Math.abs(emlTarget) && Math.abs(emr) >= Math.abs(emrTarget)) break;
@@ -482,10 +485,10 @@ namespace chassis {
         pidChassisSync.setPoint(0); // Установить нулевую уставку регулятору
         pidChassisSync.reset(); // Сброс ПИД-регулятора
 
-        let prevTime = control.millis();
+        let prevTime = control.micros();
         while (true) {
-            const currTime = control.millis();
-            const dt = currTime - prevTime;
+            const currTime = control.micros();
+            const dt = (currTime - prevTime) / 1000;
             prevTime = currTime;
             const eml = leftMotor.angle() - emlPrev;
             const emr = rightMotor.angle() - emrPrev;
