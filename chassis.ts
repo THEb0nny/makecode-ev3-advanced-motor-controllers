@@ -438,7 +438,8 @@ namespace chassis {
             const eml = leftMotor.angle() - emlPrev; // Получить текущее значение энкодера левого и правого двигателя
             const emr = rightMotor.angle() - emrPrev;
             if (targetAngle > 0 && Math.abs(eml) >= Math.abs(emlTarget) && Math.abs(emr) >= Math.abs(emrTarget)) break;
-            const error = advmotctrls.getErrorSyncMotors(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
+            const errorRaw = advmotctrls.getErrorSyncMotors(eml, emr, vLeft, vRight); // Найдите ошибку в управлении двигателей
+            const error = Math.clamp(-1000, 1000, errorRaw);
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotors(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
@@ -494,7 +495,8 @@ namespace chassis {
             const emr = rightMotor.angle() - emrPrev;
             const out = advmotctrls.accTwoEncLinearMotionCompute(eml, emr);
             if (out.isDone) break;
-            const error = advmotctrls.getErrorSyncMotors(eml, emr, out.pwr, out.pwr);
+            const errorRaw = advmotctrls.getErrorSyncMotors(eml, emr, out.pwr, out.pwr);
+            const error = Math.clamp(-1000, 1000, errorRaw);
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
             const powers = advmotctrls.getPwrSyncMotors(u, out.pwr, out.pwr);
             setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
