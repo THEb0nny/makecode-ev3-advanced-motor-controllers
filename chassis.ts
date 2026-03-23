@@ -472,13 +472,15 @@ namespace chassis {
         syncMovement(speedLeft, speedRight, value, unit, braking);
     }
 
-    // Функция выполнения синхронизированного движения с фазами
-    export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, totalDist: number, accelDist: number, decelDist: number) {
+    // Функция-обёртка выполнения синхронизированного движения с фазами
+    export function executeRampMovement(minStartPwr: number, maxPwr: number, minEndPwr: number, totalDist: number, accelDist: number, decelDist: number, dirSign: number) {
         const emlPrev = leftMotor.angle(); // Перед запуском мы считываем значение с энкодера левого и правого двигателя
         const emrPrev = rightMotor.angle();
 
+        dirSign = Math.sign(dirSign); // Защита от того, что пользователь введёт -2 или 2 и т.д.
+
         // Защиту входных данных следует провести в функции, которая запускает executeRampMovement
-        advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, totalDist, accelDist, decelDist);
+        advmotctrls.accTwoEncLinearMotionConfig(minStartPwr, maxPwr, minEndPwr, totalDist, accelDist, decelDist, dirSign < 0);
 
         pidChassisSync.setGains(syncKp, syncKi, syncKd); // Установка коэффициентов регулятора синхронизации
         pidChassisSync.setDerivativeFilter(syncKf); // Установить фильтр дифференциального регулятора
@@ -555,7 +557,7 @@ namespace chassis {
 
         const dirSign = Math.sign(totalValue); // Направление по знаку totalValue
 
-        executeRampMovement(absStartV, absMaxV * dirSign, absFinishV, totalValue, accelValue, decelValue); // Выполнение синхронизированного движения с фазами
+        executeRampMovement(absStartV, absMaxV, absFinishV, totalValue, accelValue, decelValue, dirSign); // Выполнение синхронизированного движения с фазами
         stop(Braking.Hold); // Остановить с удержанием
     }
 

@@ -46,7 +46,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
     }
     
     const emlPrev = chassis.leftMotor.angle(), emrPrev = chassis.rightMotor.angle();
-    const dirSign = totalDist >= 0 ? 1 : -1;
+    const dirSign = Math.sign(totalDist);
     vStarting = Math.clamp(0, 100, Math.abs(vStarting) >> 0);
     vLeftMax = Math.clamp(0, 100, Math.abs(vLeftMax) >> 0);
     vRightMax = Math.clamp(0, 100, Math.abs(vRightMax) >> 0);
@@ -76,7 +76,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         console.log(`Warning: accelDist (${absAccelDist}) + decelDist (${absDecelDist}) > totalDist (${absTotalDist}). Profile will be scaled down.`);
     }
 
-    advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, totalCalcMotRot, accelCalcMotRot, decelCalcMotRot);
+    advmotctrls.accTwoEncComplexMotionConfig(vStarting, vLeftMax, vRightMax, vFinishing, totalCalcMotRot, accelCalcMotRot, decelCalcMotRot, dirSign < 0, dirSign < 0);
     
     chassis.pidChassisSync.setGains(chassis.getSyncRegulatorKp(), chassis.getSyncRegulatorKi(), chassis.getSyncRegulatorKd());
     chassis.pidChassisSync.setControlSaturation(-100, 100);

@@ -43,10 +43,10 @@ namespace advmotctrls {
     let accMotorsComplexMotionStartingPwrs = { left: 0, right: 0 };
     let accMotorsComplexMotionMaxPwrs = { left: 0, right: 0 };
     let accMotorsComplexMotionFinishingPwrs = { left: 0, right: 0 };
-    let accMotorsComplexMotionIsNeg = { left: false, right: false };
     let accMotorsComplexMotionTotalValue = { left: 0, right: 0 };
     let accMotorsComplexMotionAccelValue = { left: 0, right: 0 };
     let accMotorsComplexMotionDecelValue = { left: 0, right: 0 };
+    let accMotorsComplexMotionIsNeg = { left: false, right: false };
     
     /**
      * Посчитать ошибку синхронизации моторов шассии с использованием значений с энкодеров и с учётом необходимых скоростей (мощностей) для моторов.
@@ -94,22 +94,24 @@ namespace advmotctrls {
      * @param totalValue значение всей дистанции, eg: 500
      * @param accelValue значение дистанции ускорения, eg: 150
      * @param decelValue значение дистанции замедления, eg: 150
+     * @param isNeg вращение в противоположную сторону, eg: false
      */
     //% blockId="AccOneEncConfig"
-    //% block="config motor acceleration minPwr = $minPwr maxPwr = $maxPwr accelValue = $accelValue decelValue = $decelValue totalValue = $totalValue"
-    //% block.loc.ru="конфигурация ускорения мотора minPwr = $minPwr maxPwr = $maxPwr accelValue = $accelValue decelValue = $decelValue totalValue = $totalValue"
+    //% block="config motor acceleration minPwr = $minPwr maxPwr = $maxPwr|accelValue = $accelValue decelValue = $decelValue totalValue = $totalValue|isNeg $isNeg"
+    //% block.loc.ru="конфигурация ускорения мотора minPwr = $minPwr maxPwr = $maxPwr|accelValue = $accelValue decelValue = $decelValue totalValue = $totalValue|isNeg $isNeg"
     //% inlineInputMode="inline"
     //% minPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
+    //% isNeg.shadow="toggleOnOff"
     //% weight="89"
     //% group="Ускорение/замедлениие мотора"
-    export function accOneEncConfig(minPwr: number, maxPwr: number, totalValue: number, accelValue: number, decelValue: number) {
+    export function accOneEncConfig(minPwr: number, maxPwr: number, totalValue: number, accelValue: number, decelValue: number, isNeg: boolean) {
         accMotorMinPwr = Math.abs(minPwr);
         accMotorMaxPwr = Math.abs(maxPwr);
         accMotorTotalValue = Math.abs(totalValue);
         accMotorAccelValue = Math.abs(accelValue);
         accMotorDecelValue = Math.abs(decelValue);
-        accMotorIsNeg = maxPwr < 0;
+        accMotorIsNeg = isNeg;
     }
     
     /**
@@ -154,24 +156,26 @@ namespace advmotctrls {
      * @param totalValue значение всей дистанции, eg: 500
      * @param accelValue значение дистанции ускорения, eg: 150
      * @param decelValue значение дистанции замедления, eg: 150
+     * @param isNeg вращение в противоположную сторону, eg: false
      */
     //% blockId="AccTwoEncLinearMotionConfig"
-    //% block="config accel/deceleration chassis at startPwr = $startPwr maxPwr = $maxPwr endPwr = $endPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue"
-    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при startPwr = $startPwr maxPwr = $maxPwr endPwr = $endPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue"
+    //% block="config accel/deceleration chassis at startPwr = $startPwr maxPwr = $maxPwr endPwr = $endPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue|isNeg $isNeg"
+    //% block.loc.ru="конфигурирация ускорения/замедления управления шасси при startPwr = $startPwr maxPwr = $maxPwr endPwr = $endPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue|isNeg $isNeg"
     //% inlineInputMode="inline"
     //% startPwr.shadow="motorSpeedPicker"
     //% maxPwr.shadow="motorSpeedPicker"
     //% endPwr.shadow="motorSpeedPicker"
+    //% isNeg.shadow="toggleOnOff"
     //% weight="79"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncLinearMotionConfig(startPwr: number, maxPwr: number, endPwr: number, totalValue: number, accelValue: number, decelValue: number) {
+    export function accTwoEncLinearMotionConfig(startPwr: number, maxPwr: number, endPwr: number, totalValue: number, accelValue: number, decelValue: number, isNeg: boolean) {
         accMotorsStartingPwr = Math.abs(startPwr);
         accMotorsMaxPwr = Math.abs(maxPwr);
         accMotorsFinishingPwr = Math.abs(endPwr);
         accMotorsTotalValue = Math.abs(totalValue);
         accMotorsAccelValue = Math.abs(accelValue);
         accMotorsDecelValue = Math.abs(decelValue);
-        accMotorsIsNeg = maxPwr < 0;
+        accMotorsIsNeg = isNeg;
     }
 
     /**
@@ -220,10 +224,12 @@ namespace advmotctrls {
      * @param totalValue значение всей дистанции, eg: 500
      * @param accelValue значение дистанции ускорения, eg: 100
      * @param decelValue значение дистанции замедления, eg: 150
+     * @param isNegLeft вращение в противоположную сторону левого мотора, eg: false
+     * @param isNegRight вращение в противоположную сторону правого мотора, eg: false
      */
     //% blockId="AccTwoEncComplexMotionConfig"
-    //% block="config accel/deceleration chassis at startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue"
-    //% block.loc.ru="конфигурирация ускорения/замедления шасси при startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue"
+    //% block="config accel/deceleration chassis at startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue|isNegLeft $isNegLeft isNegRight $isNegRight"
+    //% block.loc.ru="конфигурирация ускорения/замедления шасси при startingPwr = $startingPwr maxPwrLeft = $maxPwrLeft maxPwrRight = $maxPwrRight finishingPwr = $finishingPwr|totalValue = $totalValue accelValue = $accelValue decelValue = $decelValue|isNegLeft $isNegLeft isNegRight $isNegRight"
     //% inlineInputMode="inline"
     //% startingPwr.shadow="motorSpeedPicker"
     //% maxPwrLeft.shadow="motorSpeedPicker"
@@ -231,7 +237,7 @@ namespace advmotctrls {
     //% finishingPwr.shadow="motorSpeedPicker"
     //% weight="69"
     //% group="Синхронизация шасси с ускорением/замедлением"
-    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, totalValue: number, accelValue: number, decelValue: number) {
+    export function accTwoEncComplexMotionConfig(startingPwr: number, maxPwrLeft: number, maxPwrRight: number, finishingPwr: number, totalValue: number, accelValue: number, decelValue: number, isNegLeft: boolean, isNegRight: boolean) {
         const absStartingPwr = Math.abs(startingPwr);
         const absMaxLeft = Math.abs(maxPwrLeft);
         const absMaxRight = Math.abs(maxPwrRight);
@@ -274,8 +280,8 @@ namespace advmotctrls {
         zeroMotorProfile("left", absMaxLeft);
         zeroMotorProfile("right", absMaxRight);
 
-        accMotorsComplexMotionIsNeg.left = maxPwrLeft < 0;
-        accMotorsComplexMotionIsNeg.right = maxPwrRight < 0;
+        accMotorsComplexMotionIsNeg.left = isNegLeft;
+        accMotorsComplexMotionIsNeg.right = isNegRight;
     }
 
     function zeroMotorProfile(side: "left" | "right", absMax: number) {
