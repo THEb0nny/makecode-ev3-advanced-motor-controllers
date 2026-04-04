@@ -24,9 +24,9 @@ const enum Braking {
     //% block="break at hold"
     //% block.loc.ru="тормоз с удержанием"
     Hold,
-    //% block="float"
-    //% block.loc.ru="тормоз без удержания"
-    Float
+    //% block="coast"
+    //% block.loc.ru="торможение накатом"
+    Coast
 }
 
 // Перечислении о вариантах торможения при движении
@@ -34,9 +34,9 @@ const enum MotionBraking {
     //% block="break at hold"
     //% block.loc.ru="тормоз с удержанием"
     Hold,
-    //% block="float"
-    //% block.loc.ru="тормоз без удержания"
-    Float,
+    //% block="coast"
+    //% block.loc.ru="торможение накатом"
+    Coast,
     //% block="continue"
     //% block.loc.ru="не останавливаться"
     Continue

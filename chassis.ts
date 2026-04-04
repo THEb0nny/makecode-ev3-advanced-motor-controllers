@@ -447,7 +447,7 @@ namespace chassis {
             control.pauseUntilTimeUs(currTime, 1000); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
         if (braking == MotionBraking.Hold) stop(Braking.Hold); // Торможение и удержание
-        else if (braking == MotionBraking.Float) stop(Braking.Float); // Торможение с освобождением (без удержания)
+        else if (braking == MotionBraking.Coast) stop(Braking.Coast); // Торможение с освобождением (без удержания)
         else if (braking == MotionBraking.Continue) setSpeedsCommand(vLeft, vRight); // Двигаться дальше
     }
 
