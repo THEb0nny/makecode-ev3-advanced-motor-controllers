@@ -95,7 +95,7 @@ function RampArcMovementExample(vStarting: number, vLeftMax: number, vRightMax: 
         const error = advmotctrls.getErrorSyncMotors(eml, emr, out.pwrLeft, out.pwrRight);
         const u = chassis.pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
         const powers = advmotctrls.getPwrSyncMotors(u, out.pwrLeft, out.pwrRight);
-        chassis.setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
+        chassis.setPower(powers.pwrLeft, powers.pwrRight);
         if (debug && control.timer8.millis() >= 10) {
             console.log(`pwrLeft: ${out.pwrLeft}, pwrRight: ${out.pwrRight}, eml: ${eml}, emr: ${emr}`);
             control.timer8.reset();

@@ -146,7 +146,7 @@ namespace chassis {
         leftMotor = newLeftMotors, rightMotor = newRightMotors; // Установите левый и правый экземпляр двигателя
         leftMotor.setInverted(setLeftMotReverse); // Установите свойство реверса левого двигателя
         rightMotor.setInverted(setRightMotReverse); // Установите правильное свойство реверса двигателя
-        setSpeedRegulated(false); // Отключить регулирование скорости прошивки моторов
+        // setSpeedRegulated(false); // Отключить регулирование скорости прошивки моторов
         const motorLeftType = leftMotor.toString().split(" ")[0][0];
         const motorRightType = leftMotor.toString().split(" ")[0][0];
         if (motorLeftType === "M" && motorRightType === "M") motors.motorMaxRPM = 250;
@@ -345,8 +345,16 @@ namespace chassis {
         return { speedLeft, speedRight };
     }
 
-    // Команда установки моторам скоростей (мощностей)
-    export function setSpeedsCommand(speedLeft: number, speedRight: number) {
+    // Команда установки моторам скоростей
+    export function setSpeed(speedLeft: number, speedRight: number) {
+        setSpeedRegulated(true);
+        leftMotor.run(speedLeft);
+        rightMotor.run(speedRight);
+    }
+
+    // Команда установки моторам мощностей
+    export function setPower(speedLeft: number, speedRight: number) {
+        setSpeedRegulated(false);
         leftMotor.run(speedLeft);
         rightMotor.run(speedRight);
     }
@@ -366,7 +374,7 @@ namespace chassis {
     //% group="Move"
     export function steeringCommand(turnRatio: number, speed: number) {
         const { speedLeft, speedRight } = getSpeedsAtSteering(turnRatio, speed);
-        setSpeedsCommand(speedLeft, speedRight);
+        setPower(speedLeft, speedRight);
     }
     
     /**
@@ -443,12 +451,12 @@ namespace chassis {
             const error = Math.clamp(-1000, 1000, errorRaw);
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error); // Получить управляющее воздействие от регулятора
             const powers = advmotctrls.getPwrSyncMotors(u, vLeft, vRight); // Узнайте мощность двигателей для регулирования, передав управляющее воздействие
-            setSpeedsCommand(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
+            setPower(powers.pwrLeft, powers.pwrRight); // Установить скорости/мощности моторам
             control.pauseUntilTimeUs(currTime, 1000); // Подождите, пока цикл управления не достигнет установленного количества времени
         }
         if (braking == MotionBraking.Hold) stop(Braking.Hold); // Торможение и удержание
         else if (braking == MotionBraking.Coast) stop(Braking.Coast); // Торможение с освобождением (без удержания)
-        else if (braking == MotionBraking.Continue) setSpeedsCommand(vLeft, vRight); // Двигаться дальше
+        else if (braking == MotionBraking.Continue) setPower(vLeft, vRight); // Двигаться дальше
     }
 
     /**
@@ -502,7 +510,7 @@ namespace chassis {
             const error = Math.clamp(-1000, 1000, errorRaw);
             const u = pidChassisSync.compute(dt == 0 ? 1 : dt, -error);
             const powers = advmotctrls.getPwrSyncMotors(u, out.pwr, out.pwr);
-            setSpeedsCommand(powers.pwrLeft, powers.pwrRight);
+            setPower(powers.pwrLeft, powers.pwrRight);
             control.pauseUntilTimeUs(currTime, 1000);
         }
     }
